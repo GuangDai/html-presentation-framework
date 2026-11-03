@@ -1,0 +1,108 @@
+/**
+ * ============================================================================
+ * @file css/variables.css
+ * @description Single Source of Truth for Design Tokens, Color Palette,
+ *              Typography Scale, and 16:9 Stage Layout Dimensions.
+ *
+ * AI / AGENT MODIFICATION GUIDE:
+ * - To adjust slide dimensions or global padding: edit `--stage-*` variables.
+ * - To adjust upper card vs bottom formula bar height ratio: edit
+ *   `--pipeline-upper-height`, `--pipeline-bridge-height`, and `--formula-stage-max-h`.
+ * - To adjust semantic module colors: edit `--color-mod-*` tokens below.
+ * ============================================================================
+ */
+
+:root {
+  /* --------------------------------------------------------------------------
+   * 1. 16:9 Standard Widescreen Stage Geometry (1920 x 1080)
+   * -------------------------------------------------------------------------- */
+  --stage-width: 1920px;
+  --stage-height: 1080px;
+  --stage-scale: 1;
+  --stage-pad-top: 34px;
+  --stage-pad-x: 54px;
+  --stage-pad-bottom: 24px;
+
+  /* --------------------------------------------------------------------------
+   * 2. Vertical Rhythm & Spatial Allocation Tokens
+   * -------------------------------------------------------------------------- */
+  --arch-grid-height: 600px;
+  --pipeline-upper-height-4col: 550px;
+  --pipeline-upper-height-5col: 550px;
+  --pipeline-upper-height-7col: 530px;
+  --pipeline-bridge-height: 30px;
+  --formula-stage-min-h: 62px;
+  --formula-stage-max-h: 96px;
+
+  /* --------------------------------------------------------------------------
+   * 3. Typography Families & Projection Font Scale
+   * -------------------------------------------------------------------------- */
+  --font-sans: 'Inter', 'Noto Sans CJK SC', 'PingFang SC', 'Microsoft YaHei', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: 'Inter Display', 'Inter', 'Noto Sans CJK SC', 'PingFang SC', sans-serif;
+  --font-mono: 'JetBrains Mono', 'DejaVu Sans Mono', monospace;
+
+  --fs-slide-title: 28px;
+  --fs-kicker: 12.5px;
+  --fs-card-title: 19.5px;
+  --fs-card-title-compact: 16.5px;
+  --fs-caption: 13.5px;
+  --fs-caption-compact: 12px;
+  --fs-formula-main: 17.5px;
+  --fs-formula-compact: 15px;
+
+  /* --------------------------------------------------------------------------
+   * 4. Clean Daylight / Warm Academic Paper Surfaces & Ink Hierarchy
+   * -------------------------------------------------------------------------- */
+  --bg-viewport: #CBD5E1;
+  --bg-stage: #F8FAFC;
+  --bg-card: #FFFFFF;
+  --bg-subtle: #F1F5F9;
+
+  --border-light: #F1F5F9;
+  --border-card: #E2E8F0;
+  --border-strong: #CBD5E1;
+
+  --text-ink: #0F172A;
+  --text-body: #334155;
+  --text-muted: #64748B;
+
+  /* --------------------------------------------------------------------------
+   * 5. Semantic Forward-Stage Module Accents
+   * -------------------------------------------------------------------------- */
+  /* Stage 1: Normalization & Scale (Cyan) */
+  --c-norm: #0891B2;
+  --bg-norm: #ECFEFF;
+  --bd-norm: #A5F3FC;
+
+  /* Stage 2A: 1D Temporal Stream (Royal Blue) */
+  --c-1d: #2563EB;
+  --bg-1d: #EFF6FF;
+  --bd-1d: #BFDBFE;
+
+  /* Stage 2B: 2D Endogenous Image Stream (Violet) */
+  --c-2d: #7C3AED;
+  --bg-2d: #F5F3FF;
+  --bd-2d: #DDD6FE;
+
+  /* Stage 2C & 3: Exogenous Text & Token Distillation (Emerald) */
+  --c-text: #059669;
+  --bg-text: #ECFDF5;
+  --bd-text: #A7F3D0;
+
+  /* Stage 4: Modality-Guided Attention & Alignment (Amber) */
+  --c-align: #D97706;
+  --bg-align: #FFFBEB;
+  --bd-align: #FDE68A;
+
+  /* Stage 5: Condition Decoder & Prototype Flow Matching (Rose) */
+  --c-dec: #E11D48;
+  --bg-dec: #FFF1F2;
+  --bd-dec: #FECDD3;
+
+  /* --------------------------------------------------------------------------
+   * 6. Elevation & Animation Tokens
+   * -------------------------------------------------------------------------- */
+  --shadow-card: 0 8px 24px -4px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
+  --shadow-hover: 0 16px 32px -6px rgba(15, 23, 42, 0.11);
+  --anim-speed: 1.5;
+}

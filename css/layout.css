@@ -1,0 +1,985 @@
+/**
+ * ============================================================================
+ * @file css/layout.css
+ * @description Standardized layout & component styles for the 1920×1080 16:9
+ *              Aurora Presentation Framework.
+ * ============================================================================
+ */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #E2E8F0;
+  font-family: var(--font-sans, 'Inter', 'PingFang SC', 'Microsoft YaHei', sans-serif);
+  color: #0F172A;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================================================
+ * 1. Viewport Scaler & 1920×1080 16:9 Stage
+ * ============================================================================ */
+.viewport-scaler {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.presentation-stage {
+  width: 1920px;
+  height: 1080px;
+  background:
+    radial-gradient(circle at 8% 8%, rgba(37, 99, 235, 0.03) 0%, transparent 40%),
+    radial-gradient(circle at 92% 10%, rgba(124, 58, 237, 0.03) 0%, transparent 40%),
+    #F8FAFC;
+  position: relative;
+  overflow: hidden;
+  transform-origin: center center;
+  box-shadow: 0 25px 70px rgba(15, 23, 42, 0.18);
+  flex-shrink: 0;
+}
+
+body.export-mode .presentation-stage {
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.presentation-stage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(15, 23, 42, 0.035) 1.2px, transparent 1.2px);
+  background-size: 32px 32px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.slides-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.slide-frame {
+  position: absolute;
+  inset: 0;
+  padding: 20px 36px 18px 36px;
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.slide-frame.active {
+  display: flex;
+}
+
+.slide-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 0;
+}
+
+/* ============================================================================
+ * 2. Slide Header (Clean Left Title/Subtitle + Right Navigation Rail Only)
+ * ============================================================================ */
+.slide-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #E2E8F0;
+  flex-shrink: 0;
+}
+
+.slide-header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  flex: 1;
+}
+
+.slide-title {
+  font-size: 26px;
+  font-weight: 900;
+  color: #0F172A;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+}
+
+.slide-subtitle {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #475569;
+  line-height: 1.38;
+}
+
+.slide-agenda-rail {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: #F1F5F9;
+  padding: 5px 7px;
+  border-radius: 999px;
+  border: 1px solid #CBD5E1;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.agenda-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  border: none;
+  background: transparent;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.agenda-pill:hover {
+  background: #E2E8F0;
+  color: #0F172A;
+}
+
+.agenda-pill.active {
+  background: #2563EB;
+  color: #FFFFFF;
+  font-weight: 800;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.28);
+}
+
+.pill-num {
+  font-size: 11px;
+  opacity: 0.85;
+  font-weight: 800;
+}
+
+/* ============================================================================
+ * 3. Layout 1: Contrast Slide (Slide 1 — Full-Width Stretched Visual + Cohesive Text)
+ * ============================================================================ */
+.contrast-layout {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 0;
+}
+
+.contrast-band {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 0;
+}
+
+.band-header {
+  display: flex;
+  align-items: center;
+  padding: 0 2px;
+  flex-shrink: 0;
+}
+
+.band-badge {
+  font-size: 12.5px;
+  font-weight: 900;
+  padding: 4px 14px;
+  border-radius: 999px;
+  letter-spacing: 0.03em;
+}
+
+.band-challenges .band-badge {
+  background: #FFE4E6;
+  color: #BE123C;
+  border: 1px solid #FDA4AF;
+}
+
+.band-contributions .band-badge {
+  background: #DBEAFE;
+  color: #1D4ED8;
+  border: 1px solid #93C5FD;
+}
+
+.contrast-cards-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  min-height: 0;
+}
+
+.contrast-card {
+  background: #FFFFFF;
+  border: 2px solid #CBD5E1;
+  border-radius: 18px;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05);
+  min-height: 0;
+  overflow: hidden;
+}
+
+.band-challenges .contrast-card {
+  border-top: 5px solid #E11D48;
+}
+
+.band-contributions .contrast-card {
+  border-top: 5px solid #2563EB;
+}
+
+.clickable-card {
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.clickable-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.12);
+}
+
+.contrast-card-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1.5px solid #F1F5F9;
+  flex-shrink: 0;
+}
+
+.contrast-card-tag {
+  font-size: 12px;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.band-challenges .contrast-card-tag {
+  background: #FFF1F2;
+  color: #BE123C;
+  border: 1px solid #FECDD3;
+}
+
+.band-contributions .contrast-card-tag {
+  background: #EFF6FF;
+  color: #1D4ED8;
+  border: 1px solid #BFDBFE;
+}
+
+.contrast-card-title {
+  font-size: 17.5px;
+  font-weight: 800;
+  color: #0F172A;
+  line-height: 1.25;
+}
+
+/* Stretches to fill the middle of the card with zero wasted gap */
+.contrast-visual {
+  flex: 1;
+  min-height: 0;
+  background: #F8FAFC;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 6px;
+  overflow: hidden;
+}
+
+.contrast-visual svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Cohesive bottom explanation box with dynamically equalized height */
+.contrast-points {
+  list-style: none;
+  background: #F8FAFC;
+  border: 1px solid #CBD5E1;
+  border-radius: 10px;
+  padding: 9px 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.contrast-points li {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1E293B;
+  line-height: 1.44;
+  padding-left: 14px;
+  position: relative;
+}
+
+.contrast-points li::before {
+  content: "•";
+  position: absolute;
+  left: 2px;
+  color: #2563EB;
+  font-weight: 900;
+}
+
+.band-challenges .contrast-points li::before {
+  color: #E11D48;
+}
+
+.contrast-connectors {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  flex-shrink: 0;
+}
+
+.connector-pill {
+  background: linear-gradient(90deg, #EFF6FF, #F5F3FF);
+  border: 1.5px solid #93C5FD;
+  color: #1D4ED8;
+  font-size: 13px;
+  font-weight: 800;
+  text-align: center;
+  padding: 4px 14px;
+  border-radius: 999px;
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.08);
+}
+
+/* ============================================================================
+ * 4. Layout 2: Multi-Stream Architecture Overview (Slide 2 — Full Two-Band Stage)
+ * ============================================================================ */
+.ms-arch-stage {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 14px;
+  min-height: 0;
+}
+
+.ms-band-card {
+  background: #FFFFFF;
+  border: 2px solid #CBD5E1;
+  border-radius: 18px;
+  padding: 10px 18px 12px 18px;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 0;
+}
+
+.ms-band-card.encoder-band {
+  height: 536px;
+  border-top: 5px solid #2563EB;
+  flex-shrink: 0;
+}
+
+.ms-band-card.decoder-band {
+  flex: 1;
+  border-top: 5px solid #E11D48;
+}
+
+.ms-band-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-bottom: 6px;
+  border-bottom: 1.5px solid #F1F5F9;
+  margin-bottom: 6px;
+  flex-shrink: 0;
+}
+
+.ms-band-tag {
+  font-size: 12.5px;
+  font-weight: 900;
+  padding: 4px 14px;
+  border-radius: 8px;
+  letter-spacing: 0.02em;
+}
+
+.tag-encoder {
+  background: #DBEAFE;
+  color: #1E40AF;
+  border: 1px solid #93C5FD;
+}
+
+.tag-decoder {
+  background: #FFE4E6;
+  color: #9F1239;
+  border: 1px solid #FDA4AF;
+}
+
+.ms-svg-canvas {
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.ms-svg-canvas svg {
+  width: 100%;
+  height: 100%;
+}
+
+.ms-svg-canvas svg .svg-clickable-group {
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.ms-svg-canvas svg .svg-clickable-group:hover {
+  opacity: 0.88;
+}
+
+/* ============================================================================
+ * 5. Layout 3: Pipeline Slide (Slides 3–7 — Stretched Step Cards + Compact Formula Bar)
+ * ============================================================================ */
+.pipeline-layout {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 0;
+}
+
+.pipe-cards-grid {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  gap: 16px;
+  align-items: stretch;
+}
+
+.pipe-cards-grid.cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.pipe-cards-grid.cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.pipe-cards-grid.cols-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; }
+.pipe-cards-grid.cols-7 { grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 10px; }
+
+.pipe-step-card {
+  background: #FFFFFF;
+  border: 2px solid #CBD5E1;
+  border-radius: 18px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+  position: relative;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05);
+  min-width: 0;
+  min-height: 0;
+}
+
+.pipe-cards-grid.cols-7 .pipe-step-card {
+  padding: 10px 8px;
+  border-radius: 14px;
+  gap: 6px;
+}
+
+.pipe-step-card.theme-blue    { border-top: 5px solid #2563EB; }
+.pipe-step-card.theme-indigo  { border-top: 5px solid #4F46E5; }
+.pipe-step-card.theme-teal    { border-top: 5px solid #0D9488; }
+.pipe-step-card.theme-purple  { border-top: 5px solid #7C3AED; }
+.pipe-step-card.theme-amber   { border-top: 5px solid #D97706; }
+.pipe-step-card.theme-rose    { border-top: 5px solid #E11D48; }
+.pipe-step-card.theme-emerald { border-top: 5px solid #059669; }
+
+.pipe-step-card:not(:last-child)::after {
+  content: "➔";
+  position: absolute;
+  right: -13px;
+  top: 46%;
+  transform: translateY(-50%);
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  border: 2px solid #3B82F6;
+  color: #2563EB;
+  font-size: 11px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  box-shadow: 0 3px 8px rgba(37, 99, 235, 0.16);
+}
+
+.pipe-cards-grid.cols-7 .pipe-step-card:not(:last-child)::after {
+  right: -9px;
+  width: 18px;
+  height: 18px;
+  font-size: 9.5px;
+}
+
+.pipe-card-top {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-bottom: 6px;
+  border-bottom: 1.5px solid #F1F5F9;
+  flex-shrink: 0;
+}
+
+.pipe-step-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pipe-cards-grid.cols-7 .pipe-step-meta {
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.pipe-step-code {
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: #EFF6FF;
+  color: #1D4ED8;
+  border: 1px solid #BFDBFE;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.theme-purple .pipe-step-code  { background: #F5F3FF; color: #6D28D9; border-color: #DDD6FE; }
+.theme-teal .pipe-step-code    { background: #F0FDFA; color: #0F766E; border-color: #99F6E4; }
+.theme-amber .pipe-step-code   { background: #FFFBEB; color: #B45309; border-color: #FDE68A; }
+.theme-rose .pipe-step-code    { background: #FFF1F2; color: #BE123C; border-color: #FECDD3; }
+.theme-emerald .pipe-step-code { background: #ECFDF5; color: #047857; border-color: #A7F3D0; }
+
+.pipe-step-title {
+  font-size: 17px;
+  font-weight: 800;
+  color: #0F172A;
+  line-height: 1.25;
+}
+
+.pipe-cards-grid.cols-5 .pipe-step-title {
+  font-size: 16px;
+}
+
+.pipe-cards-grid.cols-7 .pipe-step-title {
+  font-size: 14px;
+  text-align: center;
+}
+
+.pipe-visual-frame {
+  flex: 1;
+  width: 100%;
+  background: #F8FAFC;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.pipe-visual-frame svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Dynamically equalized height across all cards in the slide! */
+.pipe-step-caption {
+  background: #F8FAFC;
+  border: 1.5px solid #CBD5E1;
+  border-radius: 12px;
+  padding: 13px 15px;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: #1E293B;
+  line-height: 1.5;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.pipe-cards-grid.cols-5 .pipe-step-caption {
+  font-size: 13.4px;
+  padding: 10px 12px;
+}
+
+.pipe-cards-grid.cols-7 .pipe-step-caption {
+  font-size: 12.2px;
+  padding: 9px 7px;
+  text-align: center;
+  justify-content: center;
+  font-weight: 600;
+}
+
+/* ============================================================================
+ * 6. Bottom Mathematical Mapping Chain (Compact Math Box, Enlarged Subtitle & Dim)
+ * ============================================================================ */
+.mapping-chain-panel {
+  flex: 0 0 auto;
+  background: transparent;
+  border: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.mapping-chain-grid {
+  display: grid;
+  gap: 16px;
+  align-items: stretch;
+}
+
+.mapping-chain-grid.cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.mapping-chain-grid.cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.mapping-chain-grid.cols-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; }
+.mapping-chain-grid.cols-7 { grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 10px; }
+
+.chain-node-card {
+  background: #FFFFFF;
+  border: 2px solid #CBD5E1;
+  border-radius: 16px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
+  overflow: hidden;
+}
+
+.mapping-chain-grid.cols-7 .chain-node-card {
+  padding: 8px 7px;
+  border-radius: 13px;
+  gap: 6px;
+}
+
+/* Enlarged operation sub-title row */
+.chain-tier-op {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.mapping-chain-grid.cols-7 .chain-tier-op {
+  gap: 5px;
+  justify-content: center;
+}
+
+.chain-step-idx {
+  font-size: 12px;
+  font-weight: 900;
+  padding: 2px 7px;
+  border-radius: 6px;
+  background: #DBEAFE;
+  color: #1D4ED8;
+  flex-shrink: 0;
+}
+
+.mapping-chain-grid.cols-7 .chain-step-idx {
+  font-size: 11px;
+  padding: 1px 5px;
+}
+
+.chain-op-label {
+  font-size: 16px;
+  font-weight: 900;
+  color: #0F172A;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mapping-chain-grid.cols-5 .chain-op-label {
+  font-size: 15.2px;
+}
+
+.mapping-chain-grid.cols-7 .chain-op-label {
+  font-size: 13.5px;
+}
+
+/* Compact white formula box with multi-line stacking */
+.chain-tier-math {
+  background: #F8FAFC;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 7px 10px;
+  color: #0F172A;
+  font-size: 14.5px;
+  min-height: 60px;
+  overflow: visible;
+}
+
+.math-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  line-height: 1.15;
+}
+
+/* Enlarged, centered dimension evolution badge */
+.chain-tier-dim {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.dim-badge {
+  width: 100%;
+  background: #EFF6FF;
+  border: 1.5px solid #93C5FD;
+  color: #1E3A8A;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 800;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mapping-chain-grid.cols-7 .dim-badge {
+  padding: 5px 4px;
+  font-size: 13.5px;
+}
+
+/* ============================================================================
+ * 7. Uniform KaTeX / MathJax / SVG ForeignObject Math Rules
+ * ============================================================================ */
+.latex-formula {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  max-width: 100%;
+}
+
+.latex-inline {
+  margin: 0 1px;
+}
+
+.latex-formula .katex {
+  font-size: 1.0em !important;
+  line-height: 1.1 !important;
+}
+
+.latex-formula .katex-display {
+  margin: 0 !important;
+}
+
+.svg-tex-cell {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  font-weight: 800;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+/* ============================================================================
+ * 8. Auto-Fading Bottom-Right Presenter HUD & Drawers
+ * ============================================================================ */
+.presenter-hud {
+  position: fixed;
+  bottom: 14px;
+  right: 22px;
+  height: 38px;
+  background: rgba(15, 23, 42, 0.82);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 1000;
+  opacity: 0.22;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.presenter-hud:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+}
+
+body.export-mode .presenter-hud,
+body.export-mode .modal-drawer,
+body.export-mode .drawer-backdrop {
+  display: none !important;
+}
+
+.hud-btn {
+  background: rgba(255, 255, 255, 0.12);
+  color: #F8FAFC;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.hud-btn-primary {
+  background: #2563EB;
+  border-color: #3B82F6;
+}
+
+.hud-counter {
+  font-size: 12px;
+  font-weight: 800;
+  color: #E2E8F0;
+  padding: 0 6px;
+}
+
+.drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.35);
+  backdrop-filter: blur(3px);
+  z-index: 1100;
+  display: none;
+}
+
+.drawer-backdrop.open {
+  display: block;
+}
+
+.modal-drawer {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.96);
+  width: 640px;
+  max-width: 92vw;
+  background: #FFFFFF;
+  border: 2px solid #CBD5E1;
+  border-radius: 20px;
+  padding: 24px;
+  z-index: 1200;
+  box-shadow: 0 25px 60px rgba(15, 23, 42, 0.25);
+  display: none;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.modal-drawer.open {
+  display: flex;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.drawer-title {
+  font-size: 20px;
+  font-weight: 900;
+  color: #0F172A;
+}
+
+.drawer-subtitle {
+  font-size: 13px;
+  color: #64748B;
+  margin-top: 4px;
+}
+
+.toc-list, .anim-options-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.toc-item, .anim-option-btn {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1.5px solid #E2E8F0;
+  background: #F8FAFC;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+}
+
+.toc-item.active, .anim-option-btn.active {
+  background: #EFF6FF;
+  border-color: #3B82F6;
+}
+
+.toc-num {
+  font-size: 14px;
+  font-weight: 900;
+  color: #2563EB;
+}
+
+.toc-title {
+  font-size: 14.5px;
+  font-weight: 800;
+  color: #0F172A;
+}
+
+.toc-sub {
+  font-size: 12px;
+  color: #64748B;
+}
+
+/* Offline pre-compiled Computer Modern TeX SVG fallback rules */
+.offline-tex-svg {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  vertical-align: -0.18em;
+  display: inline-block;
+  overflow: visible;
+}
+.dim-badge .offline-tex-svg {
+  zoom: 1.08;
+}
+.latex-inline .offline-tex-svg,
+.svg-tex-cell .offline-tex-svg {
+  zoom: 0.90;
+}
