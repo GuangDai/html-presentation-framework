@@ -1,14 +1,10 @@
 /**
  * ============================================================================
  * @file css/layout.css
- * @description Four-Tier Spatial Zoning & Standardized 16:9 Slide Layouts
- *              for the Modern White-Blue Presentation Framework.
- *
- * SPATIAL SEPARATION & HIERARCHY RULES (空间区隔与主次排布准则):
- * - Tier 1 (`.slide-header`): Category Badge + Core Title/Subtitle + Right Capsule Nav.
- * - Tier 2 (`.v-phase-track`): Macro Phase Grouping Bar separating strategic phases.
- * - Tier 3 (`.slide-body` main area): Recessed SVG Visual Canvas + Structured Semantic Box.
- * - Tier 4 (`.mapping-chain-panel`): Mathematical & Tensor Evolution Dock.
+ * @description v3.0 Four-Tier Spatial Zoning & Standardized 16:9 Slide Layouts
+ *              Built on a Pure White & Cool-White Base (`#FFFFFF` / `#F8FAFC`)
+ *              with Multi-Accent Visual Guidance (Royal Blue `#2563EB` +
+ *              Teal-Emerald `#0D9488` + Warm Amber-Gold `#D97706` / Coral `#E11D48`).
  * ============================================================================
  */
 
@@ -30,7 +26,7 @@ html, body {
 }
 
 /* ============================================================================
- * 1. Viewport Scaler & 1920×1080 16:9 Architectural Stage
+ * 1. Viewport Scaler & 1920×1080 16:9 Pure White / Cool-White Stage
  * ============================================================================ */
 .viewport-scaler {
   position: fixed;
@@ -44,10 +40,7 @@ html, body {
 .presentation-stage {
   width: var(--stage-width);
   height: var(--stage-height);
-  background:
-    radial-gradient(circle at 12% 6%, rgba(37, 99, 235, 0.045) 0%, transparent 42%),
-    radial-gradient(circle at 88% 92%, rgba(2, 132, 199, 0.04) 0%, transparent 42%),
-    linear-gradient(180deg, #FAFBFD 0%, #F4F8FC 100%);
+  background: #FFFFFF;
   position: relative;
   overflow: hidden;
   transform-origin: center center;
@@ -60,27 +53,25 @@ body.export-mode .presentation-stage {
   box-shadow: none !important;
 }
 
-/* Subtle architectural blueprint micro-grid */
+/* Neutral cool-gray architectural dot matrix (zero blue background cast) */
 .presentation-stage::before {
   content: "";
   position: absolute;
   inset: 0;
-  background-image:
-    radial-gradient(rgba(37, 99, 235, 0.055) 1px, transparent 1px);
-  background-size: 28px 28px;
+  background: none;
   pointer-events: none;
   z-index: 0;
 }
 
-/* Top edge modern blue hairline accent */
+/* Top edge multi-accent bar (Royal Blue -> Teal-Emerald -> Warm Amber) */
 .presentation-stage::after {
   content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, #1D4ED8 0%, #2563EB 45%, #0284C7 80%, #4F46E5 100%);
+  height: 3.5px;
+  background: linear-gradient(90deg, #2563EB 0%, #2563EB 45%, #0D9488 78%, #D97706 100%);
   z-index: 5;
 }
 
@@ -122,22 +113,18 @@ body.export-mode .presentation-stage {
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  padding-bottom: 9px;
-  border-bottom: 1.5px solid var(--border-card);
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  border-left: 5px solid #2563EB;
+  border-radius: 12px;
+  padding: 9px 16px;
+  box-shadow: 0 3px 12px rgba(15, 23, 42, 0.04);
   flex-shrink: 0;
   position: relative;
 }
 
-.slide-header::after {
-  content: "";
-  position: absolute;
-  bottom: -1.5px;
-  left: 0;
-  width: 84px;
-  height: 2.5px;
-  background: var(--c-primary);
-  border-radius: 2px;
-}
+/* Dual-accent leading indicator under header */
+.slide-header::after { display: none; }
 
 .slide-header-left {
   display: flex;
@@ -158,14 +145,15 @@ body.export-mode .presentation-stage {
   align-items: center;
   gap: 5px;
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 900;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  padding: 2.5px 9px;
+  padding: 3px 10px;
   border-radius: 6px;
-  background: var(--bg-primary);
-  color: var(--c-primary-dark);
-  border: 1px solid var(--bd-primary);
+  background: #2563EB;
+  color: #FFFFFF;
+  border: 1px solid #1D4ED8;
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.2);
   flex-shrink: 0;
 }
 
@@ -188,11 +176,10 @@ body.export-mode .presentation-stage {
   display: flex;
   align-items: center;
   gap: 4px;
-  background: #FFFFFF;
+  background: #F8FAFC;
   padding: 4px 6px;
   border-radius: var(--radius-pill);
-  border: 1.5px solid var(--border-card);
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
+  border: 1px solid #CBD5E1;
   flex-shrink: 0;
 }
 
@@ -214,16 +201,17 @@ body.export-mode .presentation-stage {
 }
 
 .agenda-pill:hover {
-  background: var(--bg-primary);
-  color: var(--c-primary-dark);
+  background: #FFFFFF;
+  color: var(--text-ink);
+  border-color: #CBD5E1;
 }
 
 .agenda-pill.passed {
-  color: var(--text-secondary);
+  color: #334155;
 }
 
 .agenda-pill.passed .pill-num {
-  color: var(--c-primary);
+  color: #0D9488;
 }
 
 .agenda-pill.active {
@@ -231,12 +219,12 @@ body.export-mode .presentation-stage {
   color: #FFFFFF;
   font-weight: 800;
   border-color: var(--c-primary-dark);
-  box-shadow: 0 2px 10px rgba(37, 99, 235, 0.28);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.24);
 }
 
 .pill-num {
   font-size: 10.5px;
-  opacity: 0.88;
+  opacity: 0.9;
   font-weight: 800;
   font-family: var(--font-mono);
 }
@@ -287,17 +275,17 @@ body.export-mode .presentation-stage {
 }
 
 .band-challenges .band-badge {
-  background: #F1F5F9;
-  color: #334155;
+  background: #FFFFFF;
+  color: #0F172A;
   border: 1px solid #CBD5E1;
-  border-left: 3.5px solid var(--c-rose);
+  border-left: 4px solid var(--c-rose);
 }
 
 .band-contributions .band-badge {
-  background: var(--bg-primary);
-  color: var(--c-primary-dark);
-  border: 1px solid var(--bd-primary);
-  border-left: 3.5px solid var(--c-primary);
+  background: #FFFFFF;
+  color: #0F172A;
+  border: 1px solid #CBD5E1;
+  border-left: 4px solid var(--c-teal);
 }
 
 .band-guide-hint {
@@ -318,8 +306,8 @@ body.export-mode .presentation-stage {
 }
 
 .contrast-card {
-  background: var(--bg-card);
-  border: 1.5px solid var(--border-card);
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
   border-radius: var(--radius-xl);
   padding: 10px 14px;
   display: flex;
@@ -332,16 +320,13 @@ body.export-mode .presentation-stage {
   position: relative;
 }
 
-/* Restrained top bar: Slate-Coral indicator for challenges, Royal Blue for contributions */
+/* Top accent bars: Slate-Coral for challenges, Blue-to-Teal dual accent for breakthroughs */
 .band-challenges .contrast-card {
-  border-top: 3.5px solid #64748B;
-  background: linear-gradient(180deg, #FFFFFF 0%, #FAFBFD 100%);
+  border-top: 3.5px solid #E11D48;
 }
 
 .band-contributions .contrast-card {
-  border-top: 3.5px solid var(--c-primary);
-  border-color: var(--bd-primary);
-  box-shadow: 0 6px 20px -4px rgba(37, 99, 235, 0.08);
+  border-top: 3.5px solid #0D9488;
 }
 
 .clickable-card {
@@ -361,7 +346,7 @@ body.export-mode .presentation-stage {
   justify-content: space-between;
   gap: 8px;
   padding-bottom: 5px;
-  border-bottom: 1px solid var(--border-hairline);
+  border-bottom: 1px solid #E2E8F0;
   flex-shrink: 0;
 }
 
@@ -383,15 +368,15 @@ body.export-mode .presentation-stage {
 }
 
 .band-challenges .contrast-card-tag {
-  background: var(--bg-rose);
-  color: var(--c-rose-dark);
-  border: 1px solid var(--bd-rose);
+  background: #FFF1F2;
+  color: #BE123C;
+  border: 1px solid #FDA4AF;
 }
 
 .band-contributions .contrast-card-tag {
-  background: var(--c-primary);
-  color: #FFFFFF;
-  border: 1px solid var(--c-primary-dark);
+  background: #F0FDFA;
+  color: #0F766E;
+  border: 1px solid #5EEAD4;
 }
 
 .contrast-card-title {
@@ -406,29 +391,25 @@ body.export-mode .presentation-stage {
   font-weight: 800;
   padding: 2px 7px;
   border-radius: var(--radius-pill);
-  background: var(--bg-primary);
-  color: var(--c-primary-dark);
-  border: 1px solid var(--bd-primary);
+  background: #EFF6FF;
+  color: #1D4ED8;
+  border: 1px solid #93C5FD;
   white-space: nowrap;
   flex-shrink: 0;
 }
 
+/* Neutral Cool-White Recessed Visual Well (Zero Blue Cast!) */
 .contrast-visual {
   flex: 1;
   min-height: 0;
-  background: var(--bg-well);
-  border: 1px solid var(--border-hairline);
-  border-radius: 10px;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 9px;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 3px 6px;
   overflow: hidden;
-}
-
-.band-contributions .contrast-visual {
-  background: var(--bg-well-blue);
-  border-color: #DBEAFE;
 }
 
 .contrast-visual svg {
@@ -474,6 +455,7 @@ body.export-mode .presentation-stage {
   background: var(--c-rose);
 }
 
+
 /* Bridge Connectors between Challenges & Contributions */
 .contrast-connectors {
   display: grid;
@@ -485,14 +467,16 @@ body.export-mode .presentation-stage {
 
 .connector-pill {
   background: #FFFFFF;
-  border: 1.5px solid var(--bd-primary);
-  color: var(--c-primary-dark);
+  border: 1px solid #CBD5E1;
+  border-left: 3.5px solid #2563EB;
+  border-right: 3.5px solid #0D9488;
+  color: #0F172A;
   font-size: 12px;
   font-weight: 800;
   text-align: center;
   padding: 4px 12px;
   border-radius: var(--radius-pill);
-  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.08);
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -506,7 +490,7 @@ body.export-mode .presentation-stage {
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  background: var(--c-primary);
+  background: #0D9488;
   color: #FFFFFF;
   font-size: 10px;
   font-weight: 900;
@@ -525,8 +509,8 @@ body.export-mode .presentation-stage {
 }
 
 .ms-band-card {
-  background: var(--bg-card);
-  border: 1.5px solid var(--border-card);
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
   border-radius: var(--radius-xl);
   padding: 9px 16px 10px 16px;
   box-shadow: var(--shadow-card);
@@ -544,7 +528,7 @@ body.export-mode .presentation-stage {
 
 .ms-band-card.decoder-band {
   flex: 1;
-  border-top: 3.5px solid var(--c-indigo);
+  border-top: 3.5px solid var(--c-teal);
 }
 
 .ms-band-header {
@@ -552,7 +536,7 @@ body.export-mode .presentation-stage {
   align-items: center;
   justify-content: space-between;
   padding-bottom: 6px;
-  border-bottom: 1px solid var(--border-hairline);
+  border-bottom: 1px solid #E2E8F0;
   margin-bottom: 4px;
   flex-shrink: 0;
   gap: 12px;
@@ -567,15 +551,15 @@ body.export-mode .presentation-stage {
 }
 
 .tag-encoder {
-  background: var(--bg-primary);
-  color: var(--c-primary-dark);
-  border: 1px solid var(--bd-primary);
+  background: #EFF6FF;
+  color: #1D4ED8;
+  border: 1px solid #93C5FD;
 }
 
 .tag-decoder {
-  background: var(--bg-indigo);
-  color: var(--c-indigo-dark);
-  border: 1px solid var(--bd-indigo);
+  background: #F0FDFA;
+  color: #0F766E;
+  border: 1px solid #5EEAD4;
 }
 
 .ms-svg-canvas {
@@ -632,8 +616,8 @@ body.export-mode .presentation-stage {
 }
 
 .pipe-step-card {
-  background: var(--bg-card);
-  border: 1.5px solid var(--border-card);
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
   border-radius: var(--radius-xl);
   padding: 10px 12px;
   display: flex;
@@ -648,32 +632,38 @@ body.export-mode .presentation-stage {
 }
 
 .pipe-step-card:hover {
-  border-color: #93C5FD;
+  border-color: var(--c-primary);
   box-shadow: var(--shadow-card-hover);
 }
 
 .pipe-cards-grid:is(.cols-7, .density-compact) .pipe-step-card {
   padding: 8px 7px;
-  border-radius: 13px;
+  border-radius: 11px;
   gap: 5px;
 }
 
-/* Unified Layered Blue Spectrum Top Borders */
-.pipe-step-card.theme-slate   { border-top: 3.5px solid var(--c-slate); }
-.pipe-step-card.theme-sky,
-.pipe-step-card.theme-teal    { border-top: 3.5px solid var(--c-sky); }
-.pipe-step-card.theme-blue    { border-top: 3.5px solid var(--c-primary); }
+/* Multi-Accent Top Borders: Slate (Input) -> Blue (Structure) -> Amber (Modulation) -> Teal (Output) */
+.pipe-step-card.theme-slate   { border-top: 3.5px solid #64748B; }
+.pipe-step-card.theme-sky     { border-top: 3.5px solid #0284C7; }
+.pipe-step-card.theme-blue    { border-top: 3.5px solid #2563EB; }
 .pipe-step-card.theme-indigo,
-.pipe-step-card.theme-purple  { border-top: 3.5px solid var(--c-indigo); }
-.pipe-step-card.theme-emerald { border-top: 3.5px solid var(--c-teal); }
-.pipe-step-card.theme-amber   { border-top: 3.5px solid var(--c-sky-dark); }
-.pipe-step-card.theme-rose    { border-top: 3.5px solid var(--c-primary-dark); }
+.pipe-step-card.theme-purple  { border-top: 3.5px solid #4F46E5; }
+.pipe-step-card.theme-amber   { border-top: 3.5px solid #D97706; }
+.pipe-step-card.theme-teal,
+.pipe-step-card.theme-emerald { border-top: 3.5px solid #0D9488; }
+.pipe-step-card.theme-rose    { border-top: 3.5px solid #E11D48; }
 
-/* Focal Operator Card Highlight (when a step is marked `focal: true`) */
+/* Focal Operator Card Highlight (`focal: true`) — Crisp Pure White with Dual-Accent Ring */
 .pipe-step-card.is-focal-step {
-  border-color: #93C5FD;
-  background: linear-gradient(180deg, #FFFFFF 0%, #F5F9FF 100%);
-  box-shadow: var(--shadow-focal);
+  border: 1.5px solid #D97706;
+  border-top: 4px solid #D97706;
+  background: #FFFFFF;
+  box-shadow: 0 8px 24px -4px rgba(217, 119, 6, 0.14), 0 2px 6px rgba(15, 23, 42, 0.04);
+}
+.pipe-step-card.is-focal-step .pipe-step-code {
+  background: #D97706;
+  color: #FFFFFF;
+  border-color: #B45309;
 }
 
 /* Inter-Card Directional Flow Connector */
@@ -687,15 +677,15 @@ body.export-mode .presentation-stage {
   height: 21px;
   border-radius: 50%;
   background: #FFFFFF;
-  border: 1.5px solid var(--c-primary);
-  color: var(--c-primary);
+  border: 1.5px solid #64748B;
+  color: #0F172A;
   font-size: 11px;
   font-weight: 900;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 10;
-  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.16);
+  box-shadow: 0 2px 5px rgba(15, 23, 42, 0.1);
 }
 
 .pipe-step-card.row-end::after {
@@ -714,7 +704,7 @@ body.export-mode .presentation-stage {
   flex-direction: column;
   justify-content: center;
   padding-bottom: 5px;
-  border-bottom: 1px solid var(--border-hairline);
+  border-bottom: 1px solid #E2E8F0;
   flex-shrink: 0;
 }
 
@@ -749,35 +739,38 @@ body.export-mode .presentation-stage {
   font-weight: 800;
   padding: 2px 7.5px;
   border-radius: 5px;
-  background: var(--bg-primary);
-  color: var(--c-primary-dark);
-  border: 1px solid var(--bd-primary);
+  background: #F1F5F9;
+  color: #1E293B;
+  border: 1px solid #CBD5E1;
   white-space: nowrap;
   flex-shrink: 0;
   font-family: var(--font-mono);
 }
 
-.theme-slate .pipe-step-code   { background: var(--bg-slate); color: var(--c-slate-dark); border-color: var(--bd-slate); }
-.theme-sky .pipe-step-code,
-.theme-teal .pipe-step-code    { background: var(--bg-sky); color: var(--c-sky-dark); border-color: var(--bd-sky); }
+.theme-blue .pipe-step-code    { background: #EFF6FF; color: #1D4ED8; border-color: #93C5FD; }
+.theme-sky .pipe-step-code     { background: #F0F9FF; color: #0369A1; border-color: #7DD3FC; }
 .theme-indigo .pipe-step-code,
-.theme-purple .pipe-step-code  { background: var(--bg-indigo); color: var(--c-indigo-dark); border-color: var(--bd-indigo); }
-.theme-emerald .pipe-step-code { background: var(--bg-teal); color: var(--c-teal-dark); border-color: var(--bd-teal); }
+.theme-purple .pipe-step-code  { background: #EEF2FF; color: #4338CA; border-color: #A5B4FC; }
+.theme-amber .pipe-step-code   { background: #FFFBEB; color: #B45309; border-color: #FCD34D; }
+.theme-teal .pipe-step-code,
+.theme-emerald .pipe-step-code { background: #F0FDFA; color: #0F766E; border-color: #5EEAD4; }
 
 .pipe-step-role-badge {
   font-size: 10px;
   font-weight: 700;
   padding: 1.5px 6px;
   border-radius: 4px;
-  background: #F1F5F9;
+  background: #F8FAFC;
   color: #475569;
+  border: 1px solid #E2E8F0;
   white-space: nowrap;
   flex-shrink: 0;
 }
 
 .is-focal-step .pipe-step-role-badge {
-  background: #DBEAFE;
-  color: #1E40AF;
+  background: #FFFBEB;
+  color: #B45309;
+  border-color: #FCD34D;
   font-weight: 800;
 }
 
@@ -797,13 +790,13 @@ body.export-mode .presentation-stage {
   text-align: center;
 }
 
-/* Recessed Visual Topology Well */
+/* Neutral Cool-White Recessed Visual Topology Well */
 .pipe-visual-frame {
   flex: 1;
   width: 100%;
-  background: var(--bg-well);
-  border: 1px solid var(--border-hairline);
-  border-radius: 10px;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 9px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -812,26 +805,21 @@ body.export-mode .presentation-stage {
   overflow: hidden;
 }
 
-.is-focal-step .pipe-visual-frame {
-  background: #FFFFFF;
-  border-color: #DBEAFE;
-}
-
 .pipe-visual-frame svg {
   width: 94%;
   height: 90%;
 }
 
-/* Structured Semantic Panel (replaces old walls of text in `.pipe-step-caption`) */
+/* Structured Semantic Panel on Cool-White Base */
 .pipe-step-caption {
-  background: var(--bg-well);
-  border: 1px solid var(--border-card);
-  border-radius: 10px;
-  padding: 7px 10px;
-  font-size: 14.5px;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 9px;
+  padding: 7px 9px;
+  font-size: 12.6px;
   font-weight: 600;
   color: var(--text-primary);
-  line-height: 1.5;
+  line-height: 1.4;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
@@ -839,13 +827,13 @@ body.export-mode .presentation-stage {
 }
 
 .pipe-cards-grid.cols-5 .pipe-step-caption {
-  font-size: 13.4px;
-  padding: 8px 10px;
+  font-size: 12.2px;
+  padding: 6px 8px;
 }
 
 .pipe-cards-grid:is(.cols-7, .density-compact) .pipe-step-caption {
-  font-size: 12.2px;
-  padding: 6px 6px;
+  font-size: 11.4px;
+  padding: 5px 5px;
   text-align: center;
   justify-content: center;
 }
@@ -878,17 +866,21 @@ body.export-mode .presentation-stage {
 }
 
 .chain-node-card {
-  background: var(--bg-card);
-  border: 1.5px solid var(--border-card);
-  border-radius: 13px;
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  border-radius: 11px;
   padding: 9px 11px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   gap: 6px;
   min-width: 0;
-  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03);
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
   position: relative;
+}
+
+.chain-node-card.is-focal-step {
+  border-color: #2563EB;
 }
 
 /* Inter-node math connector arrow */
@@ -897,7 +889,7 @@ body.export-mode .presentation-stage {
   position: absolute;
   right: -10px;
   bottom: 14px;
-  color: #93C5FD;
+  color: #64748B;
   font-size: 11px;
   z-index: 5;
   pointer-events: none;
@@ -905,7 +897,7 @@ body.export-mode .presentation-stage {
 
 .mapping-chain-grid:is(.cols-7, .density-compact) .chain-node-card {
   padding: 7px 6px;
-  border-radius: 11px;
+  border-radius: 10px;
   gap: 5px;
 }
 
@@ -930,12 +922,20 @@ body.export-mode .presentation-stage {
   font-size: 11px;
   font-weight: 800;
   padding: 1.5px 6px;
-  border-radius: 5px;
-  background: var(--bg-primary);
-  color: var(--c-primary-dark);
-  border: 1px solid var(--bd-primary);
+  border-radius: 4px;
+  background: #0F172A;
+  color: #FFFFFF;
   font-family: var(--font-mono);
   flex-shrink: 0;
+}
+
+.is-focal-step .chain-step-idx {
+  background: #D97706;
+}
+
+.theme-teal .chain-step-idx,
+.theme-emerald .chain-step-idx {
+  background: #0D9488;
 }
 
 .mapping-chain-grid:is(.cols-7, .density-compact) .chain-step-idx {
@@ -960,11 +960,11 @@ body.export-mode .presentation-stage {
   font-size: 12.2px;
 }
 
-/* Crisp recessed white-blue formula box */
+/* Cool-white formula box */
 .chain-tier-math {
-  background: var(--bg-well);
-  border: 1px solid var(--border-hairline);
-  border-radius: 8px;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 7px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -972,7 +972,7 @@ body.export-mode .presentation-stage {
   gap: 5px;
   padding: 6px 8px;
   color: var(--text-ink);
-  font-size: 16px;
+  font-size: 13.8px;
   min-height: 54px;
   overflow: visible;
 }
@@ -985,7 +985,7 @@ body.export-mode .presentation-stage {
   line-height: 1.15;
 }
 
-/* Centered Tensor Dimension Evolution Pill */
+/* Cool-White Tensor Dimension Evolution Pill with Left Accent Bar */
 .chain-tier-dim {
   display: flex;
   align-items: center;
@@ -995,12 +995,13 @@ body.export-mode .presentation-stage {
 
 .dim-badge {
   width: 100%;
-  background: var(--bg-primary);
-  border: 1px solid var(--bd-primary);
-  color: var(--c-primary-deep);
+  background: #F8FAFC;
+  border: 1px solid #CBD5E1;
+  border-left: 3.5px solid #2563EB;
+  color: #0F172A;
   padding: 4.5px 8px;
-  border-radius: 7px;
-  font-size: 16px;
+  border-radius: 6px;
+  font-size: var(--fs-formula-dim);
   font-weight: 800;
   white-space: nowrap;
   display: flex;
@@ -1008,9 +1009,20 @@ body.export-mode .presentation-stage {
   justify-content: center;
 }
 
+.is-focal-step .dim-badge {
+  border-left-color: #D97706;
+  background: #FFFBEB;
+}
+
+.theme-teal .dim-badge,
+.theme-emerald .dim-badge {
+  border-left-color: #0D9488;
+  background: #F0FDFA;
+}
+
 .mapping-chain-grid:is(.cols-7, .density-compact) .dim-badge {
   padding: 4px 3px;
-  font-size: 16px;
+  font-size: 12.2px;
 }
 
 /* ============================================================================
@@ -1026,7 +1038,6 @@ body.export-mode .presentation-stage {
 
 .latex-inline {
   margin: 0 1px;
-  font-size: 16px;
 }
 
 .latex-formula .katex {
@@ -1059,6 +1070,14 @@ body.export-mode .presentation-stage {
   overflow: visible;
 }
 
+.dim-badge .offline-tex-svg {
+  zoom: 1.04;
+}
+
+.latex-inline .offline-tex-svg,
+.svg-tex-cell .offline-tex-svg {
+  zoom: 0.88;
+}
 
 /* ============================================================================
  * 8. Auto-Fading Bottom-Right Presenter HUD & Modal Drawers
@@ -1068,7 +1087,7 @@ body.export-mode .presentation-stage {
   bottom: 14px;
   right: 22px;
   height: 38px;
-  background: rgba(15, 23, 42, 0.86);
+  background: rgba(15, 23, 42, 0.88);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: var(--radius-pill);
@@ -1077,7 +1096,7 @@ body.export-mode .presentation-stage {
   align-items: center;
   gap: 6px;
   z-index: 1000;
-  opacity: 0.24;
+  opacity: 0.28;
   transition: opacity 0.22s ease, transform 0.22s ease;
 }
 
@@ -1149,8 +1168,8 @@ body.export-mode .drawer-backdrop {
   max-height: 85vh;
   overflow-y: auto;
   background: #FFFFFF;
-  border: 1.5px solid var(--border-card);
-  border-radius: 20px;
+  border: 1.5px solid #CBD5E1;
+  border-radius: 18px;
   padding: 24px;
   z-index: 1200;
   box-shadow: 0 25px 60px rgba(15, 23, 42, 0.22);
@@ -1187,9 +1206,9 @@ body.export-mode .drawer-backdrop {
   align-items: center;
   gap: 14px;
   padding: 10px 14px;
-  border-radius: 12px;
-  border: 1.5px solid var(--border-card);
-  background: var(--bg-well);
+  border-radius: 10px;
+  border: 1px solid #CBD5E1;
+  background: #F8FAFC;
   cursor: pointer;
   text-align: left;
   font-family: inherit;
@@ -1197,12 +1216,12 @@ body.export-mode .drawer-backdrop {
 }
 
 .toc-item:hover, .anim-option-btn:hover, .deck-option-btn:hover {
-  border-color: #93C5FD;
-  background: #F4F8FF;
+  border-color: var(--c-primary);
+  background: #FFFFFF;
 }
 
 .toc-item.active, .anim-option-btn.active, .deck-option-btn.active {
-  background: var(--bg-primary);
+  background: #EFF6FF;
   border-color: var(--c-primary);
 }
 
@@ -1222,4 +1241,798 @@ body.export-mode .drawer-backdrop {
 .toc-sub {
   font-size: 11.8px;
   color: var(--text-muted);
+}
+
+
+
+
+/* === EMBEDDED COMPONENTS.CSS === */
+/**
+ * ============================================================================
+ * @file css/components.css
+ * @description v3.0 Rich Visual Semantic Components & Extended Slide Layouts
+ *              Built on a Pure White & Cool-White Base (`#FFFFFF` / `#F8FAFC`)
+ *              with Multi-Accent Chromatic Guidance:
+ *              - Accent 1: Royal Blue (`#2563EB`) — Core Structure & Backbone
+ *              - Accent 2: Teal-Emerald (`#0D9488`) — Priors, Gains & Outputs
+ *              - Accent 3: Amber-Gold (`#D97706`) & Coral (`#E11D48`) — Focal
+ *                Modulation & Bottleneck Diagnostics
+ * ============================================================================
+ */
+
+/* ============================================================================
+ * 1. Tier 2: Macro Phase Guidance Track (`.v-phase-track`)
+ * ============================================================================ */
+.v-phase-track {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-columns, 4), minmax(0, 1fr));
+  gap: 14px;
+  flex-shrink: 0;
+}
+
+.v-phase-track.cols-5 { gap: 13px; }
+.v-phase-track.cols-7 { gap: 9px; }
+
+.v-phase-pill {
+  grid-column: span var(--phase-span, 1);
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  border-left: 4px solid var(--c-primary);
+  border-radius: 8px;
+  padding: 5px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.03);
+  position: relative;
+}
+
+.v-phase-pill.phase-sky    { border-left-color: var(--c-sky); }
+.v-phase-pill.phase-blue   { border-left-color: var(--c-primary); }
+.v-phase-pill.phase-indigo { border-left-color: var(--c-indigo); }
+.v-phase-pill.phase-teal   { border-left-color: var(--c-teal); }
+.v-phase-pill.phase-amber  { border-left-color: var(--c-amber); }
+.v-phase-pill.phase-slate  { border-left-color: var(--c-slate); }
+
+.v-phase-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.v-phase-code {
+  font-size: 10.5px;
+  font-weight: 900;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: var(--c-primary);
+  color: #FFFFFF;
+  font-family: var(--font-mono);
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.phase-sky .v-phase-code    { background: var(--c-sky); }
+.phase-indigo .v-phase-code { background: var(--c-indigo); }
+.phase-teal .v-phase-code   { background: var(--c-teal); }
+.phase-amber .v-phase-code  { background: var(--c-amber); }
+.phase-slate .v-phase-code  { background: var(--c-slate); }
+
+.v-phase-title {
+  font-size: 12.5px;
+  font-weight: 800;
+  color: var(--text-ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.v-phase-summary {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  background: #F8FAFC;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid #E2E8F0;
+  white-space: nowrap;
+}
+
+/* ============================================================================
+ * 2. Structured Step Semantic Block (`.v-step-semantics` inside `.pipe-step-caption`)
+ * ============================================================================ */
+.v-step-semantics {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
+}
+
+/* 3-Node Input (Slate) -> Operator (Blue/Amber) -> Output (Teal) Visual Flow Strip */
+.v-io-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 7px;
+  padding: 4px 6px;
+}
+
+.v-io-node {
+  flex: 1 1 auto;
+  text-align: center;
+  font-size: 10.8px;
+  font-weight: 800;
+  padding: 2.5px 5px;
+  border-radius: 5px;
+  white-space: nowrap;
+}
+
+.v-io-node.io-in {
+  background: #F1F5F9;
+  color: #334155;
+  border: 1px solid #CBD5E1;
+}
+
+.v-io-node.io-op {
+  background: #EFF6FF;
+  color: #1D4ED8;
+  border: 1px solid #93C5FD;
+}
+
+.is-focal-step .v-io-node.io-op {
+  background: #FFFBEB;
+  color: #B45309;
+  border: 1px solid #FCD34D;
+}
+
+.v-io-node.io-out {
+  background: #F0FDFA;
+  color: #0F766E;
+  border: 1px solid #5EEAD4;
+}
+
+.v-io-arrow {
+  font-size: 10px;
+  font-weight: 900;
+  color: #64748B;
+  flex-shrink: 0;
+}
+
+/* 2-Row Key-Value Semantic Spec Grid */
+.v-kv-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.v-kv-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 6px;
+  padding: 3.5px 7px;
+  text-align: left;
+}
+
+.v-kv-tag {
+  font-size: 10.2px;
+  font-weight: 800;
+  padding: 1.5px 6px;
+  border-radius: 4px;
+  background: #EFF6FF;
+  color: #1D4ED8;
+  border: 1px solid #93C5FD;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.v-kv-tag.tag-slate  { background: #F1F5F9; color: #334155; border-color: #CBD5E1; }
+.v-kv-tag.tag-sky    { background: #F0F9FF; color: #0369A1; border-color: #7DD3FC; }
+.v-kv-tag.tag-indigo { background: #EEF2FF; color: #4338CA; border-color: #A5B4FC; }
+.v-kv-tag.tag-teal   { background: #F0FDFA; color: #0F766E; border-color: #5EEAD4; }
+.v-kv-tag.tag-amber  { background: #FFFBEB; color: #B45309; border-color: #FCD34D; }
+.v-kv-tag.tag-rose   { background: #FFF1F2; color: #BE123C; border-color: #FDA4AF; }
+
+.v-kv-val {
+  font-size: 11.8px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.3;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Compact 7-column overrides for `.v-step-semantics` */
+.pipe-cards-grid:is(.cols-7, .density-compact) .v-io-strip {
+  flex-direction: column;
+  gap: 2px;
+  padding: 3px 4px;
+}
+
+.pipe-cards-grid:is(.cols-7, .density-compact) .v-io-node {
+  width: 100%;
+  font-size: 10.2px;
+  padding: 2px 3px;
+}
+
+.pipe-cards-grid:is(.cols-7, .density-compact) .v-io-arrow {
+  display: none;
+}
+
+.pipe-cards-grid:is(.cols-7, .density-compact) .v-kv-row {
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 2px;
+  padding: 3px 4px;
+}
+
+.pipe-cards-grid:is(.cols-7, .density-compact) .v-kv-val {
+  font-size: 10.6px;
+}
+
+/* ============================================================================
+ * 3. Contrast Slide Visual Diagnostic & Mechanism Rows (`.v-diagnostic-panel`)
+ * ============================================================================ */
+.v-diagnostic-panel {
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 9px;
+  padding: 7px 9px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+.v-diag-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 6px;
+  padding: 4.5px 8px;
+}
+
+.v-diag-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  flex: 1;
+}
+
+.v-diag-badge {
+  font-size: 10.5px;
+  font-weight: 800;
+  padding: 2px 6.5px;
+  border-radius: 4px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.band-challenges .v-diag-badge {
+  background: #F1F5F9;
+  color: #334155;
+  border: 1px solid #CBD5E1;
+}
+
+.band-contributions .v-diag-badge {
+  background: #EFF6FF;
+  color: #1D4ED8;
+  border: 1px solid #93C5FD;
+}
+
+.v-diag-text {
+  font-size: 12.2px;
+  font-weight: 700;
+  color: var(--text-ink);
+  line-height: 1.28;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.v-diag-arrow {
+  font-size: 11px;
+  font-weight: 900;
+  color: #64748B;
+  flex-shrink: 0;
+}
+
+.v-diag-outcome {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 5px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.band-challenges .v-diag-outcome {
+  background: #FFF1F2;
+  color: #BE123C;
+  border: 1px solid #FDA4AF;
+}
+
+.band-contributions .v-diag-outcome {
+  background: #F0FDFA;
+  color: #0F766E;
+  border: 1px solid #5EEAD4;
+}
+
+.v-card-footer-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding-top: 3px;
+  border-top: 1px dashed #CBD5E1;
+}
+
+.v-footer-chip {
+  font-size: 10.8px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  border-radius: 5px;
+  padding: 2px 7px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.v-footer-chip strong {
+  color: #0F172A;
+  font-weight: 800;
+}
+
+.band-contributions .v-footer-chip strong {
+  color: #0F766E;
+}
+
+/* ============================================================================
+ * 4. Architecture Band Visual Metadata Pills (`.v-band-meta`)
+ * ============================================================================ */
+.v-band-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+}
+
+.v-meta-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2.5px 9px;
+  border-radius: var(--radius-pill);
+  background: #F8FAFC;
+  color: var(--text-secondary);
+  border: 1px solid #CBD5E1;
+  white-space: nowrap;
+}
+
+.v-meta-pill .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--c-primary);
+}
+
+.v-meta-pill.pill-sky .dot    { background: var(--c-sky); }
+.v-meta-pill.pill-indigo .dot { background: var(--c-indigo); }
+.v-meta-pill.pill-teal .dot   { background: var(--c-teal); }
+.v-meta-pill.pill-amber .dot  { background: var(--c-amber); }
+
+/* ============================================================================
+ * 5. Layout 4: Modern Bento Grid Layout (`.bento-layout`)
+ * ============================================================================ */
+.bento-layout {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 0;
+}
+
+.bento-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-auto-rows: minmax(0, 1fr);
+  gap: 14px;
+  min-height: 0;
+}
+
+.bento-card {
+  grid-column: span var(--bento-col, 4);
+  grid-row: span var(--bento-row, 1);
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  border-top: 3.5px solid var(--c-primary);
+  border-radius: var(--radius-xl);
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+  box-shadow: var(--shadow-card);
+  min-height: 0;
+  overflow: hidden;
+}
+
+.bento-card.theme-sky    { border-top-color: var(--c-sky); }
+.bento-card.theme-indigo { border-top-color: var(--c-indigo); }
+.bento-card.theme-teal   { border-top-color: var(--c-teal); }
+.bento-card.theme-amber  { border-top-color: var(--c-amber); }
+.bento-card.theme-slate  { border-top-color: var(--c-slate); }
+
+.bento-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #E2E8F0;
+  flex-shrink: 0;
+}
+
+.bento-card-title-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bento-card-badge {
+  font-size: 10.5px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 5px;
+  background: #EFF6FF;
+  color: #1D4ED8;
+  border: 1px solid #93C5FD;
+}
+
+.bento-card-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--text-ink);
+}
+
+.bento-card-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.bento-visual-box {
+  flex: 1;
+  min-height: 0;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  overflow: hidden;
+}
+
+.bento-visual-box svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* ============================================================================
+ * 6. Layout 5: Quantitative & Visual Benchmark Layout (`.benchmark-layout`)
+ * ============================================================================ */
+.benchmark-layout {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 0;
+}
+
+.v-kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(var(--kpi-cols, 4), minmax(0, 1fr));
+  gap: 14px;
+  flex-shrink: 0;
+}
+
+.v-kpi-card {
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  border-left: 4px solid var(--c-primary);
+  border-radius: 10px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  box-shadow: var(--shadow-card);
+}
+
+.v-kpi-card.theme-sky    { border-left-color: var(--c-sky); }
+.v-kpi-card.theme-indigo { border-left-color: var(--c-indigo); }
+.v-kpi-card.theme-teal   { border-left-color: var(--c-teal); }
+.v-kpi-card.theme-amber  { border-left-color: var(--c-amber); }
+
+.v-kpi-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.v-kpi-label {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.v-kpi-value {
+  font-size: 24px;
+  font-weight: 900;
+  color: var(--text-ink);
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+.v-kpi-delta {
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 3px 9px;
+  border-radius: var(--radius-pill);
+  background: #F0FDFA;
+  color: #0F766E;
+  border: 1px solid #5EEAD4;
+  white-space: nowrap;
+}
+
+.benchmark-main-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 7fr 5fr;
+  gap: 16px;
+  min-height: 0;
+}
+
+.benchmark-main-grid > .bento-card {
+  grid-column: span 1;
+}
+
+.v-bar-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  gap: 8px;
+  flex: 1;
+  padding: 6px 4px;
+}
+
+.v-bar-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.v-bar-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.v-bar-head.is-ours {
+  color: var(--c-primary-dark);
+  font-weight: 900;
+}
+
+.v-bar-track {
+  width: 100%;
+  height: 12px;
+  background: #F1F5F9;
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1px solid #CBD5E1;
+}
+
+.v-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: #94A3B8;
+}
+
+.v-bar-fill.is-ours {
+  background: linear-gradient(90deg, #2563EB 0%, #0D9488 100%);
+}
+
+/* ============================================================================
+ * 7. Layout 6: Semantic Comparison Matrix Layout (`.matrix-layout`)
+ * ============================================================================ */
+.matrix-layout {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 0;
+}
+
+.v-matrix-card {
+  flex: 1;
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  border-top: 3.5px solid var(--c-primary);
+  border-radius: var(--radius-xl);
+  padding: 12px 16px;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.v-matrix-table {
+  width: 100%;
+  height: 100%;
+  border-collapse: separate;
+  border-spacing: 0 6px;
+}
+
+.v-matrix-table th {
+  text-align: left;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 800;
+  color: #0F172A;
+  background: #F8FAFC;
+  border-top: 1.5px solid #CBD5E1;
+  border-bottom: 1.5px solid #CBD5E1;
+}
+
+.v-matrix-table th:first-child {
+  border-left: 1.5px solid #CBD5E1;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+
+.v-matrix-table th:last-child {
+  border-right: 1.5px solid #CBD5E1;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.v-matrix-table td {
+  padding: 8px 12px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+  background: #FFFFFF;
+  border-top: 1px solid #E2E8F0;
+  border-bottom: 1px solid #E2E8F0;
+}
+
+.v-matrix-table tr.is-highlight td {
+  background: #F8FAFC;
+  border-top: 1.5px solid #2563EB;
+  border-bottom: 1.5px solid #2563EB;
+  font-weight: 800;
+  color: var(--text-ink);
+}
+
+.v-matrix-table td:first-child {
+  border-left: 1px solid #E2E8F0;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+  font-weight: 800;
+}
+
+.v-matrix-table tr.is-highlight td:first-child {
+  border-left: 4px solid #2563EB;
+}
+
+.v-matrix-table td:last-child {
+  border-right: 1px solid #E2E8F0;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.v-matrix-table tr.is-highlight td:last-child {
+  border-right: 1.5px solid #2563EB;
+}
+
+.v-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2.5px 8px;
+  border-radius: 999px;
+}
+
+.v-status-pill.status-yes {
+  background: #F0FDFA;
+  color: #0F766E;
+  border: 1px solid #5EEAD4;
+}
+
+.v-status-pill.status-mid {
+  background: #FFFBEB;
+  color: #B45309;
+  border: 1px solid #FCD34D;
+}
+
+.v-status-pill.status-no {
+  background: #FFF1F2;
+  color: #BE123C;
+  border: 1px solid #FDA4AF;
+}
+
+/* ============================================================================
+ * 8. Bottom Callout / Insight Banner (`.v-callout-banner`)
+ * ============================================================================ */
+.v-callout-banner {
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  border-left: 4px solid var(--c-teal);
+  border-radius: 10px;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-shrink: 0;
+  box-shadow: var(--shadow-card);
+}
+
+.v-callout-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.v-callout-badge {
+  font-size: 11px;
+  font-weight: 900;
+  padding: 3px 9px;
+  border-radius: 5px;
+  background: var(--c-teal);
+  color: #FFFFFF;
+  white-space: nowrap;
+}
+
+.v-callout-text {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-ink);
+}
+
+.v-callout-pills {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }

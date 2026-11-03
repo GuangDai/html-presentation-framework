@@ -1,3 +1,6 @@
 *.ppt
 *.pptx
 *.pdf
+
+# 本机生成的版式预览
+/design-previews/

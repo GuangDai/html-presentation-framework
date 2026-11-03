@@ -1,20 +1,15 @@
 /**
  * ============================================================================
  * @file css/variables.css
- * @description Single Source of Truth for the Unified Bright White & Modern Blue
- *              Design System (克制白蓝现代学术视觉体系).
- *
- * VISUAL GRAMMAR & COLOR GUIDANCE RULES (色彩引导与视觉逻辑铁律):
- * 1. 85% Pure White & Alabaster Surfaces (`--bg-*`):
- *    Eliminates visual noise and maximizes contrast for diagrams and formulas.
- * 2. 12% Layered Blue Spectrum (`--c-slate`, `--c-sky`, `--c-primary`, `--c-indigo`):
- *    - Slate (`#475569`): Raw inputs, baseline states, frozen pretrained weights.
- *    - Sky Blue (`#0284C7`): Normalization, exogenous text, feature distillation.
- *    - Indigo Blue (`#4F46E5`): 2D periodic spectral stream, prior prototype bank.
- *    - Royal Blue (`#2563EB`): Core 1D backbone, focal operators, active attention.
- *    - Signal Teal (`#0D9488`): Converged terminal outputs (X^fuse, \hat{Y}).
- * 3. 3% Surgical Diagnostic Accent (`--c-rose`):
- *    - Strictly reserved for baseline bottlenecks, padding gaps, or error diagnostics.
+ * @description v3.0 Design Tokens — Pure White & Cool-White Base (`#FFFFFF` /
+ *              `#F8FAFC`) + Multi-Accent Visual Guidance System:
+ *              - Base Skeleton (80%): Pure White (`#FFFFFF`), Cool Alabaster
+ *                (`#F8FAFC`, `#F1F5F9`), Deep Slate Ink (`#0F172A`, `#334155`).
+ *              - Accent 1 (Primary Backbone & Structure): Royal Blue (`#2563EB`).
+ *              - Accent 2 (Prior Injection, Distillation & Converged Output):
+ *                Vibrant Teal-Emerald (`#0D9488` / `#059669`).
+ *              - Accent 3 (Focal Modulation & Bottleneck Diagnostic):
+ *                Warm Amber-Gold (`#D97706`) & Surgical Coral-Red (`#E11D48`).
  * ============================================================================
  */
 
@@ -47,18 +42,19 @@
   --fs-formula-dim: 13.5px;
 
   /* --------------------------------------------------------------------------
-   * 3. 85% Luminous White & Cool Alabaster Surface Hierarchy
+   * 3. 80% Pure White & Neutral Cool-White Base Surfaces (黑白冷灰基底)
    * -------------------------------------------------------------------------- */
-  --bg-viewport: #DCE5F0;
-  --bg-stage: #F6F9FC;
+  --bg-viewport: #E2E8F0;
+  --bg-stage: #FFFFFF;
+  --bg-stage-subtle: #F8FAFC;
   --bg-card: #FFFFFF;
   --bg-well: #F8FAFC;
-  --bg-well-blue: #F2F7FF;
+  --bg-well-cool: #F4F6F9;
   --bg-subtle: #F1F5F9;
 
-  --border-hairline: #E8EEF5;
-  --border-card: #DCE6F2;
-  --border-strong: #C5D4E6;
+  --border-hairline: #E2E8F0;
+  --border-card: #CBD5E1;
+  --border-strong: #94A3B8;
   --border-focus: #2563EB;
 
   --text-ink: #0F172A;
@@ -68,65 +64,73 @@
   --text-light: #94A3B8;
 
   /* --------------------------------------------------------------------------
-   * 4. 12% Layered Modern Blue Semantic Spectrum (Consistent End-to-End)
+   * 4. Multi-Accent Chromatic Guidance System (三种职责分明的强调色)
    * -------------------------------------------------------------------------- */
-  /* Role A: Primary Royal Blue — Core 1D Backbone & Focal Active Operators */
+  /* Accent 1: Royal Blue — Core 1D Backbone, Primary Operators & Navigation */
   --c-primary: #2563EB;
   --c-primary-dark: #1D4ED8;
   --c-primary-deep: #1E3A8A;
   --bg-primary: #EFF6FF;
-  --bd-primary: #BFDBFE;
+  --bd-primary: #93C5FD;
 
-  /* Role B: Sky / Cyan Blue — Normalization, Exogenous Text & Distillation */
-  --c-sky: #0284C7;
-  --c-sky-dark: #0369A1;
-  --bg-sky: #F0F9FF;
-  --bd-sky: #BAE6FD;
-
-  /* Role C: Cobalt / Indigo Blue — 2D Periodic Stream & Prototype Bank */
-  --c-indigo: #4F46E5;
-  --c-indigo-dark: #4338CA;
-  --bg-indigo: #EEF2FF;
-  --bd-indigo: #C7D2FE;
-
-  /* Role D: Signal Teal — Converged Terminal Representation & Output */
+  /* Accent 2: Teal-Emerald — Multimodal Priors, Distillation & Converged Output */
   --c-teal: #0D9488;
   --c-teal-dark: #0F766E;
   --bg-teal: #F0FDFA;
-  --bd-teal: #99F6E4;
+  --bd-teal: #5EEAD4;
 
-  /* Role E: Neutral Cool Slate — Raw Inputs, Frozen Backbones & Baselines */
+  --c-emerald: #059669;
+  --c-emerald-dark: #047857;
+  --bg-emerald: #ECFDF5;
+  --bd-emerald: #6EE7B7;
+
+  /* Accent 3A: Warm Amber-Gold — Cross-Modal Modulation, Queries & Focal Anchors */
+  --c-amber: #D97706;
+  --c-amber-dark: #B45309;
+  --bg-amber: #FFFBEB;
+  --bd-amber: #FCD34D;
+
+  /* Accent 3B: Surgical Coral-Rose — Baseline Bottlenecks & Diagnostic Gaps */
+  --c-rose: #E11D48;
+  --c-rose-dark: #BE123C;
+  --bg-rose: #FFF1F2;
+  --bd-rose: #FDA4AF;
+
+  /* Supporting Neutral/Secondary Accents */
+  --c-sky: #0284C7;
+  --c-sky-dark: #0369A1;
+  --bg-sky: #F0F9FF;
+  --bd-sky: #7DD3FC;
+
+  --c-indigo: #4F46E5;
+  --c-indigo-dark: #4338CA;
+  --bg-indigo: #EEF2FF;
+  --bd-indigo: #A5B4FC;
+
   --c-slate: #475569;
   --c-slate-dark: #334155;
   --bg-slate: #F1F5F9;
   --bd-slate: #CBD5E1;
 
   /* --------------------------------------------------------------------------
-   * 5. 3% Surgical Diagnostic & Modulation Accents (Restrained Usage)
+   * 5. Architectural Radii, Shadows & Elevation
    * -------------------------------------------------------------------------- */
-  /* Role F: Diagnostic Rose-Coral — Baseline Bottlenecks & Padding Gaps Only */
-  --c-rose: #E11D48;
-  --c-rose-dark: #BE123C;
-  --bg-rose: #FFF1F2;
-  --bd-rose: #FECDD3;
-
-  /* Role G: Warm Amber-Gold — Correlation Weight Matrix Modulation Only */
-  --c-amber: #D97706;
-  --c-amber-dark: #B45309;
-  --bg-amber: #FFFBEB;
-  --bd-amber: #FDE68A;
-
-  /* --------------------------------------------------------------------------
-   * 6. Architectural Radii, Shadows & Elevation
-   * -------------------------------------------------------------------------- */
-  --radius-xl: 16px;
-  --radius-lg: 12px;
-  --radius-md: 9px;
-  --radius-sm: 6px;
+  --radius-xl: 14px;
+  --radius-lg: 10px;
+  --radius-md: 8px;
+  --radius-sm: 5px;
   --radius-pill: 999px;
 
-  --shadow-stage: 0 24px 64px rgba(15, 23, 42, 0.14), 0 4px 16px rgba(30, 58, 138, 0.06);
-  --shadow-card: 0 4px 16px -2px rgba(15, 23, 42, 0.04), 0 2px 5px -1px rgba(37, 99, 235, 0.025);
-  --shadow-card-hover: 0 12px 28px -4px rgba(37, 99, 235, 0.12), 0 4px 10px -2px rgba(15, 23, 42, 0.05);
-  --shadow-focal: 0 6px 20px -3px rgba(37, 99, 235, 0.18);
+  --shadow-stage: 0 24px 64px rgba(15, 23, 42, 0.14), 0 4px 16px rgba(15, 23, 42, 0.05);
+  --shadow-card: 0 2px 10px -1px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.025);
+  --shadow-card-hover: 0 10px 24px -4px rgba(15, 23, 42, 0.09), 0 4px 8px -2px rgba(37, 99, 235, 0.06);
+  --shadow-focal: 0 8px 24px -4px rgba(37, 99, 235, 0.14), 0 2px 6px rgba(13, 148, 136, 0.08);
+}
+
+/* 1920×1080 舞台映射到 13⅓×7½ 英寸 PPT：1 pt = 2 CSS px。 */
+:root {
+  --type-title: 36px;       /* 18 pt */
+  --type-body: 20px;        /* 10 pt */
+  --type-chart: 20px;       /* 10 pt */
+  --type-chart-small: 16px; /* 8 pt */
 }

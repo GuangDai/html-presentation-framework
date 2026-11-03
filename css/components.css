@@ -1,17 +1,13 @@
 /**
  * ============================================================================
  * @file css/components.css
- * @description Rich Visual Semantic Components & Extended Slide Layouts
- *              (视觉语义组件库与扩展幻灯片布局样式)
- *
- * Replaces dense paragraphs of text with structured, scannable visual grammar:
- *  1. `.v-phase-track`: Macro Phase Grouping Bar above pipeline steps
- *  2. `.v-flow-strip`: 3-Node [Input] ➔ [Operator] ➔ [Output] visual chain
- *  3. `.v-kv-grid`: Tagged Semantic Key-Value rows ([物理作用] / [核心性质])
- *  4. `.v-diagnostic-rows`: Cause-to-Effect & Mechanism-to-Gain rows for Contrast
- *  5. `.v-card-footer-strip`: Metadata & metric chips at card bottom
- *  6. `.v-band-meta-strip`: Architecture stream summary badges
- *  7. Extended Layouts: `.bento-layout`, `.benchmark-layout`, `.matrix-layout`
+ * @description v3.0 Rich Visual Semantic Components & Extended Slide Layouts
+ *              Built on a Pure White & Cool-White Base (`#FFFFFF` / `#F8FAFC`)
+ *              with Multi-Accent Chromatic Guidance:
+ *              - Accent 1: Royal Blue (`#2563EB`) — Core Structure & Backbone
+ *              - Accent 2: Teal-Emerald (`#0D9488`) — Priors, Gains & Outputs
+ *              - Accent 3: Amber-Gold (`#D97706`) & Coral (`#E11D48`) — Focal
+ *                Modulation & Bottleneck Diagnostics
  * ============================================================================
  */
 
@@ -31,7 +27,7 @@
 .v-phase-pill {
   grid-column: span var(--phase-span, 1);
   background: #FFFFFF;
-  border: 1.5px solid var(--border-card);
+  border: 1px solid #CBD5E1;
   border-left: 4px solid var(--c-primary);
   border-radius: 8px;
   padding: 5px 12px;
@@ -39,15 +35,16 @@
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.025);
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.03);
   position: relative;
 }
 
-.v-phase-pill.phase-sky    { border-left-color: var(--c-sky); background: linear-gradient(90deg, #F0F9FF 0%, #FFFFFF 45%); }
-.v-phase-pill.phase-blue   { border-left-color: var(--c-primary); background: linear-gradient(90deg, #EFF6FF 0%, #FFFFFF 45%); }
-.v-phase-pill.phase-indigo { border-left-color: var(--c-indigo); background: linear-gradient(90deg, #EEF2FF 0%, #FFFFFF 45%); }
-.v-phase-pill.phase-teal   { border-left-color: var(--c-teal); background: linear-gradient(90deg, #F0FDFA 0%, #FFFFFF 45%); }
-.v-phase-pill.phase-slate  { border-left-color: var(--c-slate); background: linear-gradient(90deg, #F1F5F9 0%, #FFFFFF 45%); }
+.v-phase-pill.phase-sky    { border-left-color: var(--c-sky); }
+.v-phase-pill.phase-blue   { border-left-color: var(--c-primary); }
+.v-phase-pill.phase-indigo { border-left-color: var(--c-indigo); }
+.v-phase-pill.phase-teal   { border-left-color: var(--c-teal); }
+.v-phase-pill.phase-amber  { border-left-color: var(--c-amber); }
+.v-phase-pill.phase-slate  { border-left-color: var(--c-slate); }
 
 .v-phase-left {
   display: flex;
@@ -59,7 +56,7 @@
 .v-phase-code {
   font-size: 10.5px;
   font-weight: 900;
-  padding: 1.5px 7px;
+  padding: 2px 7px;
   border-radius: 4px;
   background: var(--c-primary);
   color: #FFFFFF;
@@ -71,6 +68,7 @@
 .phase-sky .v-phase-code    { background: var(--c-sky); }
 .phase-indigo .v-phase-code { background: var(--c-indigo); }
 .phase-teal .v-phase-code   { background: var(--c-teal); }
+.phase-amber .v-phase-code  { background: var(--c-amber); }
 .phase-slate .v-phase-code  { background: var(--c-slate); }
 
 .v-phase-title {
@@ -85,11 +83,11 @@
 .v-phase-summary {
   font-size: 11px;
   font-weight: 700;
-  color: var(--text-muted);
-  background: var(--bg-well);
+  color: var(--text-secondary);
+  background: #F8FAFC;
   padding: 2px 8px;
   border-radius: 999px;
-  border: 1px solid var(--border-hairline);
+  border: 1px solid #E2E8F0;
   white-space: nowrap;
 }
 
@@ -103,14 +101,14 @@
   width: 100%;
 }
 
-/* 3-Node Input -> Operator -> Output Visual Flow Strip */
+/* 3-Node Input (Slate) -> Operator (Blue/Amber) -> Output (Teal) Visual Flow Strip */
 .v-io-strip {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 4px;
   background: #FFFFFF;
-  border: 1px solid var(--border-card);
+  border: 1px solid #E2E8F0;
   border-radius: 7px;
   padding: 4px 6px;
 }
@@ -127,24 +125,32 @@
 
 .v-io-node.io-in {
   background: #F1F5F9;
-  color: #475569;
+  color: #334155;
+  border: 1px solid #CBD5E1;
 }
 
 .v-io-node.io-op {
-  background: var(--bg-primary);
-  color: var(--c-primary-dark);
-  border: 1px solid var(--bd-primary);
+  background: #EFF6FF;
+  color: #1D4ED8;
+  border: 1px solid #93C5FD;
+}
+
+.is-focal-step .v-io-node.io-op {
+  background: #FFFBEB;
+  color: #B45309;
+  border: 1px solid #FCD34D;
 }
 
 .v-io-node.io-out {
-  background: var(--bg-sky);
-  color: var(--c-sky-dark);
+  background: #F0FDFA;
+  color: #0F766E;
+  border: 1px solid #5EEAD4;
 }
 
 .v-io-arrow {
   font-size: 10px;
   font-weight: 900;
-  color: #94A3B8;
+  color: #64748B;
   flex-shrink: 0;
 }
 
@@ -160,7 +166,7 @@
   align-items: center;
   gap: 6px;
   background: #FFFFFF;
-  border: 1px solid var(--border-hairline);
+  border: 1px solid #E2E8F0;
   border-radius: 6px;
   padding: 3.5px 7px;
   text-align: left;
@@ -173,16 +179,17 @@
   border-radius: 4px;
   background: #EFF6FF;
   color: #1D4ED8;
-  border: 1px solid #BFDBFE;
+  border: 1px solid #93C5FD;
   white-space: nowrap;
   flex-shrink: 0;
 }
 
 .v-kv-tag.tag-slate  { background: #F1F5F9; color: #334155; border-color: #CBD5E1; }
-.v-kv-tag.tag-sky    { background: #F0F9FF; color: #0369A1; border-color: #BAE6FD; }
-.v-kv-tag.tag-indigo { background: #EEF2FF; color: #4338CA; border-color: #C7D2FE; }
-.v-kv-tag.tag-teal   { background: #F0FDFA; color: #0F766E; border-color: #99F6E4; }
-.v-kv-tag.tag-rose   { background: #FFF1F2; color: #BE123C; border-color: #FECDD3; }
+.v-kv-tag.tag-sky    { background: #F0F9FF; color: #0369A1; border-color: #7DD3FC; }
+.v-kv-tag.tag-indigo { background: #EEF2FF; color: #4338CA; border-color: #A5B4FC; }
+.v-kv-tag.tag-teal   { background: #F0FDFA; color: #0F766E; border-color: #5EEAD4; }
+.v-kv-tag.tag-amber  { background: #FFFBEB; color: #B45309; border-color: #FCD34D; }
+.v-kv-tag.tag-rose   { background: #FFF1F2; color: #BE123C; border-color: #FDA4AF; }
 
 .v-kv-val {
   font-size: 11.8px;
@@ -226,20 +233,15 @@
  * 3. Contrast Slide Visual Diagnostic & Mechanism Rows (`.v-diagnostic-panel`)
  * ============================================================================ */
 .v-diagnostic-panel {
-  background: var(--bg-well);
-  border: 1px solid var(--border-card);
-  border-radius: 10px;
-  padding: 7px 10px;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 9px;
+  padding: 7px 9px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   gap: 5px;
   flex-shrink: 0;
-}
-
-.band-contributions .v-diagnostic-panel {
-  background: #F5F9FF;
-  border-color: #BFDBFE;
 }
 
 .v-diag-row {
@@ -248,8 +250,8 @@
   justify-content: space-between;
   gap: 6px;
   background: #FFFFFF;
-  border: 1px solid var(--border-hairline);
-  border-radius: 7px;
+  border: 1px solid #E2E8F0;
+  border-radius: 6px;
   padding: 4.5px 8px;
 }
 
@@ -277,9 +279,9 @@
 }
 
 .band-contributions .v-diag-badge {
-  background: var(--bg-primary);
-  color: var(--c-primary-dark);
-  border: 1px solid var(--bd-primary);
+  background: #EFF6FF;
+  color: #1D4ED8;
+  border: 1px solid #93C5FD;
 }
 
 .v-diag-text {
@@ -295,7 +297,7 @@
 .v-diag-arrow {
   font-size: 11px;
   font-weight: 900;
-  color: #94A3B8;
+  color: #64748B;
   flex-shrink: 0;
 }
 
@@ -309,15 +311,15 @@
 }
 
 .band-challenges .v-diag-outcome {
-  background: var(--bg-rose);
-  color: var(--c-rose-dark);
-  border: 1px solid var(--bd-rose);
+  background: #FFF1F2;
+  color: #BE123C;
+  border: 1px solid #FDA4AF;
 }
 
 .band-contributions .v-diag-outcome {
-  background: var(--bg-teal);
-  color: var(--c-teal-dark);
-  border: 1px solid var(--bd-teal);
+  background: #F0FDFA;
+  color: #0F766E;
+  border: 1px solid #5EEAD4;
 }
 
 .v-card-footer-strip {
@@ -326,7 +328,7 @@
   justify-content: space-between;
   gap: 6px;
   padding-top: 3px;
-  border-top: 1px dashed var(--border-card);
+  border-top: 1px dashed #CBD5E1;
 }
 
 .v-footer-chip {
@@ -334,7 +336,7 @@
   font-weight: 700;
   color: var(--text-secondary);
   background: #FFFFFF;
-  border: 1px solid var(--border-card);
+  border: 1px solid #CBD5E1;
   border-radius: 5px;
   padding: 2px 7px;
   display: inline-flex;
@@ -343,8 +345,12 @@
 }
 
 .v-footer-chip strong {
-  color: var(--c-primary-dark);
+  color: #0F172A;
   font-weight: 800;
+}
+
+.band-contributions .v-footer-chip strong {
+  color: #0F766E;
 }
 
 /* ============================================================================
@@ -365,15 +371,15 @@
   font-weight: 700;
   padding: 2.5px 9px;
   border-radius: var(--radius-pill);
-  background: var(--bg-well);
+  background: #F8FAFC;
   color: var(--text-secondary);
-  border: 1px solid var(--border-card);
+  border: 1px solid #CBD5E1;
   white-space: nowrap;
 }
 
 .v-meta-pill .dot {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   background: var(--c-primary);
 }
@@ -381,6 +387,7 @@
 .v-meta-pill.pill-sky .dot    { background: var(--c-sky); }
 .v-meta-pill.pill-indigo .dot { background: var(--c-indigo); }
 .v-meta-pill.pill-teal .dot   { background: var(--c-teal); }
+.v-meta-pill.pill-amber .dot  { background: var(--c-amber); }
 
 /* ============================================================================
  * 5. Layout 4: Modern Bento Grid Layout (`.bento-layout`)
@@ -405,8 +412,8 @@
 .bento-card {
   grid-column: span var(--bento-col, 4);
   grid-row: span var(--bento-row, 1);
-  background: var(--bg-card);
-  border: 1.5px solid var(--border-card);
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
   border-top: 3.5px solid var(--c-primary);
   border-radius: var(--radius-xl);
   padding: 12px 16px;
@@ -422,6 +429,7 @@
 .bento-card.theme-sky    { border-top-color: var(--c-sky); }
 .bento-card.theme-indigo { border-top-color: var(--c-indigo); }
 .bento-card.theme-teal   { border-top-color: var(--c-teal); }
+.bento-card.theme-amber  { border-top-color: var(--c-amber); }
 .bento-card.theme-slate  { border-top-color: var(--c-slate); }
 
 .bento-card-head {
@@ -430,7 +438,7 @@
   justify-content: space-between;
   gap: 10px;
   padding-bottom: 6px;
-  border-bottom: 1px solid var(--border-hairline);
+  border-bottom: 1px solid #E2E8F0;
   flex-shrink: 0;
 }
 
@@ -445,9 +453,9 @@
   font-weight: 800;
   padding: 2px 8px;
   border-radius: 5px;
-  background: var(--bg-primary);
-  color: var(--c-primary-dark);
-  border: 1px solid var(--bd-primary);
+  background: #EFF6FF;
+  color: #1D4ED8;
+  border: 1px solid #93C5FD;
 }
 
 .bento-card-title {
@@ -468,9 +476,9 @@
 .bento-visual-box {
   flex: 1;
   min-height: 0;
-  background: var(--bg-well);
-  border: 1px solid var(--border-hairline);
-  border-radius: 10px;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 9px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -504,9 +512,9 @@
 
 .v-kpi-card {
   background: #FFFFFF;
-  border: 1.5px solid var(--border-card);
+  border: 1px solid #CBD5E1;
   border-left: 4px solid var(--c-primary);
-  border-radius: 12px;
+  border-radius: 10px;
   padding: 10px 14px;
   display: flex;
   align-items: center;
@@ -518,6 +526,7 @@
 .v-kpi-card.theme-sky    { border-left-color: var(--c-sky); }
 .v-kpi-card.theme-indigo { border-left-color: var(--c-indigo); }
 .v-kpi-card.theme-teal   { border-left-color: var(--c-teal); }
+.v-kpi-card.theme-amber  { border-left-color: var(--c-amber); }
 
 .v-kpi-info {
   display: flex;
@@ -544,9 +553,9 @@
   font-weight: 800;
   padding: 3px 9px;
   border-radius: var(--radius-pill);
-  background: var(--bg-primary);
-  color: var(--c-primary-dark);
-  border: 1px solid var(--bd-primary);
+  background: #F0FDFA;
+  color: #0F766E;
+  border: 1px solid #5EEAD4;
   white-space: nowrap;
 }
 
@@ -597,7 +606,7 @@
   background: #F1F5F9;
   border-radius: 999px;
   overflow: hidden;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #CBD5E1;
 }
 
 .v-bar-fill {
@@ -607,7 +616,7 @@
 }
 
 .v-bar-fill.is-ours {
-  background: linear-gradient(90deg, #2563EB 0%, #0284C7 100%);
+  background: linear-gradient(90deg, #2563EB 0%, #0D9488 100%);
 }
 
 /* ============================================================================
@@ -625,7 +634,7 @@
 .v-matrix-card {
   flex: 1;
   background: #FFFFFF;
-  border: 1.5px solid var(--border-card);
+  border: 1px solid #CBD5E1;
   border-top: 3.5px solid var(--c-primary);
   border-radius: var(--radius-xl);
   padding: 12px 16px;
@@ -649,20 +658,20 @@
   padding: 8px 12px;
   font-size: 12px;
   font-weight: 800;
-  color: var(--c-primary-dark);
-  background: var(--bg-primary);
-  border-top: 1px solid var(--bd-primary);
-  border-bottom: 1px solid var(--bd-primary);
+  color: #0F172A;
+  background: #F8FAFC;
+  border-top: 1.5px solid #CBD5E1;
+  border-bottom: 1.5px solid #CBD5E1;
 }
 
 .v-matrix-table th:first-child {
-  border-left: 1px solid var(--bd-primary);
+  border-left: 1.5px solid #CBD5E1;
   border-top-left-radius: 8px;
   border-bottom-left-radius: 8px;
 }
 
 .v-matrix-table th:last-child {
-  border-right: 1px solid var(--bd-primary);
+  border-right: 1.5px solid #CBD5E1;
   border-top-right-radius: 8px;
   border-bottom-right-radius: 8px;
 }
@@ -672,29 +681,38 @@
   font-size: 12.5px;
   font-weight: 600;
   color: var(--text-primary);
-  background: var(--bg-well);
-  border-top: 1px solid var(--border-hairline);
-  border-bottom: 1px solid var(--border-hairline);
+  background: #FFFFFF;
+  border-top: 1px solid #E2E8F0;
+  border-bottom: 1px solid #E2E8F0;
 }
 
 .v-matrix-table tr.is-highlight td {
-  background: #EFF6FF;
-  border-color: #93C5FD;
+  background: #F8FAFC;
+  border-top: 1.5px solid #2563EB;
+  border-bottom: 1.5px solid #2563EB;
   font-weight: 800;
   color: var(--text-ink);
 }
 
 .v-matrix-table td:first-child {
-  border-left: 1px solid var(--border-hairline);
+  border-left: 1px solid #E2E8F0;
   border-top-left-radius: 8px;
   border-bottom-left-radius: 8px;
   font-weight: 800;
 }
 
+.v-matrix-table tr.is-highlight td:first-child {
+  border-left: 4px solid #2563EB;
+}
+
 .v-matrix-table td:last-child {
-  border-right: 1px solid var(--border-hairline);
+  border-right: 1px solid #E2E8F0;
   border-top-right-radius: 8px;
   border-bottom-right-radius: 8px;
+}
+
+.v-matrix-table tr.is-highlight td:last-child {
+  border-right: 1.5px solid #2563EB;
 }
 
 .v-status-pill {
@@ -708,37 +726,38 @@
 }
 
 .v-status-pill.status-yes {
-  background: var(--bg-primary);
-  color: var(--c-primary-dark);
-  border: 1px solid var(--bd-primary);
+  background: #F0FDFA;
+  color: #0F766E;
+  border: 1px solid #5EEAD4;
 }
 
 .v-status-pill.status-mid {
-  background: #F1F5F9;
-  color: #475569;
-  border: 1px solid var(--bd-slate);
+  background: #FFFBEB;
+  color: #B45309;
+  border: 1px solid #FCD34D;
 }
 
 .v-status-pill.status-no {
-  background: var(--bg-rose);
-  color: var(--c-rose-dark);
-  border: 1px solid var(--bd-rose);
+  background: #FFF1F2;
+  color: #BE123C;
+  border: 1px solid #FDA4AF;
 }
 
 /* ============================================================================
  * 8. Bottom Callout / Insight Banner (`.v-callout-banner`)
  * ============================================================================ */
 .v-callout-banner {
-  background: linear-gradient(90deg, #EFF6FF 0%, #F8FAFC 60%, #F0F9FF 100%);
-  border: 1.5px solid var(--bd-primary);
-  border-left: 4px solid var(--c-primary);
-  border-radius: 11px;
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  border-left: 4px solid var(--c-teal);
+  border-radius: 10px;
   padding: 8px 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
   flex-shrink: 0;
+  box-shadow: var(--shadow-card);
 }
 
 .v-callout-left {
@@ -752,7 +771,7 @@
   font-weight: 900;
   padding: 3px 9px;
   border-radius: 5px;
-  background: var(--c-primary);
+  background: var(--c-teal);
   color: #FFFFFF;
   white-space: nowrap;
 }

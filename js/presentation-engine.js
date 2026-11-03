@@ -18,12 +18,16 @@
 
 class AuroraPresentationEngine {
   constructor(contentData, visualsLibrary) {
-    this.content = contentData;
+    const requestedVariant = new URLSearchParams(window.location.search).get('style');
+    const prepared = window.PresentationVariants.prepare(contentData, requestedVariant);
+    this.content = prepared.content;
+    this.variant = prepared.key;
+    this.firstPageBySource = prepared.firstPageBySource;
     this.visuals = visualsLibrary;
-    this.slides = contentData.slides || [];
+    this.slides = this.content.slides || [];
     this.currentSlideIndex = 0;
     this.spotlightColIndex = null;
-    this.animSpeed = (contentData.deckMeta && contentData.deckMeta.defaultAnimSpeed) || 'normal';
+    this.animSpeed = (this.content.deckMeta && this.content.deckMeta.defaultAnimSpeed) || 'normal';
 
     this.dom = {
       viewport: document.getElementById('viewport-scaler'),
@@ -60,6 +64,9 @@ class AuroraPresentationEngine {
     if (title) title.textContent = `幻灯片目录导航 (快捷键: 1–${Math.min(this.slides.length, 9)} / T)`;
     const subtitle = document.getElementById('toc-subtitle');
     if (subtitle) subtitle.textContent = meta.tocSubtitle || '点击章节直达对应页面';
+
+    const variantSelect = document.getElementById('hud-variant');
+    if (variantSelect) variantSelect.value = this.variant;
 
     const currentDeck = window.ACTIVE_DECK_NAME || 'aurora';
     document.querySelectorAll('[data-deck-option]').forEach(btn => {
@@ -112,7 +119,7 @@ class AuroraPresentationEngine {
     if (!this.dom.headerAgenda) return;
     this.dom.headerAgenda.innerHTML = this.slides.map((slide, idx) => `
       <button class="agenda-pill" data-slide-idx="${idx}" title="${slide.title}">
-        <span class="pill-num">${String(idx + 1).padStart(2, '0')}</span>
+        <span class="pill-num">${idx + 1}</span>
         <span>${slide.navTitle || slide.title}</span>
       </button>
     `).join('');
@@ -123,7 +130,7 @@ class AuroraPresentationEngine {
     if (!this.dom.tocList) return;
     this.dom.tocList.innerHTML = this.slides.map((slide, idx) => `
       <div class="toc-item" data-slide-idx="${idx}">
-        <span class="toc-num">${String(idx + 1).padStart(2, '0')}</span>
+        <span class="toc-num">${idx + 1}</span>
         <div class="toc-text">
           <div class="toc-title">${this.formatInlineMath(slide.title)}</div>
           <div class="toc-sub">${this.formatInlineMath(slide.subtitle)}</div>
@@ -171,7 +178,7 @@ class AuroraPresentationEngine {
       const stateClass = sIdx === idx ? 'active' : (sIdx < idx ? 'passed' : '');
       return `
         <button class="agenda-pill ${stateClass}" data-slide-idx="${sIdx}">
-          <span class="pill-num">${String(sIdx + 1).padStart(2, '0')}</span>
+          <span class="pill-num">${sIdx + 1}</span>
           <span>${s.navTitle || s.title}</span>
         </button>
       `;
@@ -449,7 +456,10 @@ class AuroraPresentationEngine {
       const jumpNode = e.target.closest('[data-jump-slide]');
       if (jumpNode) {
         const slideIdx = parseInt(jumpNode.getAttribute('data-jump-slide'), 10);
-        if (!isNaN(slideIdx)) this.goToSlide(slideIdx);
+        if (!isNaN(slideIdx)) {
+          const target = this.firstPageBySource[slideIdx];
+          if (target !== undefined) this.goToSlide(target);
+        }
         return;
       }
 
@@ -469,6 +479,14 @@ class AuroraPresentationEngine {
         }
         return;
       }
+    });
+
+    const variantSelect = document.getElementById('hud-variant');
+    if (variantSelect) variantSelect.addEventListener('change', () => {
+      const url = new URL(window.location.href);
+      if (variantSelect.value === window.PresentationVariants.defaultVariant) url.searchParams.delete('style');
+      else url.searchParams.set('style', variantSelect.value);
+      window.location.href = url.toString();
     });
 
     const btnPrev = document.getElementById('hud-btn-prev');

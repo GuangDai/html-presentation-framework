@@ -1,0 +1,105 @@
+/* PPT 物理字号：1920×1080 舞台中 2 px 对应 1 pt。 */
+.slide-title { font-size: var(--type-title); }
+.slide-subtitle, .contrast-points li, .pipe-step-caption,
+.pipe-cards-grid.cols-5 .pipe-step-caption,
+.pipe-cards-grid:is(.cols-7, .density-compact) .pipe-step-caption {
+  font-size: var(--type-body);
+  line-height: 1.35;
+}
+.contrast-card-title, .pipe-step-title,
+.pipe-cards-grid.cols-5 .pipe-step-title,
+.pipe-cards-grid:is(.cols-7, .density-compact) .pipe-step-title,
+.chain-op-label, .mapping-chain-grid.cols-5 .chain-op-label,
+.mapping-chain-grid:is(.cols-7, .density-compact) .chain-op-label,
+.band-badge, .ms-band-tag, .connector-pill {
+  font-size: var(--type-chart);
+}
+.agenda-pill, .pill-num, .pipe-step-code, .contrast-card-tag,
+.pipe-step-role-badge, .chain-step-idx,
+.mapping-chain-grid:is(.cols-7, .density-compact) .chain-step-idx,
+.v-phase-code, .v-phase-title, .v-meta-pill, .contrast-jump-pill {
+  font-size: var(--type-chart-small);
+}
+.chain-tier-math, .dim-badge,
+.mapping-chain-grid:is(.cols-7, .density-compact) .dim-badge {
+  font-size: var(--type-chart);
+}
+.latex-inline { font-size: var(--type-body); }
+.chain-tier-math .offline-tex-svg, .dim-badge .offline-tex-svg { zoom: 1.25; }
+.latex-inline .offline-tex-svg { zoom: 1.25; }
+
+/* 导航独占一行，为较大的标题和副标题留出横向空间。 */
+.slide-header { flex-wrap: wrap; row-gap: 6px; }
+.slide-header-left { flex: 1 1 100%; }
+.slide-agenda-rail { max-width: 100%; }
+.pipe-cards-grid:is(.cols-7, .density-compact) .pipe-step-caption { text-align: left; }
+
+/* 正文采用 10 pt，以常规字重和适度行距减少拥挤。 */
+.slide-subtitle, .pipe-step-caption,
+.pipe-cards-grid.cols-5 .pipe-step-caption,
+.pipe-cards-grid:is(.cols-7, .density-compact) .pipe-step-caption,
+.contrast-points li { font-weight: 400; line-height: 1.32; }
+.pipe-step-caption { padding: 10px 12px; }
+.pipe-cards-grid.cols-5 .pipe-step-caption,
+.pipe-cards-grid:is(.cols-7, .density-compact) .pipe-step-caption { padding: 8px 10px; }
+
+/* 首页只保留对应关系箭头，架构两层使用虚线分隔。 */
+.contrast-connectors.arrows-only { padding: 0; gap: 18px; }
+.arrows-only .connector-pill { padding: 0; border: 0; background: transparent; box-shadow: none; }
+.arrows-only .connector-pill-arrow { width: auto; height: auto; background: transparent; color: #0D9488; font-size: 32px; line-height: 1; }
+.ms-band-header { border-bottom: 1px dashed #94A3B8; }
+/* 第四页 SVG 公式使用与图内文字相近的字号。 */
+[id="slide-04"] .svg-tex-cell .offline-tex-svg, [id^="slide-04-part-"] .svg-tex-cell .offline-tex-svg { zoom: 1.12; }
+
+/* 架构页用一条中线组织上下两个区域，标签位于中线右端。 */
+.ms-arch-stage.divider-only { gap: 0; background: #fff; border: 1px solid #CBD5E1; border-radius: var(--radius-xl); padding: 4px 7px; }
+.divider-only .ms-band-card { border: 0; border-radius: 0; padding: 0 38px 0 0; box-shadow: none; }
+.ms-band-divider { position: relative; height: 1px; border-top: 1px dashed #94A3B8; flex: 0 0 1px; }
+.ms-band-divider span { position: absolute; right: 2px; font-size: var(--type-chart-small); line-height: 1; font-weight: 800; }
+.ms-divider-encoder { bottom: 7px; color: #1D4ED8; }
+.ms-divider-decoder { top: 7px; color: #0F766E; }
+
+/* 在图形内加粗数学符号；正文和底部公式保持原字重。 */
+.svg-tex-cell .katex { -webkit-text-stroke: 0.3px currentColor; }
+.svg-tex-cell .offline-tex-svg { stroke: currentColor; stroke-width: 0.18; stroke-linejoin: round; paint-order: stroke fill; }
+
+.svg-tex-cell .latex-formula > svg:not(.offline-tex-svg) { stroke: currentColor; stroke-width: 15; stroke-linejoin: round; paint-order: stroke fill; }
+
+/* 论文流程页可选择统一蓝色；其余页面与其他演示不受影响。 */
+.uniform-blue .pipe-step-card,
+.uniform-blue .pipe-step-card.is-focal-step {
+  border: 1px solid #CBD5E1;
+  border-top: 3.5px solid #1D4ED8;
+  background: #FFFFFF;
+  box-shadow: var(--shadow-card);
+}
+.uniform-blue .pipe-step-card .pipe-step-code,
+.uniform-blue .pipe-step-card.is-focal-step .pipe-step-code {
+  background: #EFF6FF;
+  border-color: #93C5FD;
+  color: #1E3A8A;
+}
+.uniform-blue .chain-node-card,
+.uniform-blue .chain-node-card.is-focal-step {
+  border: 1px solid #CBD5E1;
+  box-shadow: var(--shadow-card);
+}
+.uniform-blue .chain-step-idx,
+.uniform-blue .chain-node-card.is-focal-step .chain-step-idx,
+.uniform-blue .theme-teal .chain-step-idx,
+.uniform-blue .theme-emerald .chain-step-idx {
+  background: #1D4ED8;
+  color: #FFFFFF;
+}
+.uniform-blue .dim-badge,
+.uniform-blue .is-focal-step .dim-badge,
+.uniform-blue .theme-teal .dim-badge,
+.uniform-blue .theme-emerald .dim-badge {
+  background: #EFF6FF;
+  border-color: #93C5FD;
+  color: #1E3A8A;
+}
+.uniform-blue .is-focal-step .pipe-visual-frame { background: #F8FAFC; border-color: #E2E8F0; }
+
+/* 控件选项使用系统可读的深色文字。 */
+#hud-variant option { color: #0F172A; background: #FFFFFF; }

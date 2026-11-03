@@ -24,6 +24,7 @@
   <link rel="stylesheet" href="css/variables.css" />
   <link rel="stylesheet" href="css/layout.css" />
   <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/typography.css" />
   <link rel="stylesheet" href="css/animations.css" />
 </head>
 <body data-anim-speed="normal">
@@ -43,6 +44,11 @@
        4. AUTO-FADING PRESENTER HUD (Bottom-Right Corner, Hidden in Print/Export)
        ====================================================================== -->
   <aside class="presenter-hud" aria-label="Presenter Controls">
+    <select id="hud-variant" class="hud-btn" aria-label="选择流程版式" title="选择流程版式">
+      <option value="A">版式 A</option>
+      <option value="B">版式 B</option>
+      <option value="C">版式 C</option>
+    </select>
     <button id="hud-btn-deck" class="hud-btn" title="切换演示文稿库 (快捷键: D)">🗂 演示库</button>
     <button id="hud-btn-toc" class="hud-btn" title="打开目录 (快捷键: T)">☰ 目录</button>
     <button id="hud-btn-arch" class="hud-btn hud-btn-primary" title="返回总览 (快捷键: M)">⊞ 总览</button>
@@ -125,6 +131,7 @@
        6. MODULAR JAVASCRIPT ARCHITECTURE (Deck -> Components -> Layouts -> Engine)
        ====================================================================== -->
   <script src="decks/active.js"></script>
+  <script src="js/presentation-variants.js"></script>
   <script src="js/visual-components.js"></script>
   <script src="js/slide-layouts.js"></script>
   <script src="js/presentation-engine.js"></script>

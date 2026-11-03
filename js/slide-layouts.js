@@ -53,13 +53,13 @@ window.PresentationLayouts = {
     `).join('');
 
     const connectorsHtml = slide.connectors && slide.connectors.length ? `
-      <div class="contrast-connectors anim-item" data-anim="scale-in" style="--stagger:3;--grid-columns:${Math.min(7, slide.connectors.length)}">
+      <div class="contrast-connectors ${slide.connectorStyle === 'arrows' ? 'arrows-only ' : ''}anim-item" data-anim="scale-in" style="--stagger:3;--grid-columns:${Math.min(7, slide.connectors.length)}">
         ${slide.connectors.map(label => {
           const cleanLabel = String(label).replace(/^[⬇↓]\s*/, '');
           return `
             <div class="connector-pill">
               <span class="connector-pill-arrow">↓</span>
-              <span>${this.formatInlineMath(cleanLabel)}</span>
+              ${cleanLabel ? `<span>${this.formatInlineMath(cleanLabel)}</span>` : ''}
             </div>
           `;
         }).join('')}
@@ -69,11 +69,7 @@ window.PresentationLayouts = {
     return `
       <div class="contrast-layout">
         <div class="contrast-band band-challenges">
-          <div class="band-header">
-            <div class="band-header-left">
-              <span class="band-badge">${slide.challengesSection.headerTag}</span>
-            </div>
-          </div>
+          ${slide.challengesSection.headerTag ? `<div class="band-header"><div class="band-header-left"><span class="band-badge">${slide.challengesSection.headerTag}</span></div></div>` : ''}
           <div class="contrast-cards-grid" style="--grid-columns:${Math.max(1, Math.min(7, slide.challengesSection.cards.length))}">
             ${topCards}
           </div>
@@ -82,11 +78,7 @@ window.PresentationLayouts = {
         ${connectorsHtml}
 
         <div class="contrast-band band-contributions">
-          <div class="band-header">
-            <div class="band-header-left">
-              <span class="band-badge">${slide.contributionsSection.headerTag}</span>
-            </div>
-          </div>
+          ${slide.contributionsSection.headerTag ? `<div class="band-header"><div class="band-header-left"><span class="band-badge">${slide.contributionsSection.headerTag}</span></div></div>` : ''}
           <div class="contrast-cards-grid" style="--grid-columns:${Math.max(1, Math.min(7, slide.contributionsSection.cards.length))}">
             ${bottomCards}
           </div>
@@ -104,22 +96,17 @@ window.PresentationLayouts = {
       ? slide.bandWeights : null;
 
     return `
-      <div class="ms-arch-stage">
+      <div class="ms-arch-stage ${slide.bandDivider ? 'divider-only' : ''}">
         <div class="ms-band-card encoder-band anim-item" data-anim="fade-up"${weights ? ` style="--stagger:1;height:auto;flex:${weights[0]} 1 0"` : ' style="--stagger:1"'}>
-          <div class="ms-band-header">
-            <span class="ms-band-tag tag-encoder">${slide.encoderBand.bandTag}</span>
-            ${this.buildBandMetaStrip(slide.encoderBand.metaPills)}
-          </div>
+          ${!slide.bandDivider ? `<div class="ms-band-header"><span class="ms-band-tag tag-encoder">${slide.encoderBand.bandTag}</span>${this.buildBandMetaStrip(slide.encoderBand.metaPills)}</div>` : ''}
           <div class="ms-svg-canvas">
             ${this.resolveVisual(slide.encoderBand.visualKey)}
           </div>
         </div>
 
+        ${slide.bandDivider ? `<div class="ms-band-divider"><span class="ms-divider-encoder">Encoder</span><span class="ms-divider-decoder">Decoder</span></div>` : ''}
         <div class="ms-band-card decoder-band anim-item" data-anim="fade-up"${weights ? ` style="--stagger:2;height:auto;flex:${weights[1]} 1 0"` : ' style="--stagger:2"'}>
-          <div class="ms-band-header">
-            <span class="ms-band-tag tag-decoder">${slide.decoderBand.bandTag}</span>
-            ${this.buildBandMetaStrip(slide.decoderBand.metaPills)}
-          </div>
+          ${!slide.bandDivider ? `<div class="ms-band-header"><span class="ms-band-tag tag-decoder">${slide.decoderBand.bandTag}</span>${this.buildBandMetaStrip(slide.decoderBand.metaPills)}</div>` : ''}
           <div class="ms-svg-canvas">
             ${this.resolveVisual(slide.decoderBand.visualKey)}
           </div>
@@ -168,10 +155,6 @@ window.PresentationLayouts = {
 
       return `
         <div class="chain-node-card theme-${step.theme || 'blue'} ${step.focal ? 'is-focal-step ' : ''}anim-item" data-anim="fade-up" data-col-idx="${i}" style="--stagger:${i + 2}">
-          <div class="chain-tier-op">
-            <span class="chain-step-idx">0${i + 1}</span>
-            <span class="chain-op-label">${this.formatInlineMath(step.chainOp)}</span>
-          </div>
           <div class="chain-tier-math">
             ${mathLinesHtml}
           </div>
@@ -183,7 +166,7 @@ window.PresentationLayouts = {
     }).join('');
 
     return `
-      <div class="pipeline-layout">
+      <div class="pipeline-layout ${slide.uniformColor === 'blue' ? 'uniform-blue' : ''}">
         ${phaseTrackHtml}
 
         <div class="pipe-cards-grid cols-${colCount}${density}" style="--grid-columns:${colCount}">
