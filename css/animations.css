@@ -1,0 +1,88 @@
+/* ============================================================================
+ * Aurora Decoupled Per-Element Animation Engine Styles
+ * Supports:
+ *  - Global speed multiplier (--anim-speed: 0.2 to 3.0)
+ *  - Instant zero-duration mode (.anim-disabled)
+ *  - Per-element animation presets ([data-anim="fade-up" | "scale-in" | "slide-right" | "none"])
+ *  - Per-element animation removal ([data-anim-deleted="true"])
+ *  - Step-by-step progressive reveal (.step-hidden / .step-visible)
+ * ============================================================================ */
+
+:root {
+  --anim-base-duration: 360ms;
+  --anim-speed-multiplier: 1;
+  --anim-effective-duration: calc(var(--anim-base-duration) / var(--anim-speed-multiplier));
+  --anim-ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Global animation kill switch or PPT export mode */
+body.anim-disabled,
+body.export-ppt {
+  --anim-effective-duration: 0ms !important;
+}
+
+body.anim-disabled [data-anim],
+body.export-ppt [data-anim],
+[data-anim="none"],
+[data-anim-deleted="true"] {
+  transition: none !important;
+  animation: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+/* Base state for animated elements when step controller is active */
+[data-anim] {
+  transition-property: opacity, transform, filter, box-shadow, border-color;
+  transition-duration: var(--anim-effective-duration);
+  transition-timing-function: var(--anim-ease);
+  transition-delay: calc(var(--anim-delay, 0ms) / var(--anim-speed-multiplier));
+}
+
+/* Step-by-step hidden states */
+[data-anim="fade-up"].step-hidden {
+  opacity: 0.12;
+  transform: translateY(18px);
+  filter: grayscale(0.8);
+}
+
+[data-anim="scale-in"].step-hidden {
+  opacity: 0.12;
+  transform: scale(0.92);
+  filter: grayscale(0.8);
+}
+
+[data-anim="slide-right"].step-hidden {
+  opacity: 0.12;
+  transform: translateX(-22px);
+  filter: grayscale(0.8);
+}
+
+[data-anim="glow-pulse"].step-hidden {
+  opacity: 0.15;
+  filter: grayscale(0.9);
+}
+
+/* Visible states */
+[data-anim].step-visible {
+  opacity: 1;
+  transform: translate(0, 0) scale(1);
+  filter: none;
+}
+
+/* Active focus ring for current step in interactive explanation */
+[data-anim].step-current {
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.45), 0 12px 28px rgba(15, 23, 42, 0.12);
+}
+
+/* Visual highlight when Per-Element Animation Edit Mode is toggled ON */
+body.anim-edit-mode [data-anim] {
+  outline: 2px dashed rgba(56, 189, 248, 0.75);
+  outline-offset: 3px;
+  cursor: pointer;
+}
+
+body.anim-edit-mode [data-anim-deleted="true"] {
+  outline: 2px dashed rgba(244, 63, 94, 0.8);
+}

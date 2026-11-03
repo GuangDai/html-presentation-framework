@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AURORA — 通用生成式多模态时间序列预测框架 (16:9 Presentation)</title>
+
+  <!-- ======================================================================
+       1. MATH RENDERING ENGINE: KaTeX v0.16.11 + MathJax v3.2.2 Support
+       ====================================================================== -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" crossorigin="anonymous"></script>
+
+  <!-- ======================================================================
+       2. MODULAR PRESENTATION STYLESHEETS (Design Tokens, Layout, Animations)
+       ====================================================================== -->
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+</head>
+<body data-anim-speed="normal">
+
+  <!-- ======================================================================
+       3. 16:9 SCALABLE PRESENTATION CANVAS (1920 × 1080 Fixed Coordinate Stage)
+       ====================================================================== -->
+  <div id="viewport-scaler" class="viewport-scaler">
+    <main id="presentation-stage" class="presentation-stage" aria-label="16:9 Presentation Stage">
+      <div id="slides-container" class="slides-container">
+        <!-- Populated dynamically by js/presentation-engine.js from js/slide-content.js -->
+      </div>
+    </main>
+  </div>
+
+  <!-- ======================================================================
+       4. AUTO-FADING PRESENTER HUD (Bottom-Right Corner, Hidden in Print/Export)
+       ====================================================================== -->
+  <aside class="presenter-hud" aria-label="Presenter Controls">
+    <button id="hud-btn-toc" class="hud-btn" title="打开目录 (快捷键: T)">☰ 目录</button>
+    <button id="hud-btn-arch" class="hud-btn hud-btn-primary" title="返回第 2 页多路总览图 (快捷键: M)">⊞ 多路总览 (P2)</button>
+    <button id="hud-btn-prev" class="hud-btn" title="上一页 (快捷键: ←)">◀</button>
+    <span id="hud-page-counter" class="hud-counter">1 / 7</span>
+    <button id="hud-btn-next" class="hud-btn" title="下一页 (快捷键: →)">▶</button>
+    <button id="hud-btn-anim" class="hud-btn" title="动画速度配置 (快捷键: A)">⚡ 动画</button>
+  </aside>
+
+  <!-- ======================================================================
+       5. SLIDE DIRECTORY & ANIMATION CONFIGURATION DRAWERS
+       ====================================================================== -->
+  <div id="drawer-backdrop" class="drawer-backdrop"></div>
+
+  <aside id="toc-drawer" class="modal-drawer" aria-label="Slide Directory">
+    <div class="drawer-header">
+      <h2 class="drawer-title">幻灯片目录导航 (快捷键: 1–7 / T)</h2>
+      <p class="drawer-subtitle">点击任意章节直达对应精讲页面 · 按 M 键随时返回第 2 页多路总架构</p>
+    </div>
+    <div id="toc-list" class="toc-list"></div>
+  </aside>
+
+  <aside id="anim-drawer" class="modal-drawer" aria-label="Animation Settings">
+    <div class="drawer-header">
+      <h2 class="drawer-title">解耦动画速度配置 (快捷键: A)</h2>
+      <p class="drawer-subtitle">通过 CSS 变量动态调节全局过渡时长，无代码耦合，导出 PPT 时可一键关闭</p>
+    </div>
+    <div class="anim-options-grid">
+      <button class="anim-option-btn" data-speed-option="off">
+        <strong>关闭动画 (0ms · 极速/导出模式)</strong>
+        <span>完全取消过渡延迟，适合快速切页汇报与高分截图导出</span>
+      </button>
+      <button class="anim-option-btn" data-speed-option="fast">
+        <strong>快速动画 (180ms · 紧凑节奏)</strong>
+        <span>轻微淡入位移，兼顾视觉呼吸感与高频翻页</span>
+      </button>
+      <button class="anim-option-btn active" data-speed-option="normal">
+        <strong>标准动画 (360ms · 推荐展示)</strong>
+        <span>默认阶梯式丝滑入场，引导观众视线逐模块推进</span>
+      </button>
+      <button class="anim-option-btn" data-speed-option="slow">
+        <strong>慢速演示 (650ms · 细节精讲)</strong>
+        <span>适合逐步剖析多模态引导与流匹配演化细节</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ======================================================================
+       6. MODULAR JAVASCRIPT ARCHITECTURE (Visuals -> Content -> Engine)
+       ====================================================================== -->
+  <script src="js/visuals-library.js"></script>
+  <script src="js/slide-content.js"></script>
+  <script src="js/presentation-engine.js"></script>
+</body>
+</html>
