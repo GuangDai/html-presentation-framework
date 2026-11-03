@@ -1,0 +1,9 @@
+<!doctype html>
+<html lang="zh-CN"><meta charset="utf-8"><title>Aurora PPTX 逐页渲染对比</title>
+<style>body{font:16px/1.6 sans-serif;margin:2em auto;max-width:1500px;padding:0 1em;color:#172033}img{width:100%;height:auto;border:1px solid #cbd5e1}h2{margin-top:2em}.columns{display:flex;justify-content:space-around}</style>
+<h1>Aurora PPTX 逐页渲染对比</h1>
+<p>每张图左侧为原 PPTX 中该页的整页图片，右侧为当前 HTML 在 Chromium 中以 1920×1080 舞台、2 倍像素密度渲染的页面。为便于并排查看，两侧缩放至各 1280×720。</p>
+<p>两者并非逐像素一致：文字、公式和部分区域的位置存在差异。页面 1–7 的原始 3840×2160 图像归一化平均绝对像素误差依次约为 2.47%、1.31%、4.35%、4.63%、5.14%、4.96%、6.18%。误差包含反锯齿、字体和所有其他像素差异，不能单独判断原因。</p>
+<p>另在同一浏览器、离线公式缓存条件下，比较本次自动排布修改前后的七页截图，逐页像素相同。该结果不代表与 PPTX 像素相同。</p>
+<div id="pages"></div><script>document.getElementById('pages').innerHTML=Array.from({length:7},(_,i)=>`<section><h2>第 ${i+1} 页</h2><div class="columns"><span>原 PPTX</span><span>当前 HTML</span></div><img src="slide_0${i+1}.png" alt="第 ${i+1} 页 PPTX 与 HTML 并排对比"></section>`).join('');</script>
+</html>

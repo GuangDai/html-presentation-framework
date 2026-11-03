@@ -1,6 +1,6 @@
 /**
  * ============================================================================
- * @file js/visuals-library.js
+ * @file decks/aurora/visuals.js
  * @description Pure SVG Visual Component Registry (`window.AuroraVisuals`).
  *              Completely decoupled from text content and presentation logic.
  *              All mathematical symbols inside SVG diagrams use `<foreignObject>`

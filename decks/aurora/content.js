@@ -2,7 +2,7 @@
  * ============================================================================
  * AURORA PRESENTATION FRAMEWORK — DECLARATIVE SLIDE CONTENT DATA
  * ============================================================================
- * File: js/slide-content.js
+ * File: decks/aurora/content.js
  * Global Export: window.AuroraContent
  *
  * DESIGN PRINCIPLES:
@@ -16,6 +16,11 @@
 
 window.AuroraContent = {
   deckMeta: {
+    documentTitle: 'AURORA — 通用生成式多模态时间序列预测框架 (16:9 Presentation)',
+    homeSlide: 1, // 从 0 开始计数
+    homeButtonLabel: '⊞ 多路总览 (P2)',
+    homeButtonTitle: '返回第 2 页多路总览图 (快捷键: M)',
+    tocSubtitle: '点击任意章节直达对应精讲页面 · 按 M 键随时返回第 2 页多路总架构',
     title: 'AURORA',
     subtitle: '通用生成式多模态时间序列预测框架 (ICLR 2026)',
     defaultAnimSpeed: 'normal'
@@ -32,6 +37,8 @@ window.AuroraContent = {
       layout: 'contrast-slide',
       title: '多模态生成式时间序列预测：背景与核心贡献',
       subtitle: '剖析传统单模态确定性时间序列预测面临的固有局限，阐述本文在多模态表征提取、跨模态引导对齐与概率生成范式上的核心突破。',
+
+      connectors: ['⬇ 频域周期折叠 + 三路协同编码', '⬇ 质心自适应蒸馏 + 双路相关性引导', '⬇ 先验基波原型检索 + 直线流匹配生成'],
 
       challengesSection: {
         headerTag: '现有单模态确定性预测的局限',

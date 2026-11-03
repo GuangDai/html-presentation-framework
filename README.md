@@ -1,24 +1,67 @@
-# AURORA (ICLR 2026) · 模块化 16:9 HTML 演示与多路架构可视化框架
+# 学术论文 16:9 HTML 演示框架
 
-本项目围绕 **《AURORA: Towards Universal Generative Multimodal Time Series Forecasting》 (ICLR 2026)** 构建，采用**内容数据、SVG 视觉图形库、CSS 样式令牌与渲染引擎四层彻底解耦**的标准前端工程结构。详细的开发规范与视觉校验守则请参阅项目根目录下的 **[`AGENTS.md`](./AGENTS.md)**。
+默认演示是 Aurora 论文汇报。通用布局、样式和交互与论文素材分开存放；切换论文只需在 `decks/active.js` 修改目录名。页面使用 1920×1080 舞台，提供对比页、双层架构页、流程公式页、目录、键盘翻页与动画。
 
-## 📁 目录结构
+## 目录和职责
 
 ```text
-aurora_html_framework/
-├── index.html                        # 标准 HTML5 主入口（引入 KaTeX v0.16.11 与 MathJax v3.2.2）
-├── AGENTS.md                         # AI Agent 与开发者全局工程规范与视觉校验指南
-├── README.md                         # 项目目录与使用说明
-├── css/
-│   ├── variables.css                 # 全局颜色令牌、字号阶梯、间距与卡片阴影变量
-│   ├── layout.css                    # 16:9 舞台、双层多路架构图、流程卡片与底部紧凑多行公式链布局
-│   └── animations.css                # 基于 data-anim-speed 的无耦合动画样式表
-├── js/
-│   ├── slide-content.js              # 【纯内容数据层】7 页幻灯片文本与多行 TeX 映射链配置
-│   ├── visuals-library.js            # 【纯矢量图形层】多路架构图与各步骤抽象几何 SVG 库
-│   └── presentation-engine.js        # 【渲染与交互引擎】DOM 组装、动态等高对齐、公式排版与快捷键控制
-├── rendered_slides_16x9/             # 16:9 (3840×2160 2x Retina) 渲染导出的高清幻灯片 PNG
-│   ├── slide_01.png ~ slide_07.png
-├── Aurora_Presentation_16x9.pdf      # 由 16:9 渲染图生成的标准宽屏 PDF 演示文稿
-└── Aurora_Presentation_16x9.pptx     # 由 16:9 渲染图生成的标准宽屏 PowerPoint 演示文稿
+index.html                  通用页面入口、公式引擎和演示控件
+css/variables.css           设计变量（部分颜色也写在 layout.css 和 SVG 中）
+css/layout.css              舞台、页面及控件布局和样式
+css/animations.css          动画预设
+js/slide-layouts.js         三种页面的 HTML 结构
+js/presentation-engine.js   渲染、公式、区域等高和交互
+decks/active.js             当前论文目录选择
+decks/aurora/               Aurora 论文素材
+  content.js                页面文字、公式、图形引用和导航配置
+  visuals.js                论文专用 SVG 图形
+  math-cache.js             Aurora 公式的离线 SVG 缓存
+decks/paper-template/       可复制的新论文模板，含上述三个文件
+rendered_slides_16x9/       Aurora 历史导出 PNG
 ```
+
+根目录中的 PDF、PPTX 及 PNG 均为历史导出结果，不会随源码修改自动更新。本仓库没有附带导出脚本。
+
+## 新建和切换论文
+
+1. 复制 `decks/paper-template/`，将副本改名为论文目录，例如 `decks/my-paper/`。目录名只使用英文字母、数字、连字符或下划线。
+2. 修改该目录的 `content.js`：填写论文标题、页面文字、公式与导航。按需复制或删减 `slides` 数组中的页面。
+3. 修改该目录的 `visuals.js`：用论文专用 SVG 替换示例图形，并让内容中的 `visualKey` 与图形键名一致。图内文字、连线和颜色都属于图形素材。
+4. `math-cache.js` 可保持模板中的空对象；如果需要离线显示新论文公式，可在其中提供公式到 SVG 的映射。它是每个论文目录都需要保留的文件。
+5. 将 `decks/active.js` 中的 `activeDeck` 改成 `my-paper`，然后用浏览器打开或刷新 `index.html`。恢复 Aurora 时把目录名改回 `aurora`。
+
+每个目录的三个脚本会按 `math-cache.js`、`visuals.js`、`content.js` 的顺序同步加载，然后由通用布局和引擎渲染。复制模板时保留三个文件，即使某个文件暂时为空。`active.js` 使用浏览器解析阶段的 `document.write` 加载脚本，应通过 `index.html` 的普通同步 `<script>` 引用，不要添加 `async` 或 `defer`。
+
+## 内容格式
+
+`content.js` 定义 `window.PresentationContent = { deckMeta, slides }`。模板提供全部三种页面的可编辑示例；Aurora 的完整实例在 `decks/aurora/content.js`。
+
+### 演示配置
+
+- `deckMeta.documentTitle`：浏览器标签标题。
+- `defaultAnimSpeed`：`off`、`fast`、`normal` 或 `slow`，默认 `normal`。
+- `homeSlide`：可选的总览页索引，从 0 开始。配置有效索引后显示总览按钮，M 和 Home 键跳转至该页；省略则隐藏按钮。
+- `homeButtonLabel`、`homeButtonTitle`、`tocSubtitle`：可选的按钮和目录文字。
+- `slides`：按展示顺序排列的页面数组。每页填写唯一的 `id`、`layout`、`title`、`subtitle`，可选 `navTitle`。方向键和目录适用于全部页面；数字键 1–9 对应前九页；超过七页时，页眉显示当前页附近最多七项，完整目录仍可访问全部页面。
+
+### 三种页面布局
+
+- `contrast-slide`：上下两组卡片分别放在 `challengesSection`、`contributionsSection`，每组包含 `headerTag` 和 `cards`。卡片填写 `code`、`title`、`visualKey`、`points`；下组卡片可选 `jumpToSlide`，值为零起始页码。可选的 `connectors` 数组控制两组之间的说明文字。每组按卡片数自动计算列数，单行最多七列，超过后换行；连接文字也按数量分列。
+- `architecture-slide`：`encoderBand` 和 `decoderBand` 各包含 `bandTag` 与 `visualKey`。这两个字段名沿用 Aurora 示例，可以填写其他论文的上下两组模块。可选 `bandWeights: [上层比例, 下层比例]` 按比例分配可用高度；省略时沿用 Aurora 的固定比例。
+- `pipeline-slide`：`steps` 数组的每一项包含 `stepCode`、`title`、`theme`、`visualKey`、`caption`、`chainOp`、`chainLatex`、`chainDim`。`chainLatex` 使用字符串数组，一项显示一行。列数默认按步骤数计算，单行最多七列；也可用 `cols` 指定每行列数，超出时换行。对应公式按相同列数排列，同一行的卡片区域分别等高。内容过多时受固定画布高度和字号限制，应拆成多页或精简文字，框架不会自动分页或改写内容。可用主题名为 `blue`、`indigo`、`teal`、`purple`、`amber`、`rose`、`emerald`。
+
+正文行内公式用 `$...$`；JavaScript 字符串中的 TeX 反斜杠写成 `\\`。长公式或多个公式应拆成多行，避免溢出。内容和 SVG 均作为 HTML 插入，因此只能使用可信来源。
+
+### 图形和离线公式
+
+`visuals.js` 定义 `window.PresentationVisuals`，将图形键映射到 SVG 字符串；`visualKey` 支持完整字符串键或嵌套对象路径。SVG 中可使用带 `latex-formula` 类和 `data-latex` 属性的元素渲染公式，参见 Aurora 图形库。
+
+公式优先使用在线 KaTeX 或 MathJax；两者不可用时查找 `window.PresentationMathSvgs` 中的缓存，缓存也不存在时显示原始 TeX。Aurora 的缓存沿用 `window.AURORA_MATH_SVGS`，引擎兼容该旧名称。新论文的空缓存不会自动生成新公式 SVG。
+
+## 修改通用外观与功能
+
+- 颜色、字号和尺寸变量：`css/variables.css`。部分颜色、布局规则和 SVG 颜色仍直接写在 `css/layout.css` 或各论文的 `visuals.js`，更换整套配色时也需检查这些位置。
+- 间距、网格、卡片和舞台：`css/layout.css`；动画：`css/animations.css`。
+- 页面结构：`js/slide-layouts.js`；DOM 组装、等高、公式和导航：`js/presentation-engine.js`。新增布局还需在引擎的 `renderAllSlides` 中注册。
+
+原有 `window.AuroraContent`、`window.AuroraVisuals`、`window.AuroraEngine` 和 `window.auroraApp` 仍受支持。修改既有 Aurora 演示时还应遵循 [AGENTS.md](./AGENTS.md) 的算法和排版规范；其中关于 Aurora 的数据流和图形规则针对该论文，不应套用为其他论文的事实。

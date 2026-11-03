@@ -17,20 +17,22 @@ aurora_html_framework/
 │   ├── variables.css                 # 第一层：全局设计令牌（色板、字号、圆角、阴影变量）
 │   ├── layout.css                    # 第二层：1920×1080 舞台、三种标准幻灯片布局与紧凑多行数学排版样式
 │   └── animations.css                # 第三层：基于 data-anim-speed 属性的无耦合阶梯动画
-├── js/
-│   ├── slide-content.js              # 第四层 A（纯数据）：声明式幻灯片内容与多行 TeX 公式数组（零 SVG 代码）
-│   ├── visuals-library.js            # 第四层 B（纯图形）：独立 SVG 矢量流程图注册表（window.AuroraVisuals）
-│   └── presentation-engine.js        # 第四层 C（纯引擎）：DOM 组装、动态等高对齐、KaTeX/MathJax 渲染与交互
+├── js/                               # 通用 slide-layouts.js 与 presentation-engine.js
+├── decks/
+│   ├── active.js                     # 当前论文目录选择
+│   ├── aurora/                       # content.js、visuals.js、math-cache.js
+│   └── paper-template/               # 可复制的新论文模板
 ├── rendered_slides_16x9/             # 2x Retina (3840×2160) 16:9 渲染幻灯片 PNG
 ├── Aurora_Presentation_16x9.pdf      # 16:9 高清演示文稿 PDF
 └── Aurora_Presentation_16x9.pptx     # 16:9 标准宽屏 PowerPoint 演示文稿
 ```
 
 ### 修改路由守则：
-1. **修改标题、副标题、要点、步骤说明或数学公式**：仅编辑 `js/slide-content.js`。
-2. **修改或新增抽象几何流程图 / 算法架构图**：仅编辑 `js/visuals-library.js`，并在 `js/slide-content.js` 中通过 `visualKey`（如 `'arch.encoderMultiStream'` 或 `'stream2d.periodFold'`）引用。
+1. **修改标题、副标题、要点、步骤说明或数学公式**：仅编辑 `decks/aurora/content.js`。
+2. **修改或新增抽象几何流程图 / 算法架构图**：仅编辑 `decks/aurora/visuals.js`，并在 `decks/aurora/content.js` 中通过 `visualKey`（如 `'arch.encoderMultiStream'` 或 `'stream2d.periodFold'`）引用。
 3. **调整字号、间距、卡片高度或网格比例**：仅编辑 `css/layout.css` 或 `css/variables.css`。
 4. **调整动态等高计算、翻页快捷键或公式引擎调度**：仅编辑 `js/presentation-engine.js`。
+5. **调整通用页面 HTML 结构**：编辑 `js/slide-layouts.js`。新论文复制 `decks/paper-template/`，并在 `decks/active.js` 中切换目录；Aurora 专属的算法拓扑要求仅适用于 Aurora。
 
 ---
 
@@ -76,7 +78,7 @@ aurora_html_framework/
 ## 4. 数学公式多行拆分与字号绝对统一规范 (Multi-Line Math & Uniformity)
 
 ### 4.1 多公式与长公式强制换行拆分 (Multi-Line Formula Splitting)
-- 在 `js/slide-content.js` 中，每个步骤的 `chainLatex` 均采用**字符串数组**（`chainLatex: ['公式第 1 行', '公式第 2 行']`）：
+- 在 `decks/aurora/content.js` 中，每个步骤的 `chainLatex` 均采用**字符串数组**（`chainLatex: ['公式第 1 行', '公式第 2 行']`）：
   - 若当前步骤包含两个或多个子公式（如均值/标准差计算与归一化、双路编码器前向、双路蒸馏输出、速度场回归与流状态插值），**必须分行列出**，每行一个公式。
   - 若单个公式较长（如交叉注意力打分、多模态融合、因果解码），**必须拆分为中间变量定义与最终映射两行**，严禁将冗长公式挤在同一行。
 
@@ -101,4 +103,4 @@ aurora_html_framework/
    - 先将高度重置为 `auto` 以测量自然内容高度 `offsetHeight`；
    - 计算该组的最大高度 `maxH = Math.max(...nodes.map(el => el.offsetHeight))`；
    - 将该组所有元素的高度统一设为 `${maxH}px`。
-3. 自动化视觉批评家（`build_and_render.py` 第 5 项检查）强制校验同行所有区域的渲染高度差 `maxH - minH <= 2px`。
+3. 视觉检查时应关注同行区域的渲染高度差。仓库当前未附带自动化导出或视觉检查脚本。

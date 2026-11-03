@@ -6,8 +6,8 @@
  * Global Export: window.AuroraEngine
  *
  * ARCHITECTURE & RESPONSIBILITIES:
- * - Reads declarative content from `window.AuroraContent` (`js/slide-content.js`)
- * - Fetches pure SVG diagrams by key from `window.AuroraVisuals` (`js/visuals-library.js`)
+ * - Reads declarative content from `window.AuroraContent` (`decks/aurora/content.js`)
+ * - Fetches pure SVG diagrams by key from `window.AuroraVisuals` (`decks/aurora/visuals.js`)
  * - Renders multi-part/long equations on separate stacked lines (`.math-line`)
  *   inside compact formula boxes.
  * - Dynamically measures and equalizes the heights of card headers, captions,
@@ -41,7 +41,27 @@ class AuroraPresentationEngine {
       pageCounter: document.getElementById('hud-page-counter')
     };
 
+    this.configureDeckUI();
     this.init();
+  }
+
+  /** 将目录和总览入口交由演示数据配置。 */
+  configureDeckUI() {
+    const meta = this.content.deckMeta || {};
+    if (meta.documentTitle) document.title = meta.documentTitle;
+    this.homeSlide = Number.isInteger(meta.homeSlide) && meta.homeSlide >= 0 && meta.homeSlide < this.slides.length ? meta.homeSlide : null;
+    const button = document.getElementById('hud-btn-arch');
+    if (button) {
+      button.hidden = this.homeSlide === null;
+      if (this.homeSlide !== null) {
+        button.textContent = meta.homeButtonLabel || `⊞ 总览 (P${this.homeSlide + 1})`;
+        button.title = meta.homeButtonTitle || `返回第 ${this.homeSlide + 1} 页 (快捷键: M)`;
+      }
+    }
+    const title = document.getElementById('toc-heading');
+    if (title) title.textContent = `幻灯片目录导航 (快捷键: 1–${Math.min(this.slides.length, 9)} / T)`;
+    const subtitle = document.getElementById('toc-subtitle');
+    if (subtitle) subtitle.textContent = meta.tocSubtitle || '点击章节直达对应页面';
   }
 
   /**
@@ -97,7 +117,7 @@ class AuroraPresentationEngine {
     if (!this.dom.headerAgenda) return;
     this.dom.headerAgenda.innerHTML = this.slides.map((slide, idx) => `
       <button class="agenda-pill" data-slide-idx="${idx}" title="${slide.title}">
-        <span class="pill-num">0${idx + 1}</span>
+        <span class="pill-num">${String(idx + 1).padStart(2, '0')}</span>
         <span>${slide.navTitle || slide.title}</span>
       </button>
     `).join('');
@@ -110,7 +130,7 @@ class AuroraPresentationEngine {
     if (!this.dom.tocList) return;
     this.dom.tocList.innerHTML = this.slides.map((slide, idx) => `
       <div class="toc-item" data-slide-idx="${idx}">
-        <span class="toc-num">0${idx + 1}</span>
+        <span class="toc-num">${String(idx + 1).padStart(2, '0')}</span>
         <div class="toc-text">
           <div class="toc-title">${slide.title}</div>
           <div class="toc-sub">${slide.subtitle}</div>
@@ -149,12 +169,18 @@ class AuroraPresentationEngine {
    * Build the standardized top header bar
    */
   buildSlideHeader(slide, idx) {
-    const agendaHtml = this.slides.map((s, sIdx) => `
+    // Keep the navigation rail within the fixed stage when a deck has many pages.
+    const start = Math.max(0, Math.min(idx - 3, this.slides.length - 7));
+    const visibleSlides = this.slides.slice(start, start + 7);
+    const agendaHtml = visibleSlides.map((s, offset) => {
+      const sIdx = start + offset;
+      return `
       <button class="agenda-pill ${sIdx === idx ? 'active' : ''}" data-slide-idx="${sIdx}">
-        <span class="pill-num">0${sIdx + 1}</span>
-        <span>${s.navTitle}</span>
+        <span class="pill-num">${String(sIdx + 1).padStart(2, '0')}</span>
+        <span>${s.navTitle || s.title}</span>
       </button>
-    `).join('');
+    `;
+    }).join('');
 
     return `
       <header class="slide-header anim-item" data-anim="fade-down" style="--stagger:0">
@@ -166,158 +192,6 @@ class AuroraPresentationEngine {
           ${agendaHtml}
         </nav>
       </header>
-    `;
-  }
-
-  /**
-   * Layout 1: Contrast Slide (Slide 1 — Top Challenges vs Bottom Contributions)
-   */
-  buildContrastSlide(slide) {
-    const topCards = slide.challengesSection.cards.map((card, i) => `
-      <article class="contrast-card anim-item" data-anim="fade-up" style="--stagger:${i + 1}">
-        <div class="contrast-card-head">
-          <span class="contrast-card-tag">${card.code}</span>
-          <h3 class="contrast-card-title">${this.formatInlineMath(card.title)}</h3>
-        </div>
-        <div class="contrast-visual">
-          ${this.resolveVisual(card.visualKey)}
-        </div>
-        <ul class="contrast-points">
-          ${card.points.map(pt => `<li>${this.formatInlineMath(pt)}</li>`).join('')}
-        </ul>
-      </article>
-    `).join('');
-
-    const bottomCards = slide.contributionsSection.cards.map((card, i) => `
-      <article class="contrast-card clickable-card anim-item" data-anim="fade-up" style="--stagger:${i + 4}" data-jump-slide="${card.jumpToSlide !== undefined ? card.jumpToSlide : 1}">
-        <div class="contrast-card-head">
-          <span class="contrast-card-tag">${card.code}</span>
-          <h3 class="contrast-card-title">${this.formatInlineMath(card.title)}</h3>
-        </div>
-        <div class="contrast-visual">
-          ${this.resolveVisual(card.visualKey)}
-        </div>
-        <ul class="contrast-points">
-          ${card.points.map(pt => `<li>${this.formatInlineMath(pt)}</li>`).join('')}
-        </ul>
-      </article>
-    `).join('');
-
-    return `
-      <div class="contrast-layout">
-        <div class="contrast-band band-challenges">
-          <div class="band-header">
-            <span class="band-badge">${slide.challengesSection.headerTag}</span>
-          </div>
-          <div class="contrast-cards-grid">
-            ${topCards}
-          </div>
-        </div>
-
-        <div class="contrast-connectors anim-item" data-anim="scale-in" style="--stagger:3">
-          <div class="connector-pill">⬇ 频域周期折叠 + 三路协同编码</div>
-          <div class="connector-pill">⬇ 质心自适应蒸馏 + 双路相关性引导</div>
-          <div class="connector-pill">⬇ 先验基波原型检索 + 直线流匹配生成</div>
-        </div>
-
-        <div class="contrast-band band-contributions">
-          <div class="band-header">
-            <span class="band-badge">${slide.contributionsSection.headerTag}</span>
-          </div>
-          <div class="contrast-cards-grid">
-            ${bottomCards}
-          </div>
-        </div>
-      </div>
-    `;
-  }
-
-  /**
-   * Layout 2: Multi-Stream Architecture Slide (Slide 2 — Upper Encoder Band + Lower Decoder Band)
-   */
-  buildArchitectureSlide(slide) {
-    return `
-      <div class="ms-arch-stage">
-        <div class="ms-band-card encoder-band anim-item" data-anim="fade-up" style="--stagger:1">
-          <div class="ms-band-header">
-            <span class="ms-band-tag tag-encoder">${slide.encoderBand.bandTag}</span>
-          </div>
-          <div class="ms-svg-canvas">
-            ${this.resolveVisual(slide.encoderBand.visualKey)}
-          </div>
-        </div>
-
-        <div class="ms-band-card decoder-band anim-item" data-anim="fade-up" style="--stagger:2">
-          <div class="ms-band-header">
-            <span class="ms-band-tag tag-decoder">${slide.decoderBand.bandTag}</span>
-          </div>
-          <div class="ms-svg-canvas">
-            ${this.resolveVisual(slide.decoderBand.visualKey)}
-          </div>
-        </div>
-      </div>
-    `;
-  }
-
-  /**
-   * Layout 3: Pipeline Slide (Slides 3–7 — Step Cards + Compact Multi-Line Formula Chain)
-   */
-  buildPipelineSlide(slide) {
-    const colCount = slide.cols || slide.steps.length;
-
-    const stepCardsHtml = slide.steps.map((step, i) => `
-      <article class="pipe-step-card theme-${step.theme || 'blue'} anim-item" data-anim="fade-up" style="--stagger:${i + 1}">
-        <div class="pipe-card-top">
-          <div class="pipe-step-meta">
-            <span class="pipe-step-code">${step.stepCode}</span>
-            <h3 class="pipe-step-title">${this.formatInlineMath(step.title)}</h3>
-          </div>
-        </div>
-        <div class="pipe-visual-frame">
-          ${this.resolveVisual(step.visualKey)}
-        </div>
-        <div class="pipe-step-caption">
-          <span>${this.formatInlineMath(step.caption)}</span>
-        </div>
-      </article>
-    `).join('');
-
-    const chainNodesHtml = slide.steps.map((step, i) => {
-      const formulaLines = Array.isArray(step.chainLatex) ? step.chainLatex : [step.chainLatex];
-      const mathLinesHtml = formulaLines.map(line => `
-        <div class="math-line">
-          <span class="latex-formula" data-latex="${this.escapeAttr(line)}" data-display="true"></span>
-        </div>
-      `).join('');
-
-      return `
-        <div class="chain-node-card theme-${step.theme || 'blue'} anim-item" data-anim="fade-up" style="--stagger:${i + 2}">
-          <div class="chain-tier-op">
-            <span class="chain-step-idx">0${i + 1}</span>
-            <span class="chain-op-label">${this.formatInlineMath(step.chainOp)}</span>
-          </div>
-          <div class="chain-tier-math">
-            ${mathLinesHtml}
-          </div>
-          <div class="chain-tier-dim">
-            <span class="dim-badge latex-formula" data-latex="${this.escapeAttr(step.chainDim)}" data-display="false"></span>
-          </div>
-        </div>
-      `;
-    }).join('');
-
-    return `
-      <div class="pipeline-layout">
-        <div class="pipe-cards-grid cols-${colCount}">
-          ${stepCardsHtml}
-        </div>
-
-        <div class="mapping-chain-panel">
-          <div class="mapping-chain-grid cols-${colCount}">
-            ${chainNodesHtml}
-          </div>
-        </div>
-      </div>
     `;
   }
 
@@ -341,37 +215,33 @@ class AuroraPresentationEngine {
         frame.style.visibility = 'hidden';
       }
 
-      // 1. Equalize pipeline slide regions
-      const pipeGroups = [
-        '.pipe-card-top',
-        '.pipe-step-caption',
-        '.chain-tier-op',
-        '.chain-tier-math',
-        '.chain-tier-dim'
-      ];
-      pipeGroups.forEach(selector => {
-        const nodes = Array.from(frame.querySelectorAll(selector));
-        if (nodes.length > 1) {
-          nodes.forEach(el => { el.style.height = 'auto'; });
-          const maxH = Math.max(...nodes.map(el => el.offsetHeight));
-          if (maxH > 0) {
-            nodes.forEach(el => { el.style.height = `${maxH}px`; });
-          }
-        }
-      });
-
-      // 2. Equalize contrast slide regions per band
-      frame.querySelectorAll('.contrast-band').forEach(band => {
-        ['.contrast-card-head', '.contrast-points'].forEach(selector => {
-          const nodes = Array.from(band.querySelectorAll(selector));
-          if (nodes.length > 1) {
-            nodes.forEach(el => { el.style.height = 'auto'; });
-            const maxH = Math.max(...nodes.map(el => el.offsetHeight));
-            if (maxH > 0) {
-              nodes.forEach(el => { el.style.height = `${maxH}px`; });
-            }
-          }
+      // Equalize regions within each actual grid row, including wrapped layouts.
+      const equalizeRows = (container, cardSelector, selectors) => {
+        if (!container) return;
+        const cards = Array.from(container.querySelectorAll(cardSelector));
+        const rows = new Map();
+        cards.forEach(card => {
+          const row = card.offsetTop;
+          if (!rows.has(row)) rows.set(row, []);
+          rows.get(row).push(card);
         });
+        rows.forEach(rowCards => selectors.forEach(selector => {
+          const nodes = rowCards.map(card => card.querySelector(selector)).filter(Boolean);
+          nodes.forEach(node => { node.style.height = 'auto'; });
+          if (nodes.length > 1) {
+            const maxH = Math.max(...nodes.map(node => node.offsetHeight));
+            if (maxH > 0) nodes.forEach(node => { node.style.height = `${maxH}px`; });
+          }
+        }));
+      };
+      equalizeRows(frame.querySelector('.pipe-cards-grid'), '.pipe-step-card', [
+        '.pipe-card-top', '.pipe-step-caption'
+      ]);
+      equalizeRows(frame.querySelector('.mapping-chain-grid'), '.chain-node-card', [
+        '.chain-tier-op', '.chain-tier-math', '.chain-tier-dim'
+      ]);
+      frame.querySelectorAll('.contrast-cards-grid').forEach(grid => {
+        equalizeRows(grid, '.contrast-card', ['.contrast-card-head', '.contrast-points']);
       });
 
       if (!wasActive) {
@@ -425,8 +295,9 @@ class AuroraPresentationEngine {
         }
       }
 
-      if (window.AURORA_MATH_SVGS && window.AURORA_MATH_SVGS[latex]) {
-        node.innerHTML = window.AURORA_MATH_SVGS[latex];
+      const mathCache = window.PresentationMathSvgs || window.AURORA_MATH_SVGS;
+      if (mathCache && mathCache[latex]) {
+        node.innerHTML = mathCache[latex];
         return;
       }
 
@@ -563,7 +434,7 @@ class AuroraPresentationEngine {
 
     if (btnPrev) btnPrev.addEventListener('click', () => this.goToSlide(this.currentSlideIndex - 1));
     if (btnNext) btnNext.addEventListener('click', () => this.goToSlide(this.currentSlideIndex + 1));
-    if (btnHome) btnHome.addEventListener('click', () => this.goToSlide(1));
+    if (btnHome) btnHome.addEventListener('click', () => { if (this.homeSlide !== null) this.goToSlide(this.homeSlide); });
     if (btnToc) btnToc.addEventListener('click', () => this.toggleDrawer(this.dom.tocDrawer));
     if (btnAnim) btnAnim.addEventListener('click', () => this.toggleDrawer(this.dom.animDrawer));
     if (this.dom.backdrop) this.dom.backdrop.addEventListener('click', () => this.closeDrawers());
@@ -577,7 +448,7 @@ class AuroraPresentationEngine {
         this.goToSlide(this.currentSlideIndex - 1);
       } else if (e.key === 'm' || e.key === 'M' || e.key === 'Home') {
         e.preventDefault();
-        this.goToSlide(1);
+        if (this.homeSlide !== null) this.goToSlide(this.homeSlide);
       } else if (e.key === 't' || e.key === 'T') {
         e.preventDefault();
         this.toggleDrawer(this.dom.tocDrawer);
@@ -594,10 +465,15 @@ class AuroraPresentationEngine {
   }
 }
 
+Object.assign(AuroraPresentationEngine.prototype, window.PresentationLayouts);
+window.PresentationEngine = AuroraPresentationEngine;
 window.AuroraEngine = AuroraPresentationEngine;
 
 document.addEventListener('DOMContentLoaded', () => {
-  if (window.AuroraContent && window.AuroraVisuals) {
-    window.auroraApp = new AuroraPresentationEngine(window.AuroraContent, window.AuroraVisuals);
+  const content = window.PresentationContent || window.AuroraContent;
+  const visuals = window.PresentationVisuals || window.AuroraVisuals || {};
+  if (content) {
+    window.presentationApp = new AuroraPresentationEngine(content, visuals);
+    window.auroraApp = window.presentationApp;
   }
 });

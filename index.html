@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AURORA — 通用生成式多模态时间序列预测框架 (16:9 Presentation)</title>
+  <title>学术论文演示</title>
 
   <!-- ======================================================================
        1. MATH RENDERING ENGINE: KaTeX v0.16.11 + MathJax v3.2.2 Support
@@ -33,7 +33,7 @@
   <div id="viewport-scaler" class="viewport-scaler">
     <main id="presentation-stage" class="presentation-stage" aria-label="16:9 Presentation Stage">
       <div id="slides-container" class="slides-container">
-        <!-- Populated dynamically by js/presentation-engine.js from js/slide-content.js -->
+        <!-- Populated dynamically by js/presentation-engine.js from decks/aurora/content.js -->
       </div>
     </main>
   </div>
@@ -43,9 +43,9 @@
        ====================================================================== -->
   <aside class="presenter-hud" aria-label="Presenter Controls">
     <button id="hud-btn-toc" class="hud-btn" title="打开目录 (快捷键: T)">☰ 目录</button>
-    <button id="hud-btn-arch" class="hud-btn hud-btn-primary" title="返回第 2 页多路总览图 (快捷键: M)">⊞ 多路总览 (P2)</button>
+    <button id="hud-btn-arch" class="hud-btn hud-btn-primary" title="返回总览">⊞ 总览</button>
     <button id="hud-btn-prev" class="hud-btn" title="上一页 (快捷键: ←)">◀</button>
-    <span id="hud-page-counter" class="hud-counter">1 / 7</span>
+    <span id="hud-page-counter" class="hud-counter"></span>
     <button id="hud-btn-next" class="hud-btn" title="下一页 (快捷键: →)">▶</button>
     <button id="hud-btn-anim" class="hud-btn" title="动画速度配置 (快捷键: A)">⚡ 动画</button>
   </aside>
@@ -57,8 +57,8 @@
 
   <aside id="toc-drawer" class="modal-drawer" aria-label="Slide Directory">
     <div class="drawer-header">
-      <h2 class="drawer-title">幻灯片目录导航 (快捷键: 1–7 / T)</h2>
-      <p class="drawer-subtitle">点击任意章节直达对应精讲页面 · 按 M 键随时返回第 2 页多路总架构</p>
+      <h2 id="toc-heading" class="drawer-title">幻灯片目录导航</h2>
+      <p id="toc-subtitle" class="drawer-subtitle">点击章节直达对应页面</p>
     </div>
     <div id="toc-list" class="toc-list"></div>
   </aside>
@@ -91,9 +91,8 @@
   <!-- ======================================================================
        6. MODULAR JAVASCRIPT ARCHITECTURE (Visuals -> Content -> Engine)
        ====================================================================== -->
-  <script src="js/math-svgs-cache.js"></script>
-  <script src="js/visuals-library.js"></script>
-  <script src="js/slide-content.js"></script>
+  <script src="decks/active.js"></script>
+  <script src="js/slide-layouts.js"></script>
   <script src="js/presentation-engine.js"></script>
 </body>
 </html>
