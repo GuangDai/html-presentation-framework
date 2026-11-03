@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>学术论文演示</title>
+  <title>学术论文 16:9 现代白蓝视觉演示框架</title>
 
   <!-- ======================================================================
-       1. MATH RENDERING ENGINE: KaTeX v0.16.11 + MathJax v3.2.2 Support
+       1. MATH RENDERING ENGINE: KaTeX + MathJax + 100% Offline Vector SVG Cache
        ====================================================================== -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous" />
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
@@ -19,10 +19,11 @@
   <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" crossorigin="anonymous"></script>
 
   <!-- ======================================================================
-       2. MODULAR PRESENTATION STYLESHEETS (Design Tokens, Layout, Animations)
+       2. MODULAR PRESENTATION STYLESHEETS (Tokens, Layout, Components, Animations)
        ====================================================================== -->
   <link rel="stylesheet" href="css/variables.css" />
   <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
   <link rel="stylesheet" href="css/animations.css" />
 </head>
 <body data-anim-speed="normal">
@@ -33,7 +34,7 @@
   <div id="viewport-scaler" class="viewport-scaler">
     <main id="presentation-stage" class="presentation-stage" aria-label="16:9 Presentation Stage">
       <div id="slides-container" class="slides-container">
-        <!-- Populated dynamically by js/presentation-engine.js from decks/aurora/content.js -->
+        <!-- Populated dynamically by js/presentation-engine.js -->
       </div>
     </main>
   </div>
@@ -42,8 +43,10 @@
        4. AUTO-FADING PRESENTER HUD (Bottom-Right Corner, Hidden in Print/Export)
        ====================================================================== -->
   <aside class="presenter-hud" aria-label="Presenter Controls">
+    <button id="hud-btn-deck" class="hud-btn" title="切换演示文稿库 (快捷键: D)">🗂 演示库</button>
     <button id="hud-btn-toc" class="hud-btn" title="打开目录 (快捷键: T)">☰ 目录</button>
-    <button id="hud-btn-arch" class="hud-btn hud-btn-primary" title="返回总览">⊞ 总览</button>
+    <button id="hud-btn-arch" class="hud-btn hud-btn-primary" title="返回总览 (快捷键: M)">⊞ 总览</button>
+    <button id="hud-btn-spot" class="hud-btn" title="逐列聚光灯精讲模式 (快捷键: S / 双击卡片)">◎ 聚焦</button>
     <button id="hud-btn-prev" class="hud-btn" title="上一页 (快捷键: ←)">◀</button>
     <span id="hud-page-counter" class="hud-counter"></span>
     <button id="hud-btn-next" class="hud-btn" title="下一页 (快捷键: →)">▶</button>
@@ -51,22 +54,52 @@
   </aside>
 
   <!-- ======================================================================
-       5. SLIDE DIRECTORY & ANIMATION CONFIGURATION DRAWERS
+       5. SLIDE DIRECTORY, DECK SWITCHER & ANIMATION CONFIGURATION DRAWERS
        ====================================================================== -->
   <div id="drawer-backdrop" class="drawer-backdrop"></div>
 
   <aside id="toc-drawer" class="modal-drawer" aria-label="Slide Directory">
     <div class="drawer-header">
       <h2 id="toc-heading" class="drawer-title">幻灯片目录导航</h2>
-      <p id="toc-subtitle" class="drawer-subtitle">点击章节直达对应页面</p>
+      <p id="toc-subtitle" class="drawer-subtitle">点击章节直达对应页面 · 双击任意步骤卡片开启聚光灯聚焦</p>
     </div>
     <div id="toc-list" class="toc-list"></div>
+  </aside>
+
+  <aside id="deck-drawer" class="modal-drawer" aria-label="Deck Switcher">
+    <div class="drawer-header">
+      <h2 class="drawer-title">切换演示文稿库 (快捷键: D)</h2>
+      <p class="drawer-subtitle">支持通过 URL 参数 <code>?deck=名称</code> 或修改 <code>decks/active.js</code> 切换当前演示</p>
+    </div>
+    <div class="deck-options-grid">
+      <button class="deck-option-btn" data-deck-option="aurora">
+        <span class="toc-num">01</span>
+        <div>
+          <div class="toc-title">Aurora 多模态时间序列生成框架 (ICLR 2026 完整实例 · 7 页)</div>
+          <div class="toc-sub">涵盖问题诊断对比、多路总架构、1D/2D/文本蒸馏、双路引导融合与流匹配生成</div>
+        </div>
+      </button>
+      <button class="deck-option-btn" data-deck-option="component-showcase">
+        <span class="toc-num">02</span>
+        <div>
+          <div class="toc-title">现代白蓝视觉组件与 6 大标准布局全景库 (Component Showcase · 6 页)</div>
+          <div class="toc-sub">全面展示对比诊断页、多路架构页、阶段流水线页、Bento 网格页、定量评测页与语义矩阵页</div>
+        </div>
+      </button>
+      <button class="deck-option-btn" data-deck-option="paper-template">
+        <span class="toc-num">03</span>
+        <div>
+          <div class="toc-title">新论文快速上手脚手架模板 (Paper Template · 6 页全布局骨架)</div>
+          <div class="toc-sub">开箱即用的全部 6 种标准页面与结构化语义组件脚手架，复制即可编写新论文汇报</div>
+        </div>
+      </button>
+    </div>
   </aside>
 
   <aside id="anim-drawer" class="modal-drawer" aria-label="Animation Settings">
     <div class="drawer-header">
       <h2 class="drawer-title">解耦动画速度配置 (快捷键: A)</h2>
-      <p class="drawer-subtitle">通过 CSS 变量动态调节全局过渡时长，无代码耦合，导出 PPT 时可一键关闭</p>
+      <p class="drawer-subtitle">通过 CSS 变量动态调节全局过渡时长，无代码耦合，导出 PPT/PDF 时可一键关闭</p>
     </div>
     <div class="anim-options-grid">
       <button class="anim-option-btn" data-speed-option="off">
@@ -82,16 +115,17 @@
         <span>默认阶梯式丝滑入场，引导观众视线逐模块推进</span>
       </button>
       <button class="anim-option-btn" data-speed-option="slow">
-        <strong>慢速演示 (650ms · 细节精讲)</strong>
+        <strong>慢速演示 (620ms · 细节精讲)</strong>
         <span>适合逐步剖析多模态引导与流匹配演化细节</span>
       </button>
     </div>
   </aside>
 
   <!-- ======================================================================
-       6. MODULAR JAVASCRIPT ARCHITECTURE (Visuals -> Content -> Engine)
+       6. MODULAR JAVASCRIPT ARCHITECTURE (Deck -> Components -> Layouts -> Engine)
        ====================================================================== -->
   <script src="decks/active.js"></script>
+  <script src="js/visual-components.js"></script>
   <script src="js/slide-layouts.js"></script>
   <script src="js/presentation-engine.js"></script>
 </body>

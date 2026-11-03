@@ -1,108 +1,132 @@
 /**
  * ============================================================================
  * @file css/variables.css
- * @description Single Source of Truth for Design Tokens, Color Palette,
- *              Typography Scale, and 16:9 Stage Layout Dimensions.
+ * @description Single Source of Truth for the Unified Bright White & Modern Blue
+ *              Design System (克制白蓝现代学术视觉体系).
  *
- * AI / AGENT MODIFICATION GUIDE:
- * - To adjust slide dimensions or global padding: edit `--stage-*` variables.
- * - To adjust upper card vs bottom formula bar height ratio: edit
- *   `--pipeline-upper-height`, `--pipeline-bridge-height`, and `--formula-stage-max-h`.
- * - To adjust semantic module colors: edit `--color-mod-*` tokens below.
+ * VISUAL GRAMMAR & COLOR GUIDANCE RULES (色彩引导与视觉逻辑铁律):
+ * 1. 85% Pure White & Alabaster Surfaces (`--bg-*`):
+ *    Eliminates visual noise and maximizes contrast for diagrams and formulas.
+ * 2. 12% Layered Blue Spectrum (`--c-slate`, `--c-sky`, `--c-primary`, `--c-indigo`):
+ *    - Slate (`#475569`): Raw inputs, baseline states, frozen pretrained weights.
+ *    - Sky Blue (`#0284C7`): Normalization, exogenous text, feature distillation.
+ *    - Indigo Blue (`#4F46E5`): 2D periodic spectral stream, prior prototype bank.
+ *    - Royal Blue (`#2563EB`): Core 1D backbone, focal operators, active attention.
+ *    - Signal Teal (`#0D9488`): Converged terminal outputs (X^fuse, \hat{Y}).
+ * 3. 3% Surgical Diagnostic Accent (`--c-rose`):
+ *    - Strictly reserved for baseline bottlenecks, padding gaps, or error diagnostics.
  * ============================================================================
  */
 
 :root {
   /* --------------------------------------------------------------------------
-   * 1. 16:9 Standard Widescreen Stage Geometry (1920 x 1080)
+   * 1. 16:9 Widescreen Fixed Coordinate Stage (1920 × 1080)
    * -------------------------------------------------------------------------- */
   --stage-width: 1920px;
   --stage-height: 1080px;
   --stage-scale: 1;
-  --stage-pad-top: 34px;
-  --stage-pad-x: 54px;
-  --stage-pad-bottom: 24px;
+  --stage-pad-top: 22px;
+  --stage-pad-x: 38px;
+  --stage-pad-bottom: 18px;
 
   /* --------------------------------------------------------------------------
-   * 2. Vertical Rhythm & Spatial Allocation Tokens
+   * 2. Typography Scale & Families
    * -------------------------------------------------------------------------- */
-  --arch-grid-height: 600px;
-  --pipeline-upper-height-4col: 550px;
-  --pipeline-upper-height-5col: 550px;
-  --pipeline-upper-height-7col: 530px;
-  --pipeline-bridge-height: 30px;
-  --formula-stage-min-h: 62px;
-  --formula-stage-max-h: 96px;
-
-  /* --------------------------------------------------------------------------
-   * 3. Typography Families & Projection Font Scale
-   * -------------------------------------------------------------------------- */
-  --font-sans: 'Inter', 'Noto Sans CJK SC', 'PingFang SC', 'Microsoft YaHei', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-sans: 'Inter', 'Noto Sans CJK SC', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-display: 'Inter Display', 'Inter', 'Noto Sans CJK SC', 'PingFang SC', sans-serif;
-  --font-mono: 'JetBrains Mono', 'DejaVu Sans Mono', monospace;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'DejaVu Sans Mono', monospace;
 
-  --fs-slide-title: 28px;
-  --fs-kicker: 12.5px;
-  --fs-card-title: 19.5px;
-  --fs-card-title-compact: 16.5px;
-  --fs-caption: 13.5px;
-  --fs-caption-compact: 12px;
-  --fs-formula-main: 17.5px;
-  --fs-formula-compact: 15px;
+  --fs-slide-title: 25px;
+  --fs-slide-subtitle: 13px;
+  --fs-phase-tag: 12px;
+  --fs-card-title: 16.5px;
+  --fs-card-title-compact: 14px;
+  --fs-semantic-tag: 11px;
+  --fs-semantic-text: 12.8px;
+  --fs-formula-op: 14.5px;
+  --fs-formula-dim: 13.5px;
 
   /* --------------------------------------------------------------------------
-   * 4. Clean Daylight / Warm Academic Paper Surfaces & Ink Hierarchy
+   * 3. 85% Luminous White & Cool Alabaster Surface Hierarchy
    * -------------------------------------------------------------------------- */
-  --bg-viewport: #CBD5E1;
-  --bg-stage: #F8FAFC;
+  --bg-viewport: #DCE5F0;
+  --bg-stage: #F6F9FC;
   --bg-card: #FFFFFF;
+  --bg-well: #F8FAFC;
+  --bg-well-blue: #F2F7FF;
   --bg-subtle: #F1F5F9;
 
-  --border-light: #F1F5F9;
-  --border-card: #E2E8F0;
-  --border-strong: #CBD5E1;
+  --border-hairline: #E8EEF5;
+  --border-card: #DCE6F2;
+  --border-strong: #C5D4E6;
+  --border-focus: #2563EB;
 
   --text-ink: #0F172A;
-  --text-body: #334155;
+  --text-primary: #1E293B;
+  --text-secondary: #334155;
   --text-muted: #64748B;
+  --text-light: #94A3B8;
 
   /* --------------------------------------------------------------------------
-   * 5. Semantic Forward-Stage Module Accents
+   * 4. 12% Layered Modern Blue Semantic Spectrum (Consistent End-to-End)
    * -------------------------------------------------------------------------- */
-  /* Stage 1: Normalization & Scale (Cyan) */
-  --c-norm: #0891B2;
-  --bg-norm: #ECFEFF;
-  --bd-norm: #A5F3FC;
+  /* Role A: Primary Royal Blue — Core 1D Backbone & Focal Active Operators */
+  --c-primary: #2563EB;
+  --c-primary-dark: #1D4ED8;
+  --c-primary-deep: #1E3A8A;
+  --bg-primary: #EFF6FF;
+  --bd-primary: #BFDBFE;
 
-  /* Stage 2A: 1D Temporal Stream (Royal Blue) */
-  --c-1d: #2563EB;
-  --bg-1d: #EFF6FF;
-  --bd-1d: #BFDBFE;
+  /* Role B: Sky / Cyan Blue — Normalization, Exogenous Text & Distillation */
+  --c-sky: #0284C7;
+  --c-sky-dark: #0369A1;
+  --bg-sky: #F0F9FF;
+  --bd-sky: #BAE6FD;
 
-  /* Stage 2B: 2D Endogenous Image Stream (Violet) */
-  --c-2d: #7C3AED;
-  --bg-2d: #F5F3FF;
-  --bd-2d: #DDD6FE;
+  /* Role C: Cobalt / Indigo Blue — 2D Periodic Stream & Prototype Bank */
+  --c-indigo: #4F46E5;
+  --c-indigo-dark: #4338CA;
+  --bg-indigo: #EEF2FF;
+  --bd-indigo: #C7D2FE;
 
-  /* Stage 2C & 3: Exogenous Text & Token Distillation (Emerald) */
-  --c-text: #059669;
-  --bg-text: #ECFDF5;
-  --bd-text: #A7F3D0;
+  /* Role D: Signal Teal — Converged Terminal Representation & Output */
+  --c-teal: #0D9488;
+  --c-teal-dark: #0F766E;
+  --bg-teal: #F0FDFA;
+  --bd-teal: #99F6E4;
 
-  /* Stage 4: Modality-Guided Attention & Alignment (Amber) */
-  --c-align: #D97706;
-  --bg-align: #FFFBEB;
-  --bd-align: #FDE68A;
-
-  /* Stage 5: Condition Decoder & Prototype Flow Matching (Rose) */
-  --c-dec: #E11D48;
-  --bg-dec: #FFF1F2;
-  --bd-dec: #FECDD3;
+  /* Role E: Neutral Cool Slate — Raw Inputs, Frozen Backbones & Baselines */
+  --c-slate: #475569;
+  --c-slate-dark: #334155;
+  --bg-slate: #F1F5F9;
+  --bd-slate: #CBD5E1;
 
   /* --------------------------------------------------------------------------
-   * 6. Elevation & Animation Tokens
+   * 5. 3% Surgical Diagnostic & Modulation Accents (Restrained Usage)
    * -------------------------------------------------------------------------- */
-  --shadow-card: 0 8px 24px -4px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
-  --shadow-hover: 0 16px 32px -6px rgba(15, 23, 42, 0.11);
-  --anim-speed: 1.5;
+  /* Role F: Diagnostic Rose-Coral — Baseline Bottlenecks & Padding Gaps Only */
+  --c-rose: #E11D48;
+  --c-rose-dark: #BE123C;
+  --bg-rose: #FFF1F2;
+  --bd-rose: #FECDD3;
+
+  /* Role G: Warm Amber-Gold — Correlation Weight Matrix Modulation Only */
+  --c-amber: #D97706;
+  --c-amber-dark: #B45309;
+  --bg-amber: #FFFBEB;
+  --bd-amber: #FDE68A;
+
+  /* --------------------------------------------------------------------------
+   * 6. Architectural Radii, Shadows & Elevation
+   * -------------------------------------------------------------------------- */
+  --radius-xl: 16px;
+  --radius-lg: 12px;
+  --radius-md: 9px;
+  --radius-sm: 6px;
+  --radius-pill: 999px;
+
+  --shadow-stage: 0 24px 64px rgba(15, 23, 42, 0.14), 0 4px 16px rgba(30, 58, 138, 0.06);
+  --shadow-card: 0 4px 16px -2px rgba(15, 23, 42, 0.04), 0 2px 5px -1px rgba(37, 99, 235, 0.025);
+  --shadow-card-hover: 0 12px 28px -4px rgba(37, 99, 235, 0.12), 0 4px 10px -2px rgba(15, 23, 42, 0.05);
+  --shadow-focal: 0 6px 20px -3px rgba(37, 99, 235, 0.18);
 }

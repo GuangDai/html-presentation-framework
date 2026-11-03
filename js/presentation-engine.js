@@ -3,30 +3,26 @@
  * AURORA PRESENTATION FRAMEWORK — MODULAR RENDERING & INTERACTION ENGINE
  * ============================================================================
  * File: js/presentation-engine.js
- * Global Export: window.AuroraEngine
+ * Global Export: window.PresentationEngine / window.AuroraEngine
  *
- * ARCHITECTURE & RESPONSIBILITIES:
- * - Reads declarative content from `window.AuroraContent` (`decks/aurora/content.js`)
- * - Fetches pure SVG diagrams by key from `window.AuroraVisuals` (`decks/aurora/visuals.js`)
- * - Renders multi-part/long equations on separate stacked lines (`.math-line`)
- *   inside compact formula boxes.
- * - Dynamically measures and equalizes the heights of card headers, captions,
- *   operation titles, formula boxes, and dimension bars across all columns on
- *   each slide (`equalizeAllSlidesRegions`) so every region matches the tallest
- *   element in its row with pixel-level visual uniformity.
+ * CAPABILITIES:
+ * - Renders 6 standardized layouts (`contrast-slide`, `architecture-slide`,
+ *   `pipeline-slide`, `bento-slide`, `benchmark-slide`, `matrix-slide`)
+ * - Integrates declarative visual-semantic components (`window.PresentationComponents`)
+ * - Typesets TeX via KaTeX / MathJax / 100% pre-compiled offline vector SVG cache
+ * - Equalizes sibling card regions across rows with pixel-level precision
+ * - Supports interactive Step Spotlight Mode (press `S` or double-click a card)
+ * - Supports live Deck Switching via HUD drawer (`D` key) or `?deck=` URL param
  * ============================================================================
  */
 
 class AuroraPresentationEngine {
-  /**
-   * @param {Object} contentData - Declarative deck schema (`window.AuroraContent`)
-   * @param {Object} visualsLibrary - Key-indexed SVG map (`window.AuroraVisuals`)
-   */
   constructor(contentData, visualsLibrary) {
     this.content = contentData;
     this.visuals = visualsLibrary;
     this.slides = contentData.slides || [];
     this.currentSlideIndex = 0;
+    this.spotlightColIndex = null;
     this.animSpeed = (contentData.deckMeta && contentData.deckMeta.defaultAnimSpeed) || 'normal';
 
     this.dom = {
@@ -37,6 +33,7 @@ class AuroraPresentationEngine {
       tocList: document.getElementById('toc-list'),
       tocDrawer: document.getElementById('toc-drawer'),
       animDrawer: document.getElementById('anim-drawer'),
+      deckDrawer: document.getElementById('deck-drawer'),
       backdrop: document.getElementById('drawer-backdrop'),
       pageCounter: document.getElementById('hud-page-counter')
     };
@@ -45,11 +42,12 @@ class AuroraPresentationEngine {
     this.init();
   }
 
-  /** 将目录和总览入口交由演示数据配置。 */
+  /** Configure deck-specific titles, home button, and deck switcher state */
   configureDeckUI() {
     const meta = this.content.deckMeta || {};
     if (meta.documentTitle) document.title = meta.documentTitle;
-    this.homeSlide = Number.isInteger(meta.homeSlide) && meta.homeSlide >= 0 && meta.homeSlide < this.slides.length ? meta.homeSlide : null;
+    this.homeSlide = Number.isInteger(meta.homeSlide) && meta.homeSlide >= 0 && meta.homeSlide < this.slides.length
+      ? meta.homeSlide : null;
     const button = document.getElementById('hud-btn-arch');
     if (button) {
       button.hidden = this.homeSlide === null;
@@ -62,11 +60,14 @@ class AuroraPresentationEngine {
     if (title) title.textContent = `幻灯片目录导航 (快捷键: 1–${Math.min(this.slides.length, 9)} / T)`;
     const subtitle = document.getElementById('toc-subtitle');
     if (subtitle) subtitle.textContent = meta.tocSubtitle || '点击章节直达对应页面';
+
+    const currentDeck = window.ACTIVE_DECK_NAME || 'aurora';
+    document.querySelectorAll('[data-deck-option]').forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('data-deck-option') === currentDeck);
+    });
   }
 
-  /**
-   * Initialize presentation DOM, math typesetting, dynamic height equalization, and events
-   */
+  /** Initialize DOM, math rendering, row height equalization, and listeners */
   init() {
     this.renderHeaderAgenda();
     this.renderTocDrawer();
@@ -79,9 +80,7 @@ class AuroraPresentationEngine {
     this.goToSlide(0, false);
   }
 
-  /**
-   * Resolve a `visualKey` from `window.AuroraVisuals`
-   */
+  /** Resolve a `visualKey` from `window.PresentationVisuals` / `window.AuroraVisuals` */
   resolveVisual(visualKey) {
     if (!visualKey || !this.visuals) return '';
     if (typeof this.visuals[visualKey] === 'string') {
@@ -99,20 +98,16 @@ class AuroraPresentationEngine {
     return typeof cursor === 'string' ? cursor : '';
   }
 
-  /**
-   * Convert inline `$latex$` segments within a text string into `.latex-formula` spans
-   */
+  /** Convert inline `$latex$` segments within text into `.latex-formula` spans */
   formatInlineMath(str) {
-    if (!str) return '';
+    if (str === undefined || str === null) return '';
     return String(str).replace(/\$([^$]+)\$/g, (_, latex) => {
       const escaped = this.escapeAttr(latex.trim());
       return `<span class="latex-formula latex-inline" data-latex="${escaped}" data-display="false"></span>`;
     });
   }
 
-  /**
-   * Render top-right integrated Agenda Rail pills
-   */
+  /** Render top-right Agenda Rail pills */
   renderHeaderAgenda() {
     if (!this.dom.headerAgenda) return;
     this.dom.headerAgenda.innerHTML = this.slides.map((slide, idx) => `
@@ -123,25 +118,21 @@ class AuroraPresentationEngine {
     `).join('');
   }
 
-  /**
-   * Render slide directory items inside the collapsible TOC drawer
-   */
+  /** Render TOC Drawer items */
   renderTocDrawer() {
     if (!this.dom.tocList) return;
     this.dom.tocList.innerHTML = this.slides.map((slide, idx) => `
       <div class="toc-item" data-slide-idx="${idx}">
         <span class="toc-num">${String(idx + 1).padStart(2, '0')}</span>
         <div class="toc-text">
-          <div class="toc-title">${slide.title}</div>
-          <div class="toc-sub">${slide.subtitle}</div>
+          <div class="toc-title">${this.formatInlineMath(slide.title)}</div>
+          <div class="toc-sub">${this.formatInlineMath(slide.subtitle)}</div>
         </div>
       </div>
     `).join('');
   }
 
-  /**
-   * Render all slides into `#slides-container`
-   */
+  /** Render all slides into `#slides-container` */
   renderAllSlides() {
     if (!this.dom.slideContainer) return;
     this.dom.slideContainer.innerHTML = this.slides.map((slide, idx) => {
@@ -152,6 +143,12 @@ class AuroraPresentationEngine {
         bodyHtml = this.buildArchitectureSlide(slide);
       } else if (slide.layout === 'pipeline-slide') {
         bodyHtml = this.buildPipelineSlide(slide);
+      } else if (slide.layout === 'bento-slide') {
+        bodyHtml = this.buildBentoSlide(slide);
+      } else if (slide.layout === 'benchmark-slide') {
+        bodyHtml = this.buildBenchmarkSlide(slide);
+      } else if (slide.layout === 'matrix-slide') {
+        bodyHtml = this.buildMatrixSlide(slide);
       }
 
       return `
@@ -165,27 +162,27 @@ class AuroraPresentationEngine {
     }).join('');
   }
 
-  /**
-   * Build the standardized top header bar
-   */
+  /** Build the standardized top header bar with Section Tag + Title + Agenda Rail */
   buildSlideHeader(slide, idx) {
-    // Keep the navigation rail within the fixed stage when a deck has many pages.
     const start = Math.max(0, Math.min(idx - 3, this.slides.length - 7));
     const visibleSlides = this.slides.slice(start, start + 7);
     const agendaHtml = visibleSlides.map((s, offset) => {
       const sIdx = start + offset;
+      const stateClass = sIdx === idx ? 'active' : (sIdx < idx ? 'passed' : '');
       return `
-      <button class="agenda-pill ${sIdx === idx ? 'active' : ''}" data-slide-idx="${sIdx}">
-        <span class="pill-num">${String(sIdx + 1).padStart(2, '0')}</span>
-        <span>${s.navTitle || s.title}</span>
-      </button>
-    `;
+        <button class="agenda-pill ${stateClass}" data-slide-idx="${sIdx}">
+          <span class="pill-num">${String(sIdx + 1).padStart(2, '0')}</span>
+          <span>${s.navTitle || s.title}</span>
+        </button>
+      `;
     }).join('');
 
     return `
       <header class="slide-header anim-item" data-anim="fade-down" style="--stagger:0">
         <div class="slide-header-left">
-          <h1 class="slide-title">${this.formatInlineMath(slide.title)}</h1>
+          <div class="slide-title-row">
+            <h1 class="slide-title">${this.formatInlineMath(slide.title)}</h1>
+          </div>
           <p class="slide-subtitle">${this.formatInlineMath(slide.subtitle)}</p>
         </div>
         <nav class="slide-agenda-rail" aria-label="Slide Navigation">
@@ -197,9 +194,6 @@ class AuroraPresentationEngine {
 
   /**
    * Dynamically equalize the height of corresponding regions across cards in the same row
-   * so that every region (`.pipe-card-top`, `.pipe-step-caption`, `.chain-tier-op`,
-   * `.chain-tier-math`, `.chain-tier-dim`, `.contrast-card-head`, `.contrast-points`)
-   * matches the maximum height in its group!
    */
   equalizeAllSlidesRegions() {
     const prevTransform = this.dom.stage ? this.dom.stage.style.transform : '';
@@ -215,7 +209,6 @@ class AuroraPresentationEngine {
         frame.style.visibility = 'hidden';
       }
 
-      // Equalize regions within each actual grid row, including wrapped layouts.
       const equalizeRows = (container, cardSelector, selectors) => {
         if (!container) return;
         const cards = Array.from(container.querySelectorAll(cardSelector));
@@ -234,6 +227,7 @@ class AuroraPresentationEngine {
           }
         }));
       };
+
       equalizeRows(frame.querySelector('.pipe-cards-grid'), '.pipe-step-card', [
         '.pipe-card-top', '.pipe-step-caption'
       ]);
@@ -241,7 +235,9 @@ class AuroraPresentationEngine {
         '.chain-tier-op', '.chain-tier-math', '.chain-tier-dim'
       ]);
       frame.querySelectorAll('.contrast-cards-grid').forEach(grid => {
-        equalizeRows(grid, '.contrast-card', ['.contrast-card-head', '.contrast-points']);
+        equalizeRows(grid, '.contrast-card', [
+          '.contrast-card-head', '.contrast-points', '.v-diagnostic-panel'
+        ]);
       });
 
       if (!wasActive) {
@@ -255,22 +251,20 @@ class AuroraPresentationEngine {
     }
   }
 
-  /**
-   * Escape double quotes for HTML attribute embedding
-   */
+  /** Escape double quotes for HTML attribute embedding */
   escapeAttr(str) {
     if (!str) return '';
     return String(str).replace(/&/g, '&amp;').replace(/"/g, '&quot;');
   }
 
-  /**
-   * Typeset all `.latex-formula[data-latex]` elements at a uniform font size
-   */
+  /** Typeset all `.latex-formula[data-latex]` elements (KaTeX -> MathJax -> Offline Vector Cache) */
   typesetAllMath() {
     const mathNodes = document.querySelectorAll('.latex-formula[data-latex]');
     mathNodes.forEach(node => {
       const latex = node.getAttribute('data-latex');
       if (!latex) return;
+
+      const mathCache = window.PresentationMathSvgs || window.AURORA_MATH_SVGS;
 
       if (window.katex && typeof window.katex.render === 'function') {
         try {
@@ -281,7 +275,7 @@ class AuroraPresentationEngine {
           });
           return;
         } catch (err) {
-          console.warn('[AuroraEngine] KaTeX render warning:', err);
+          console.warn('[PresentationEngine] KaTeX render warning:', err);
         }
       }
 
@@ -291,11 +285,10 @@ class AuroraPresentationEngine {
           node.innerHTML = svgWrapper.innerHTML;
           return;
         } catch (err) {
-          console.warn('[AuroraEngine] MathJax render warning:', err);
+          console.warn('[PresentationEngine] MathJax render warning:', err);
         }
       }
 
-      const mathCache = window.PresentationMathSvgs || window.AURORA_MATH_SVGS;
       if (mathCache && mathCache[latex]) {
         node.innerHTML = mathCache[latex];
         return;
@@ -305,13 +298,12 @@ class AuroraPresentationEngine {
     });
   }
 
-  /**
-   * Navigate to a specific 0-based slide index
-   */
+  /** Navigate to a 0-based slide index */
   goToSlide(targetIdx, animate = true) {
     const total = this.slides.length;
     if (targetIdx < 0 || targetIdx >= total) return;
 
+    this.clearSpotlight();
     this.currentSlideIndex = targetIdx;
 
     const allFrames = document.querySelectorAll('.slide-frame');
@@ -337,9 +329,50 @@ class AuroraPresentationEngine {
     this.closeDrawers();
   }
 
-  /**
-   * Re-trigger entrance animations on the newly active slide
-   */
+  /** Interactive Step Spotlight Mode: Highlight column `colIdx` on active slide */
+  toggleSpotlight(colIdx = null) {
+    const activeFrame = document.querySelector('.slide-frame.active');
+    if (!activeFrame) return;
+
+    const cards = activeFrame.querySelectorAll('[data-col-idx]');
+    if (!cards.length) return;
+
+    const maxCol = Math.max(...Array.from(cards).map(c => parseInt(c.getAttribute('data-col-idx'), 10)));
+    if (colIdx === null) {
+      if (this.spotlightColIndex === null) {
+        this.spotlightColIndex = 0;
+      } else if (this.spotlightColIndex < maxCol) {
+        this.spotlightColIndex += 1;
+      } else {
+        this.clearSpotlight();
+        return;
+      }
+    } else if (this.spotlightColIndex === colIdx) {
+      this.clearSpotlight();
+      return;
+    } else {
+      this.spotlightColIndex = colIdx;
+    }
+
+    activeFrame.classList.add('spotlight-mode');
+    cards.forEach(card => {
+      const cIdx = parseInt(card.getAttribute('data-col-idx'), 10);
+      card.classList.toggle('spotlight-focused', cIdx === this.spotlightColIndex);
+      card.classList.toggle('spotlight-dimmed', cIdx !== this.spotlightColIndex);
+    });
+  }
+
+  clearSpotlight() {
+    this.spotlightColIndex = null;
+    document.querySelectorAll('.slide-frame.spotlight-mode').forEach(frame => {
+      frame.classList.remove('spotlight-mode');
+      frame.querySelectorAll('.spotlight-focused, .spotlight-dimmed').forEach(el => {
+        el.classList.remove('spotlight-focused', 'spotlight-dimmed');
+      });
+    });
+  }
+
+  /** Re-trigger entrance animations on the newly active slide */
   triggerSlideAnimations(slideEl) {
     const items = slideEl.querySelectorAll('.anim-item');
     items.forEach(el => {
@@ -349,9 +382,7 @@ class AuroraPresentationEngine {
     });
   }
 
-  /**
-   * Apply global animation speed preset ('off' | 'fast' | 'normal' | 'slow')
-   */
+  /** Apply global animation speed preset ('off' | 'fast' | 'normal' | 'slow') */
   applyAnimationSpeed(speedMode) {
     this.animSpeed = speedMode;
     document.body.setAttribute('data-anim-speed', speedMode);
@@ -361,9 +392,7 @@ class AuroraPresentationEngine {
     });
   }
 
-  /**
-   * Scale the 1920x1080 stage proportionally to fit any browser window
-   */
+  /** Scale the 1920x1080 stage proportionally to fit any browser window */
   updateViewportScale() {
     if (!this.dom.stage) return;
     if (document.body.classList.contains('export-mode')) {
@@ -376,9 +405,7 @@ class AuroraPresentationEngine {
     this.dom.stage.style.transform = `scale(${scale})`;
   }
 
-  /**
-   * Open/close TOC or Animation Configuration drawers
-   */
+  /** Open/close TOC, Animation, or Deck Switcher drawers */
   toggleDrawer(drawerEl) {
     if (!drawerEl) return;
     const isOpen = drawerEl.classList.contains('open');
@@ -392,16 +419,23 @@ class AuroraPresentationEngine {
   closeDrawers() {
     if (this.dom.tocDrawer) this.dom.tocDrawer.classList.remove('open');
     if (this.dom.animDrawer) this.dom.animDrawer.classList.remove('open');
+    if (this.dom.deckDrawer) this.dom.deckDrawer.classList.remove('open');
     if (this.dom.backdrop) this.dom.backdrop.classList.remove('open');
   }
 
-  /**
-   * Bind all UI click, keyboard, and resize listeners
-   */
+  /** Bind all UI click, double-click, keyboard, and resize listeners */
   bindEvents() {
     window.addEventListener('resize', () => {
       this.equalizeAllSlidesRegions();
       this.updateViewportScale();
+    });
+
+    document.addEventListener('dblclick', (e) => {
+      const colCard = e.target.closest('[data-col-idx]');
+      if (colCard) {
+        const colIdx = parseInt(colCard.getAttribute('data-col-idx'), 10);
+        if (!isNaN(colIdx)) this.toggleSpotlight(colIdx);
+      }
     });
 
     document.addEventListener('click', (e) => {
@@ -424,6 +458,17 @@ class AuroraPresentationEngine {
         this.applyAnimationSpeed(speedBtn.getAttribute('data-speed-option'));
         return;
       }
+
+      const deckBtn = e.target.closest('[data-deck-option]');
+      if (deckBtn) {
+        const targetDeck = deckBtn.getAttribute('data-deck-option');
+        if (targetDeck) {
+          const url = new URL(window.location.href);
+          url.searchParams.set('deck', targetDeck);
+          window.location.href = url.toString();
+        }
+        return;
+      }
     });
 
     const btnPrev = document.getElementById('hud-btn-prev');
@@ -431,12 +476,16 @@ class AuroraPresentationEngine {
     const btnHome = document.getElementById('hud-btn-arch');
     const btnToc = document.getElementById('hud-btn-toc');
     const btnAnim = document.getElementById('hud-btn-anim');
+    const btnDeck = document.getElementById('hud-btn-deck');
+    const btnSpot = document.getElementById('hud-btn-spot');
 
     if (btnPrev) btnPrev.addEventListener('click', () => this.goToSlide(this.currentSlideIndex - 1));
     if (btnNext) btnNext.addEventListener('click', () => this.goToSlide(this.currentSlideIndex + 1));
     if (btnHome) btnHome.addEventListener('click', () => { if (this.homeSlide !== null) this.goToSlide(this.homeSlide); });
     if (btnToc) btnToc.addEventListener('click', () => this.toggleDrawer(this.dom.tocDrawer));
     if (btnAnim) btnAnim.addEventListener('click', () => this.toggleDrawer(this.dom.animDrawer));
+    if (btnDeck) btnDeck.addEventListener('click', () => this.toggleDrawer(this.dom.deckDrawer));
+    if (btnSpot) btnSpot.addEventListener('click', () => this.toggleSpotlight());
     if (this.dom.backdrop) this.dom.backdrop.addEventListener('click', () => this.closeDrawers());
 
     window.addEventListener('keydown', (e) => {
@@ -455,7 +504,14 @@ class AuroraPresentationEngine {
       } else if (e.key === 'a' || e.key === 'A') {
         e.preventDefault();
         this.toggleDrawer(this.dom.animDrawer);
+      } else if (e.key === 'd' || e.key === 'D') {
+        e.preventDefault();
+        this.toggleDrawer(this.dom.deckDrawer);
+      } else if (e.key === 's' || e.key === 'S') {
+        e.preventDefault();
+        this.toggleSpotlight();
       } else if (e.key === 'Escape') {
+        this.clearSpotlight();
         this.closeDrawers();
       } else if (/^[1-9]$/.test(e.key)) {
         const num = parseInt(e.key, 10) - 1;
@@ -465,7 +521,11 @@ class AuroraPresentationEngine {
   }
 }
 
-Object.assign(AuroraPresentationEngine.prototype, window.PresentationLayouts);
+Object.assign(
+  AuroraPresentationEngine.prototype,
+  window.PresentationComponents || {},
+  window.PresentationLayouts || {}
+);
 window.PresentationEngine = AuroraPresentationEngine;
 window.AuroraEngine = AuroraPresentationEngine;
 

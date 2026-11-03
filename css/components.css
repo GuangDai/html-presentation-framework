@@ -1,0 +1,770 @@
+/**
+ * ============================================================================
+ * @file css/components.css
+ * @description Rich Visual Semantic Components & Extended Slide Layouts
+ *              (视觉语义组件库与扩展幻灯片布局样式)
+ *
+ * Replaces dense paragraphs of text with structured, scannable visual grammar:
+ *  1. `.v-phase-track`: Macro Phase Grouping Bar above pipeline steps
+ *  2. `.v-flow-strip`: 3-Node [Input] ➔ [Operator] ➔ [Output] visual chain
+ *  3. `.v-kv-grid`: Tagged Semantic Key-Value rows ([物理作用] / [核心性质])
+ *  4. `.v-diagnostic-rows`: Cause-to-Effect & Mechanism-to-Gain rows for Contrast
+ *  5. `.v-card-footer-strip`: Metadata & metric chips at card bottom
+ *  6. `.v-band-meta-strip`: Architecture stream summary badges
+ *  7. Extended Layouts: `.bento-layout`, `.benchmark-layout`, `.matrix-layout`
+ * ============================================================================
+ */
+
+/* ============================================================================
+ * 1. Tier 2: Macro Phase Guidance Track (`.v-phase-track`)
+ * ============================================================================ */
+.v-phase-track {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-columns, 4), minmax(0, 1fr));
+  gap: 14px;
+  flex-shrink: 0;
+}
+
+.v-phase-track.cols-5 { gap: 13px; }
+.v-phase-track.cols-7 { gap: 9px; }
+
+.v-phase-pill {
+  grid-column: span var(--phase-span, 1);
+  background: #FFFFFF;
+  border: 1.5px solid var(--border-card);
+  border-left: 4px solid var(--c-primary);
+  border-radius: 8px;
+  padding: 5px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.025);
+  position: relative;
+}
+
+.v-phase-pill.phase-sky    { border-left-color: var(--c-sky); background: linear-gradient(90deg, #F0F9FF 0%, #FFFFFF 45%); }
+.v-phase-pill.phase-blue   { border-left-color: var(--c-primary); background: linear-gradient(90deg, #EFF6FF 0%, #FFFFFF 45%); }
+.v-phase-pill.phase-indigo { border-left-color: var(--c-indigo); background: linear-gradient(90deg, #EEF2FF 0%, #FFFFFF 45%); }
+.v-phase-pill.phase-teal   { border-left-color: var(--c-teal); background: linear-gradient(90deg, #F0FDFA 0%, #FFFFFF 45%); }
+.v-phase-pill.phase-slate  { border-left-color: var(--c-slate); background: linear-gradient(90deg, #F1F5F9 0%, #FFFFFF 45%); }
+
+.v-phase-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.v-phase-code {
+  font-size: 10.5px;
+  font-weight: 900;
+  padding: 1.5px 7px;
+  border-radius: 4px;
+  background: var(--c-primary);
+  color: #FFFFFF;
+  font-family: var(--font-mono);
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.phase-sky .v-phase-code    { background: var(--c-sky); }
+.phase-indigo .v-phase-code { background: var(--c-indigo); }
+.phase-teal .v-phase-code   { background: var(--c-teal); }
+.phase-slate .v-phase-code  { background: var(--c-slate); }
+
+.v-phase-title {
+  font-size: 12.5px;
+  font-weight: 800;
+  color: var(--text-ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.v-phase-summary {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  background: var(--bg-well);
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--border-hairline);
+  white-space: nowrap;
+}
+
+/* ============================================================================
+ * 2. Structured Step Semantic Block (`.v-step-semantics` inside `.pipe-step-caption`)
+ * ============================================================================ */
+.v-step-semantics {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
+}
+
+/* 3-Node Input -> Operator -> Output Visual Flow Strip */
+.v-io-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  background: #FFFFFF;
+  border: 1px solid var(--border-card);
+  border-radius: 7px;
+  padding: 4px 6px;
+}
+
+.v-io-node {
+  flex: 1 1 auto;
+  text-align: center;
+  font-size: 10.8px;
+  font-weight: 800;
+  padding: 2.5px 5px;
+  border-radius: 5px;
+  white-space: nowrap;
+}
+
+.v-io-node.io-in {
+  background: #F1F5F9;
+  color: #475569;
+}
+
+.v-io-node.io-op {
+  background: var(--bg-primary);
+  color: var(--c-primary-dark);
+  border: 1px solid var(--bd-primary);
+}
+
+.v-io-node.io-out {
+  background: var(--bg-sky);
+  color: var(--c-sky-dark);
+}
+
+.v-io-arrow {
+  font-size: 10px;
+  font-weight: 900;
+  color: #94A3B8;
+  flex-shrink: 0;
+}
+
+/* 2-Row Key-Value Semantic Spec Grid */
+.v-kv-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.v-kv-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #FFFFFF;
+  border: 1px solid var(--border-hairline);
+  border-radius: 6px;
+  padding: 3.5px 7px;
+  text-align: left;
+}
+
+.v-kv-tag {
+  font-size: 10.2px;
+  font-weight: 800;
+  padding: 1.5px 6px;
+  border-radius: 4px;
+  background: #EFF6FF;
+  color: #1D4ED8;
+  border: 1px solid #BFDBFE;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.v-kv-tag.tag-slate  { background: #F1F5F9; color: #334155; border-color: #CBD5E1; }
+.v-kv-tag.tag-sky    { background: #F0F9FF; color: #0369A1; border-color: #BAE6FD; }
+.v-kv-tag.tag-indigo { background: #EEF2FF; color: #4338CA; border-color: #C7D2FE; }
+.v-kv-tag.tag-teal   { background: #F0FDFA; color: #0F766E; border-color: #99F6E4; }
+.v-kv-tag.tag-rose   { background: #FFF1F2; color: #BE123C; border-color: #FECDD3; }
+
+.v-kv-val {
+  font-size: 11.8px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.3;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Compact 7-column overrides for `.v-step-semantics` */
+.pipe-cards-grid:is(.cols-7, .density-compact) .v-io-strip {
+  flex-direction: column;
+  gap: 2px;
+  padding: 3px 4px;
+}
+
+.pipe-cards-grid:is(.cols-7, .density-compact) .v-io-node {
+  width: 100%;
+  font-size: 10.2px;
+  padding: 2px 3px;
+}
+
+.pipe-cards-grid:is(.cols-7, .density-compact) .v-io-arrow {
+  display: none;
+}
+
+.pipe-cards-grid:is(.cols-7, .density-compact) .v-kv-row {
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 2px;
+  padding: 3px 4px;
+}
+
+.pipe-cards-grid:is(.cols-7, .density-compact) .v-kv-val {
+  font-size: 10.6px;
+}
+
+/* ============================================================================
+ * 3. Contrast Slide Visual Diagnostic & Mechanism Rows (`.v-diagnostic-panel`)
+ * ============================================================================ */
+.v-diagnostic-panel {
+  background: var(--bg-well);
+  border: 1px solid var(--border-card);
+  border-radius: 10px;
+  padding: 7px 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+.band-contributions .v-diagnostic-panel {
+  background: #F5F9FF;
+  border-color: #BFDBFE;
+}
+
+.v-diag-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  background: #FFFFFF;
+  border: 1px solid var(--border-hairline);
+  border-radius: 7px;
+  padding: 4.5px 8px;
+}
+
+.v-diag-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  flex: 1;
+}
+
+.v-diag-badge {
+  font-size: 10.5px;
+  font-weight: 800;
+  padding: 2px 6.5px;
+  border-radius: 4px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.band-challenges .v-diag-badge {
+  background: #F1F5F9;
+  color: #334155;
+  border: 1px solid #CBD5E1;
+}
+
+.band-contributions .v-diag-badge {
+  background: var(--bg-primary);
+  color: var(--c-primary-dark);
+  border: 1px solid var(--bd-primary);
+}
+
+.v-diag-text {
+  font-size: 12.2px;
+  font-weight: 700;
+  color: var(--text-ink);
+  line-height: 1.28;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.v-diag-arrow {
+  font-size: 11px;
+  font-weight: 900;
+  color: #94A3B8;
+  flex-shrink: 0;
+}
+
+.v-diag-outcome {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 5px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.band-challenges .v-diag-outcome {
+  background: var(--bg-rose);
+  color: var(--c-rose-dark);
+  border: 1px solid var(--bd-rose);
+}
+
+.band-contributions .v-diag-outcome {
+  background: var(--bg-teal);
+  color: var(--c-teal-dark);
+  border: 1px solid var(--bd-teal);
+}
+
+.v-card-footer-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding-top: 3px;
+  border-top: 1px dashed var(--border-card);
+}
+
+.v-footer-chip {
+  font-size: 10.8px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  background: #FFFFFF;
+  border: 1px solid var(--border-card);
+  border-radius: 5px;
+  padding: 2px 7px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.v-footer-chip strong {
+  color: var(--c-primary-dark);
+  font-weight: 800;
+}
+
+/* ============================================================================
+ * 4. Architecture Band Visual Metadata Pills (`.v-band-meta`)
+ * ============================================================================ */
+.v-band-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+}
+
+.v-meta-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2.5px 9px;
+  border-radius: var(--radius-pill);
+  background: var(--bg-well);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-card);
+  white-space: nowrap;
+}
+
+.v-meta-pill .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--c-primary);
+}
+
+.v-meta-pill.pill-sky .dot    { background: var(--c-sky); }
+.v-meta-pill.pill-indigo .dot { background: var(--c-indigo); }
+.v-meta-pill.pill-teal .dot   { background: var(--c-teal); }
+
+/* ============================================================================
+ * 5. Layout 4: Modern Bento Grid Layout (`.bento-layout`)
+ * ============================================================================ */
+.bento-layout {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 0;
+}
+
+.bento-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-auto-rows: minmax(0, 1fr);
+  gap: 14px;
+  min-height: 0;
+}
+
+.bento-card {
+  grid-column: span var(--bento-col, 4);
+  grid-row: span var(--bento-row, 1);
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-card);
+  border-top: 3.5px solid var(--c-primary);
+  border-radius: var(--radius-xl);
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+  box-shadow: var(--shadow-card);
+  min-height: 0;
+  overflow: hidden;
+}
+
+.bento-card.theme-sky    { border-top-color: var(--c-sky); }
+.bento-card.theme-indigo { border-top-color: var(--c-indigo); }
+.bento-card.theme-teal   { border-top-color: var(--c-teal); }
+.bento-card.theme-slate  { border-top-color: var(--c-slate); }
+
+.bento-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border-hairline);
+  flex-shrink: 0;
+}
+
+.bento-card-title-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bento-card-badge {
+  font-size: 10.5px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 5px;
+  background: var(--bg-primary);
+  color: var(--c-primary-dark);
+  border: 1px solid var(--bd-primary);
+}
+
+.bento-card-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--text-ink);
+}
+
+.bento-card-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.bento-visual-box {
+  flex: 1;
+  min-height: 0;
+  background: var(--bg-well);
+  border: 1px solid var(--border-hairline);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  overflow: hidden;
+}
+
+.bento-visual-box svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* ============================================================================
+ * 6. Layout 5: Quantitative & Visual Benchmark Layout (`.benchmark-layout`)
+ * ============================================================================ */
+.benchmark-layout {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 0;
+}
+
+.v-kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(var(--kpi-cols, 4), minmax(0, 1fr));
+  gap: 14px;
+  flex-shrink: 0;
+}
+
+.v-kpi-card {
+  background: #FFFFFF;
+  border: 1.5px solid var(--border-card);
+  border-left: 4px solid var(--c-primary);
+  border-radius: 12px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  box-shadow: var(--shadow-card);
+}
+
+.v-kpi-card.theme-sky    { border-left-color: var(--c-sky); }
+.v-kpi-card.theme-indigo { border-left-color: var(--c-indigo); }
+.v-kpi-card.theme-teal   { border-left-color: var(--c-teal); }
+
+.v-kpi-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.v-kpi-label {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.v-kpi-value {
+  font-size: 24px;
+  font-weight: 900;
+  color: var(--text-ink);
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+.v-kpi-delta {
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 3px 9px;
+  border-radius: var(--radius-pill);
+  background: var(--bg-primary);
+  color: var(--c-primary-dark);
+  border: 1px solid var(--bd-primary);
+  white-space: nowrap;
+}
+
+.benchmark-main-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 7fr 5fr;
+  gap: 16px;
+  min-height: 0;
+}
+
+.benchmark-main-grid > .bento-card {
+  grid-column: span 1;
+}
+
+.v-bar-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  gap: 8px;
+  flex: 1;
+  padding: 6px 4px;
+}
+
+.v-bar-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.v-bar-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.v-bar-head.is-ours {
+  color: var(--c-primary-dark);
+  font-weight: 900;
+}
+
+.v-bar-track {
+  width: 100%;
+  height: 12px;
+  background: #F1F5F9;
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1px solid #E2E8F0;
+}
+
+.v-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: #94A3B8;
+}
+
+.v-bar-fill.is-ours {
+  background: linear-gradient(90deg, #2563EB 0%, #0284C7 100%);
+}
+
+/* ============================================================================
+ * 7. Layout 6: Semantic Comparison Matrix Layout (`.matrix-layout`)
+ * ============================================================================ */
+.matrix-layout {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 0;
+}
+
+.v-matrix-card {
+  flex: 1;
+  background: #FFFFFF;
+  border: 1.5px solid var(--border-card);
+  border-top: 3.5px solid var(--c-primary);
+  border-radius: var(--radius-xl);
+  padding: 12px 16px;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.v-matrix-table {
+  width: 100%;
+  height: 100%;
+  border-collapse: separate;
+  border-spacing: 0 6px;
+}
+
+.v-matrix-table th {
+  text-align: left;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--c-primary-dark);
+  background: var(--bg-primary);
+  border-top: 1px solid var(--bd-primary);
+  border-bottom: 1px solid var(--bd-primary);
+}
+
+.v-matrix-table th:first-child {
+  border-left: 1px solid var(--bd-primary);
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+
+.v-matrix-table th:last-child {
+  border-right: 1px solid var(--bd-primary);
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.v-matrix-table td {
+  padding: 8px 12px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+  background: var(--bg-well);
+  border-top: 1px solid var(--border-hairline);
+  border-bottom: 1px solid var(--border-hairline);
+}
+
+.v-matrix-table tr.is-highlight td {
+  background: #EFF6FF;
+  border-color: #93C5FD;
+  font-weight: 800;
+  color: var(--text-ink);
+}
+
+.v-matrix-table td:first-child {
+  border-left: 1px solid var(--border-hairline);
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+  font-weight: 800;
+}
+
+.v-matrix-table td:last-child {
+  border-right: 1px solid var(--border-hairline);
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.v-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2.5px 8px;
+  border-radius: 999px;
+}
+
+.v-status-pill.status-yes {
+  background: var(--bg-primary);
+  color: var(--c-primary-dark);
+  border: 1px solid var(--bd-primary);
+}
+
+.v-status-pill.status-mid {
+  background: #F1F5F9;
+  color: #475569;
+  border: 1px solid var(--bd-slate);
+}
+
+.v-status-pill.status-no {
+  background: var(--bg-rose);
+  color: var(--c-rose-dark);
+  border: 1px solid var(--bd-rose);
+}
+
+/* ============================================================================
+ * 8. Bottom Callout / Insight Banner (`.v-callout-banner`)
+ * ============================================================================ */
+.v-callout-banner {
+  background: linear-gradient(90deg, #EFF6FF 0%, #F8FAFC 60%, #F0F9FF 100%);
+  border: 1.5px solid var(--bd-primary);
+  border-left: 4px solid var(--c-primary);
+  border-radius: 11px;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+.v-callout-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.v-callout-badge {
+  font-size: 11px;
+  font-weight: 900;
+  padding: 3px 9px;
+  border-radius: 5px;
+  background: var(--c-primary);
+  color: #FFFFFF;
+  white-space: nowrap;
+}
+
+.v-callout-text {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-ink);
+}
+
+.v-callout-pills {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
