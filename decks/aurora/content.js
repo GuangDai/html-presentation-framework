@@ -17,7 +17,7 @@ window.AuroraContent = {
       "sectionTag": "PART 01 · 问题诊断与范式突破",
       "navTitle": "背景与贡献",
       "layout": "contrast-slide",
-      "title": "Aurora: 时间预测面临的多模态不足与本文贡献",
+      "title": "Aurora: 时间预测面临的多模态不足与本文贡献 ICLR 2026",
       "subtitle": "",
       "connectors": [
         "",
