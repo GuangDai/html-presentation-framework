@@ -28,9 +28,9 @@ window.PresentationLayouts = {
         <div class="contrast-visual">
           ${this.resolveVisual(card.visualKey)}
         </div>
-        ${Array.isArray(card.points) && card.points.length ? `<ul class="contrast-points">
+        ${slide.showCardDescriptions === false ? '' : (Array.isArray(card.points) && card.points.length ? `<ul class="contrast-points">
           ${card.points.map(point => `<li>${this.formatInlineMath(point)}</li>`).join('')}
-        </ul>` : this.buildContrastDiagnostics(card)}
+        </ul>` : this.buildContrastDiagnostics(card))}
       </article>
     `).join('');
 
@@ -46,9 +46,9 @@ window.PresentationLayouts = {
         <div class="contrast-visual">
           ${this.resolveVisual(card.visualKey)}
         </div>
-        ${Array.isArray(card.points) && card.points.length ? `<ul class="contrast-points">
+        ${slide.showCardDescriptions === false ? '' : (Array.isArray(card.points) && card.points.length ? `<ul class="contrast-points">
           ${card.points.map(point => `<li>${this.formatInlineMath(point)}</li>`).join('')}
-        </ul>` : this.buildContrastDiagnostics(card)}
+        </ul>` : this.buildContrastDiagnostics(card))}
       </article>
     `).join('');
 
@@ -120,13 +120,13 @@ window.PresentationLayouts = {
    */
   buildPipelineSlide(slide) {
     const requestedColumns = Number.isInteger(slide.cols) && slide.cols > 0 ? slide.cols : slide.steps.length;
-    const colCount = Math.max(1, Math.min(requestedColumns, slide.steps.length || 1, 7));
+    const colCount = Math.max(1, Math.min(requestedColumns, slide.steps.reduce((total, step) => total + (step.colSpan || 1), 0) || 1, 7));
     const density = colCount >= 6 ? ' density-compact' : '';
 
     const phaseTrackHtml = this.buildPhaseTrack(slide.phases, colCount);
 
     const stepCardsHtml = slide.steps.map((step, i) => `
-      <article class="pipe-step-card theme-${step.theme || 'blue'} ${step.focal ? 'is-focal-step ' : ''}${((i + 1) % colCount === 0) ? 'row-end ' : ''}anim-item" data-anim="fade-up" data-col-idx="${i}" style="--stagger:${i + 1}">
+      <article class="pipe-step-card theme-${step.theme || 'blue'} ${step.focal ? 'is-focal-step ' : ''}${((i + 1) % colCount === 0) ? 'row-end ' : ''}anim-item" data-anim="fade-up" data-col-idx="${i}" style="--stagger:${i + 1}; grid-column: span ${Math.min(step.colSpan || 1, colCount)}">
         <div class="pipe-card-top">
           <div class="pipe-step-meta">
             <div class="pipe-step-meta-left">
@@ -139,9 +139,9 @@ window.PresentationLayouts = {
         <div class="pipe-visual-frame">
           ${this.resolveVisual(step.visualKey)}
         </div>
-        <div class="pipe-step-caption">
+        ${slide.showStepCaptions === false ? '' : `<div class="pipe-step-caption">
           ${step.caption ? `<span>${this.formatInlineMath(step.caption)}</span>` : this.buildStepSemantics(step)}
-        </div>
+        </div>`}
       </article>
     `).join('');
 
@@ -154,13 +154,13 @@ window.PresentationLayouts = {
       `).join('');
 
       return `
-        <div class="chain-node-card theme-${step.theme || 'blue'} ${step.focal ? 'is-focal-step ' : ''}anim-item" data-anim="fade-up" data-col-idx="${i}" style="--stagger:${i + 2}">
+        <div class="chain-node-card theme-${step.theme || 'blue'} ${step.focal ? 'is-focal-step ' : ''}anim-item" data-anim="fade-up" data-col-idx="${i}" style="--stagger:${i + 2}; grid-column: span ${Math.min(step.colSpan || 1, colCount)}">
           <div class="chain-tier-math">
             ${mathLinesHtml}
           </div>
-          <div class="chain-tier-dim">
+          ${step.chainDim ? `<div class="chain-tier-dim">
             <span class="dim-badge latex-formula" data-latex="${this.escapeAttr(step.chainDim)}" data-display="false"></span>
-          </div>
+          </div>` : ''}
         </div>
       `;
     }).join('');
@@ -198,6 +198,8 @@ window.PresentationLayouts = {
         <div class="bento-card-body">
           ${card.visualKey ? `<div class="bento-visual-box">${this.resolveVisual(card.visualKey)}</div>` : ''}
           ${this.buildStepSemantics(card)}
+          ${card.evidence ? `<blockquote class="bento-evidence"><p>${this.formatInlineMath(card.evidence.text)}</p>${card.evidence.highlight ? `<p><strong>${this.formatInlineMath(card.evidence.highlight)}</strong></p>` : ''}</blockquote>${card.evidence.translation ? `<blockquote class="bento-evidence"><p>${this.formatInlineMath(card.evidence.translation)}</p><p><strong>${this.formatInlineMath(card.evidence.translationHighlight)}</strong></p></blockquote>` : ''}` : ''}
+          ${Array.isArray(card.notes) && card.notes.length ? `<div class="bento-notes">${card.notes.map(note => `<p>${this.formatInlineMath(note)}</p>`).join('')}</div>` : ''}
         </div>
       </article>
     `).join('');

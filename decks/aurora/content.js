@@ -17,8 +17,8 @@ window.AuroraContent = {
       "sectionTag": "PART 01 · 问题诊断与范式突破",
       "navTitle": "背景与贡献",
       "layout": "contrast-slide",
-      "title": "多模态生成式时间序列预测：不足与贡献",
-      "subtitle": "从表征视角、跨模态信噪比与概率生成轨迹三个维度，对比传统单模态确定性回归的不足与 Aurora 的针对性架构革新。",
+      "title": "Aurora: 时间预测面临的多模态不足与本文贡献",
+      "subtitle": "",
       "connectors": [
         "",
         "",
@@ -30,7 +30,7 @@ window.AuroraContent = {
         "cards": [
           {
             "code": "不足 1",
-            "title": "一维单模态视角扁平，缺失跨周期与文本语境",
+            "title": "仅时间序列信息不充分",
             "visualKey": "contrast.blindness",
             "diagnostics": [
               {
@@ -65,12 +65,12 @@ window.AuroraContent = {
           },
           {
             "code": "不足 2",
-            "title": "预训练特征高度冗余，直接拼接干扰时序主干",
+            "title": "现有LLM 面向任务不同,不宜直接用",
             "visualKey": "contrast.redundancy",
             "diagnostics": [
               {
-                "badge": "词元冗余",
-                "text": "冻结 ViT 与 BERT 输出数百词元，含大量语法与背景噪声",
+                "badge": " Token 冗余",
+                "text": "冻结 ViT 与 BERT 输出数百 Token ，含大量语法与背景噪声",
                 "outcome": "有效信号极度稀疏"
               },
               {
@@ -94,13 +94,13 @@ window.AuroraContent = {
               }
             ],
             "points": [
-              "冻结的预训练视觉（ViT）与语言（BERT）模型输出数百个词元，包含大量无关语法与背景噪声。",
+              "冻结的预训练视觉（ViT）与语言（BERT）模型输出数百个 Token ，包含大量无关语法与背景噪声。",
               "异构模态特征空间与一维时间序列存在显著分布差异，简单拼接易导致跨模态注意力权重发散。"
             ]
           },
           {
             "code": "不足 3",
-            "title": "点预测抹平多峰分布，纯噪声生成路径弯曲漫长",
+            "title": "传统只能点预测,基于噪声的流匹配生成路径复杂",
             "visualKey": "contrast.noiseStart",
             "diagnostics": [
               {
@@ -177,13 +177,13 @@ window.AuroraContent = {
           },
           {
             "code": "贡献 2",
-            "title": "模态质心自适应蒸馏与双路引导多头自注意力",
+            "title": "蒸馏与双路引导注意力",
             "visualKey": "contrast.distillGuide",
             "jumpToSlide": 4,
             "diagnostics": [
               {
                 "badge": "质心提纯",
-                "text": "可学习质心查询 $C_0$ 交叉注意力过滤冗长背景词元",
+                "text": "可学习质心查询 $C_0$ 交叉注意力过滤冗长背景 Token ",
                 "outcome": "浓缩 K 个核心质心"
               },
               {
@@ -213,7 +213,7 @@ window.AuroraContent = {
           },
           {
             "code": "贡献 3",
-            "title": "多尺度先验原型检索与原型引导直线流匹配生成",
+            "title": "基于先验库的流匹配生成",
             "visualKey": "contrast.pgfmStraight",
             "jumpToSlide": 6,
             "diagnostics": [
@@ -249,7 +249,8 @@ window.AuroraContent = {
           }
         ]
       },
-      "connectorStyle": "arrows"
+      "connectorStyle": "arrows",
+      "showCardDescriptions": false
     },
     {
       "id": "slide-02",
@@ -258,7 +259,7 @@ window.AuroraContent = {
       "navTitle": "多路总架构",
       "layout": "architecture-slide",
       "title": "Aurora 算法整体多路架构",
-      "subtitle": "编码器并行处理外生文本、一维历史序列与内生二维周期图像并融合为统一表征；解码器结合先验原型检索与未来条件解码，经流匹配生成预测分布。",
+      "subtitle": "",
       "bandDivider": true,
       "encoderBand": {
         "bandTag": "Encoder · 三路跨模态对齐与融合",
@@ -279,9 +280,10 @@ window.AuroraContent = {
       "sectionTag": "PART 03 · 中路主干：一维时序流",
       "navTitle": "1D 时序支路",
       "layout": "pipeline-slide",
-      "title": "一维时间序列分块与动态重采样嵌入",
-      "subtitle": "通过可逆实例归一化消除多变量量纲差异，利用首部左补零分块与嵌入核线性插值重采样，将任意采样周期的一维序列映射为局部时序特征。",
+      "title": "时序一维分块与编码",
+      "subtitle": "",
       "cols": 5,
+      "showStepCaptions": false,
       "steps": [
         {
           "stepCode": "STEP 1",
@@ -442,9 +444,10 @@ window.AuroraContent = {
       "sectionTag": "PART 04 · 下路支路：二维内生周期图像流",
       "navTitle": "2D 周期图像",
       "layout": "pipeline-slide",
-      "title": "二维内生周期图像构建与视觉编码",
-      "subtitle": "利用快速傅里叶变换自动识别序列主导周期并按周期折叠为二维矩阵，经双线性插值与三通道扩展后输入预训练视觉编码器提取跨周期纹理特征。",
+      "title": "时序的二维内生图像构建与编码",
+      "subtitle": "",
       "cols": 7,
+      "showStepCaptions": false,
       "steps": [
         {
           "stepCode": "STEP 1",
@@ -606,7 +609,7 @@ window.AuroraContent = {
           "ioFlow": [
             "块向量 $U_v$",
             "线性投影 + 位置",
-            "视觉词元 $Z_v^{(0)}$"
+            "视觉 Token $Z_v^{(0)}$"
           ],
           "specs": [
             {
@@ -634,7 +637,7 @@ window.AuroraContent = {
           "theme": "emerald",
           "visualKey": "stream2d.vitEncode",
           "ioFlow": [
-            "视觉词元 $Z_v^{(0)}$",
+            "视觉 Token $Z_v^{(0)}$",
             "冻结 ViT 主干",
             "周期纹理 $H^{\\text{vis}}$"
           ],
@@ -667,8 +670,8 @@ window.AuroraContent = {
       "sectionTag": "PART 05 · 多模态特征提纯：质心自适应蒸馏",
       "navTitle": "模态特征蒸馏",
       "layout": "pipeline-slide",
-      "title": "多模态特征提取与质心自适应蒸馏",
-      "subtitle": "基于冻结的预训练语言与视觉模型提取初始语义和周期特征，通过可学习质心交叉注意力过滤冗余背景噪声，浓缩固定数量的领域核心特征。",
+      "title": "文本编码与多模态蒸馏",
+      "subtitle": "",
       "cols": 4,
       "steps": [
         {
@@ -679,7 +682,7 @@ window.AuroraContent = {
           "ioFlow": [
             "外生领域文本",
             "子词切分 + 位置",
-            "词元序列 $Z_t^{(0)}$"
+            " Token 序列 $Z_t^{(0)}$"
           ],
           "specs": [
             {
@@ -699,102 +702,53 @@ window.AuroraContent = {
             "Z_t^{(0)} = U_t W_e + E_{\\text{pos}}^{\\text{text}}"
           ],
           "chainDim": "\\text{Text} \\to \\mathbb{R}^{N_t \\times D}",
-          "caption": "将传感器物理属性、节假日或气象事件描述切分为 $N_t$ 个子词词元，映射为词向量并叠加序列位置编码 $E_{\\text{pos}}^{\\text{text}}$。"
+          "caption": "将传感器物理属性、节假日或气象事件描述切分为 $N_t$ 个子词 Token ，映射为词向量并叠加序列位置编码 $E_{\\text{pos}}^{\\text{text}}$。"
         },
         {
           "stepCode": "STEP 2",
-          "title": "双路冻结预训练主干编码",
+          "title": "冻结预训练文本编码",
           "theme": "slate",
           "visualKey": "distill.pretrainedEncode",
           "ioFlow": [
-            "文本 / 视觉输入",
-            "冻结 BERT & ViT",
-            "长序列 $H^{\\text{text}}, H^{\\text{vis}}$"
+            "文本 Token 输入",
+            "冻结 BERT",
+            "文本特征 $H^{\\text{text}}$"
           ],
           "specs": [
             {
               "tag": "知识复用",
-              "text": "冻结预训练 BERT 与 ViT 权重提取高层表征",
+              "text": "冻结预训练 BERT 权重提取文本表征",
               "tone": "slate"
             },
             {
               "tag": "维度对齐",
-              "text": "统一投影至主干隐空间维度 $D$，含大量冗余",
+              "text": "投影至主干隐空间维度 $D$",
               "tone": "sky"
             }
           ],
-          "chainOp": "冻结预训练主干前向提取",
+          "chainOp": "冻结文本编码器前向提取",
           "chainLatex": [
-            "H^{\\text{text}} = \\mathrm{BERT}(Z_t^{(0)})",
-            "H^{\\text{vis}} = \\mathrm{ViT}(Z_v^{(0)})"
+            "H^{\\text{text}} = \\mathrm{BERT}(Z_t^{(0)})"
           ],
-          "chainDim": "\\mathbb{R}^{N_t \\times D},\\; \\mathbb{R}^{N_v \\times D}",
-          "caption": "上路通过冻结的 BERT 提取上下文语义特征 $H^{\\text{text}}$，下路通过冻结的 ViT 提取二维周期纹理特征 $H^{\\text{vis}}$。"
+          "chainDim": "\\text{Text} \\to \\mathbb{R}^{N_t \\times D}",
+          "caption": "通过冻结的 BERT 提取文本上下文语义特征 $H^{\\text{text}}$，并投影至主干隐空间。"
         },
         {
           "stepCode": "STEP 3",
-          "focal": true,
-          "title": "可学习质心交叉注意力聚合",
+          "title": "双路交叉注意力蒸馏",
           "theme": "blue",
-          "visualKey": "distill.centroids",
-          "ioFlow": [
-            "质心查询 $C_0$",
-            "跨序列交叉注意力",
-            "注意力图 $A_{\\text{dist}}^m$"
-          ],
-          "specs": [
-            {
-              "tag": "查询锚点",
-              "text": "引入 $K$ 个可学习领域质心 $C_0 \\in \\mathbb{R}^{K \\times D}$ 为 Query",
-              "tone": "blue"
-            },
-            {
-              "tag": "噪声过滤",
-              "text": "自动吸附关键趋势与周期词元，抑制背景噪声",
-              "tone": "sky"
-            }
-          ],
-          "chainOp": "质心查询交叉注意力打分",
-          "chainLatex": [
-            "Q_c = C_0 W_Q,\\quad K_m = H^m W_K",
-            "A_{\\text{dist}}^m = \\mathrm{Softmax}(Q_c K_m^\\top / \\sqrt{d_k})"
-          ],
-          "chainDim": "\\mathbb{R}^{K \\times N_{\\text{raw}}} \\; (K \\ll N_{\\text{raw}})",
-          "caption": "引入 $K$ 个可学习质心向量 $C_0$ 作为 Query，以原始长序列 $H$ 作为 Key 与 Value 计算交叉注意力，自动吸附关键趋势与周期特征。"
-        },
-        {
-          "stepCode": "STEP 4",
           "focal": true,
-          "title": "漏斗提纯输出紧凑先验质心",
-          "theme": "emerald",
-          "visualKey": "distill.funnel",
-          "ioFlow": [
-            "长序列 $N_{\\text{raw}}$",
-            "瓶颈蒸馏",
-            "精炼质心 $\\tilde{X}$"
-          ],
-          "specs": [
-            {
-              "tag": "复杂度骤降",
-              "text": "词元数由数百压缩至固定 $K$ 个 ($K \\ll N_{\\text{raw}}$)",
-              "tone": "teal"
-            },
-            {
-              "tag": "双路赋能",
-              "text": "同时供编码器相关性引导与解码器原型检索",
-              "tone": "blue"
-            }
-          ],
-          "chainOp": "瓶颈压缩输出精炼先验",
+          "colSpan": 2,
+          "visualKey": "distill.dualAttention",
           "chainLatex": [
-            "\\tilde{X}^{\\text{text}} = \\mathrm{Distill}(C_0,\\; H^{\\text{text}})",
-            "\\tilde{X}^{\\text{image}} = \\mathrm{Distill}(C_0,\\; H^{\\text{vis}})"
+            "\\tilde{X}^{\\text{image}} = \\mathrm{VisionDistill}(R^{\\text{image}}, H^{\\text{vis}})",
+            "\\tilde{X}^{\\text{text}} = \\mathrm{TextDistill}(R^{\\text{text}}, H^{\\text{text}})"
           ],
-          "chainDim": "\\mathbb{R}^{N_{\\text{raw}} \\times D} \\to \\mathbb{R}^{K \\times D}",
-          "caption": "经残差连接与前馈网络输出高度浓缩的 $K$ 个文本质心 $\\tilde{X}^{\\text{text}}$ 与 $K$ 个视觉质心 $\\tilde{X}^{\\text{image}}$，大幅降低后续跨模态交互开销。"
+          "chainDim": "\\mathbb{R}^{N_{\\text{raw}} \\times D} \\to \\mathbb{R}^{K \\times D}"
         }
       ],
-      "uniformColor": "blue"
+      "uniformColor": "blue",
+      "showStepCaptions": false
     },
     {
       "id": "slide-06",
@@ -802,75 +756,46 @@ window.AuroraContent = {
       "sectionTag": "PART 06 · 跨模态交互：双路引导与三路汇聚",
       "navTitle": "双路引导融合",
       "layout": "pipeline-slide",
-      "title": "双路引导多头自注意力与跨模态融合",
-      "subtitle": "利用文本与视觉引导器计算跨模态双线性相关性矩阵以调制一维时序自注意力权重，并通过跨模态交叉注意力与残差连接输出三路融合表征。",
+      "title": "双路引导的自注意力与特征融合",
+      "subtitle": "",
       "cols": 4,
+      "showStepCaptions": false,
       "steps": [
         {
           "stepCode": "STEP 1",
-          "title": "双路引导器跨模态关联打分",
+          "title": "引导器生成模态得分",
           "theme": "sky",
           "visualKey": "align.guiders",
-          "ioFlow": [
-            "时序 $X^{\\text{time}}$ + 质心",
-            "双线性投影打分",
-            "响应矩阵 $S_{\\text{text}}, S_{\\text{vis}}$"
-          ],
-          "specs": [
-            {
-              "tag": "双路交互",
-              "text": "计算每个时序块与 $K$ 个文本/视觉质心的亲和度",
-              "tone": "sky"
-            },
-            {
-              "tag": "参数轻量",
-              "text": "通过双线性权重 $W_{\\text{text}}, W_{\\text{vis}}$ 桥接异构空间",
-              "tone": "teal"
-            }
-          ],
+          "ioFlow": [],
+          "specs": [],
           "chainOp": "双线性跨模态关联度计算",
           "chainLatex": [
-            "S_{\\text{text}} = \\sigma\\big(X^{\\text{time}} W_{\\text{text}} (\\tilde{X}^{\\text{text}})^\\top\\big)",
-            "S_{\\text{vis}} = \\sigma\\big(X^{\\text{time}} W_{\\text{vis}} (\\tilde{X}^{\\text{image}})^\\top\\big)"
+            "Q^{m}=E_s W^{Q}_{s\\to m},\\quad K^{m}=\\hat{X}^{m}W_m",
+            "S_m=Q^{m}(K^{m})^\\top / \\sqrt{d},\\quad m\\in\\{v,t\\}"
           ],
-          "chainDim": "\\mathbb{R}^{N \\times D} \\to \\mathbb{R}^{N \\times K}",
-          "caption": "TextGuider 与 VisionGuider 分别通过可学习双线性映射矩阵 $W_{\\text{text}}$、$W_{\\text{vis}}$ 计算每个一维时序块与文本、视觉质心的关联响应。"
+          "chainDim": "",
+          "caption": ""
         },
         {
           "stepCode": "STEP 2",
           "focal": true,
-          "title": "合成时间块相关性引导矩阵",
+          "title": "视觉与文本得分合成引导矩阵",
           "theme": "blue",
           "visualKey": "align.bilinear",
-          "ioFlow": [
-            "响应 $S_{\\text{text}}, S_{\\text{vis}}$",
-            "内积与自适应加权",
-            "引导矩阵 $\\mathrm{Corr}$"
-          ],
-          "specs": [
-            {
-              "tag": "共现先验",
-              "text": "对同一事件或同相位质心高响应的时间块强连接",
-              "tone": "blue"
-            },
-            {
-              "tag": "自适应融合",
-              "text": "通过系数 $\\alpha$ 动态平衡文本与视觉引导强度",
-              "tone": "sky"
-            }
-          ],
+          "ioFlow": [],
+          "specs": [],
           "chainOp": "双路相关性矩阵加权合成",
           "chainLatex": [
-            "C_m = \\mathrm{Softmax}(S_m S_m^\\top)",
-            "\\mathrm{Corr} = \\alpha\\, C_{\\text{text}} + (1 - \\alpha)\\, C_{\\text{vis}}"
+            "M_{\\text{guide}} = S_v W_g S_{\\text{text}}^\\top",
+            "M_{\\text{guide}} = S_v W_g S_v^\\top\\quad (\\text{无文本})"
           ],
-          "chainDim": "\\mathbb{R}^{N \\times K} \\to \\mathbb{R}^{N \\times N}",
-          "caption": "若两个时间块对同一文本事件或同一周期相位质心均有高响应，则在相关性矩阵 $\\mathrm{Corr}$ 中赋予高权重，显式建立跨时间步先验连接。"
+          "chainDim": "",
+          "caption": ""
         },
         {
           "stepCode": "STEP 3",
           "focal": true,
-          "title": "相关性调制多头自注意力",
+          "title": "引导矩阵加到注意力得分",
           "theme": "blue",
           "visualKey": "align.mgmsa",
           "ioFlow": [
@@ -892,15 +817,15 @@ window.AuroraContent = {
           ],
           "chainOp": "相关性调制多头自注意力",
           "chainLatex": [
-            "A_{\\text{MG}} = \\mathrm{Softmax}\\big((Q K^\\top / \\sqrt{d_k}) \\odot \\mathrm{Corr}\\big)",
-            "\\tilde{X}^{\\text{time}} = \\mathrm{FFN}\\big(\\mathrm{LN}(X^{\\text{time}} + A_{\\text{MG}} V)\\big)"
+            "A=\\mathrm{Softmax}((QK^\\top+M_{\\text{guide}})/\\sqrt{d})",
+            "\\hat{X}^{\\text{time}}=\\mathrm{Encoder}(X^{\\text{time}};M_{\\text{guide}})"
           ],
-          "chainDim": "\\mathbb{R}^{N \\times D} \\to \\mathbb{R}^{N \\times D}",
+          "chainDim": "",
           "caption": "将多模态相关矩阵 $\\mathrm{Corr}$ 与中路标准点积注意力分数逐元素哈达玛积（$\\odot$）调制，经 $K$ 层堆叠演化输出引导后时序特征 $\\tilde{X}^{\\text{time}}$。"
         },
         {
           "stepCode": "STEP 4",
-          "title": "三路跨模态交叉注意力汇聚",
+          "title": "多模态特征融合",
           "theme": "emerald",
           "visualKey": "align.fuser",
           "ioFlow": [
@@ -922,10 +847,11 @@ window.AuroraContent = {
           ],
           "chainOp": "三路交叉注意力残差融合",
           "chainLatex": [
-            "F_{\\text{mm}} = \\mathrm{MCA}(\\tilde{X}^{\\text{time}}, \\tilde{X}^{\\text{text}}) + \\mathrm{MCA}(\\tilde{X}^{\\text{time}}, \\tilde{X}^{\\text{image}})",
-            "X^{\\text{fuse}} = \\mathrm{LN}(\\tilde{X}^{\\text{time}} + F_{\\text{mm}})"
+            "G_v=\\mathrm{MCA}(\\hat{X}^{\\text{time}},\\hat{X}^{\\text{Vision}})",
+            "G_t=\\mathrm{MCA}(\\hat{X}^{\\text{time}},\\hat{X}^{\\text{text}})",
+            "X^{\\text{fuse}}=\\hat{X}^{\\text{time}}+G_v+G_t"
           ],
-          "chainDim": "\\mathbb{R}^{N \\times D} \\to \\mathbb{R}^{N \\times D}",
+          "chainDim": "",
           "caption": "在 Modality Fuser 中以 $\\tilde{X}^{\\text{time}}$ 为 Query，分别与文本质心 $\\tilde{X}^{\\text{text}}$、视觉质心 $\\tilde{X}^{\\text{image}}$ 执行交叉注意力对齐并残差相加，输出 $X^{\\text{fuse}}$。"
         }
       ],
@@ -935,44 +861,62 @@ window.AuroraContent = {
       "id": "slide-07",
       "slideNumber": 7,
       "sectionTag": "PART 07 · 解码生成：先验原型检索与直线流匹配",
-      "navTitle": "原型流匹配生成",
+      "navTitle": "条件解码",
       "layout": "pipeline-slide",
-      "title": "先验原型检索、条件解码与流匹配生成",
-      "subtitle": "结合因果与旋转位置编码跨注意力解码未来步控制条件，同时从多尺度周期与趋势原型库中检索初始波形锚点，经条件流匹配常微分方程积分生成最终预测。",
-      "cols": 4,
+      "title": "未来条件解码",
+      "subtitle": "",
+      "cols": 3,
+      "showStepCaptions": false,
       "steps": [
         {
           "stepCode": "STEP 1",
-          "title": "因果与旋转位置编码条件解码",
+          "title": "复制最后一个融合特征",
           "theme": "blue",
-          "visualKey": "decoder.condition",
-          "ioFlow": [
-            "融合 $X^{\\text{fuse}}$",
-            "因果+RoPE",
-            "未来条件 $X^{\\text{cond}}$"
-          ],
-          "specs": [
-            {
-              "tag": "因果递推",
-              "text": "下三角掩码自注意力保证历史到未来的自回归因果性",
-              "tone": "blue"
-            },
-            {
-              "tag": "RoPE 注入",
-              "text": "旋转位置编码对齐多模态上下文，生成未来 $N_p$ 块条件",
-              "tone": "sky"
-            }
-          ],
-          "chainOp": "因果掩码与 RoPE 跨注意力解码",
+          "visualKey": "decoder.seed",
           "chainLatex": [
-            "H_{\\text{causal}} = \\mathrm{CausalAttn}(X^{\\text{fuse}})",
-            "X^{\\text{cond}} = \\mathrm{RoPE\\text{-}Attn}\\big(H_{\\text{causal}},\\; [\\tilde{X}^{\\text{image}}; \\tilde{X}^{\\text{text}}]\\big)"
+            "F=X^{\\text{fuse}},\\quad f_{\\text{last}}=F_{\\text{last}}",
+            "C^0=\\mathrm{Repeat}(f_{\\text{last}},N)"
           ],
-          "chainDim": "\\mathbb{R}^{N \\times D} \\to \\mathbb{R}^{N_p \\times D}",
-          "caption": "将编码融合表征 $X^{\\text{fuse}}$ 送入带下三角掩码的 Causal-Transformer 与引入旋转位置编码（RoPE）的 Cross-Transformer，外推得到未来 $N_p$ 个分块的控制条件 $X^{\\text{cond}}$。"
+          "chainDim": ""
         },
         {
           "stepCode": "STEP 2",
+          "title": "衰减条件与因果注意力",
+          "theme": "blue",
+          "visualKey": "decoder.causal",
+          "chainLatex": [
+            "w_i=2^{-(i-1)},\\quad \\bar C^0_i=w_i C^0_i",
+            "C^n=\\mathrm{CausalTransformer}(\\bar C^0)"
+          ],
+          "chainDim": ""
+        },
+        {
+          "stepCode": "STEP 3",
+          "title": "N 层 RoPE 交叉注意力",
+          "theme": "blue",
+          "visualKey": "decoder.cross",
+          "chainLatex": [
+            "Q=C^n,\\quad K=F,\\quad V=F",
+            "Z=\\mathrm{CrossAttentionStack}_{N}(C^n,F)"
+          ],
+          "chainDim": ""
+        }
+      ],
+      "uniformColor": "blue"
+    },
+    {
+      "id": "slide-08",
+      "slideNumber": 8,
+      "sectionTag": "PART 07 · 解码生成：先验原型检索与直线流匹配",
+      "navTitle": "原型流匹配生成",
+      "layout": "pipeline-slide",
+      "title": "先验原型检索与流匹配生成",
+      "subtitle": "",
+      "cols": 3,
+      "showStepCaptions": false,
+      "steps": [
+        {
+          "stepCode": "STEP 1",
           "focal": true,
           "title": "多尺度先验原型库软检索",
           "theme": "teal",
@@ -1003,7 +947,7 @@ window.AuroraContent = {
           "caption": "以蒸馏后的视觉与文本质心构造查询向量 $Q_{\\text{mm}}$，与可学习原型库 $B_{\\text{bank}}$（涵盖正弦周期基与多项式趋势基）计算相似度，加权合成初始先验原型 $\\tilde{\\mathcal{P}}$。"
         },
         {
-          "stepCode": "STEP 3",
+          "stepCode": "STEP 2",
           "focal": true,
           "title": "原型锚定条件流匹配速度场学习",
           "theme": "blue",
@@ -1034,7 +978,7 @@ window.AuroraContent = {
           "caption": "以叠加高斯微扰 $\\epsilon$ 的先验原型 $Z_0 = \\tilde{\\mathcal{P}} + \\sigma_0 \\epsilon$ 为流起点，在流时间步 $\\tau \\in [0,1]$ 上通过 AdaLN 注入条件 $X^{\\text{cond}}$，训练网络预测指向真实分布 $Z_1$ 的直线速度向量 $v_\\theta$。"
         },
         {
-          "stepCode": "STEP 4",
+          "stepCode": "STEP 3",
           "title": "前向欧拉积分与逆归一化还原",
           "theme": "emerald",
           "visualKey": "decoder.eulerOde",
@@ -1065,6 +1009,93 @@ window.AuroraContent = {
         }
       ],
       "uniformColor": "blue"
+    },
+    {
+      "id": "slide-09",
+      "slideNumber": 9,
+      "navTitle": "批判 1",
+      "layout": "bento-slide",
+      "title": "批判 1",
+      "subtitle": "",
+      "bentoCards": [
+        {
+          "code": "01",
+          "title": "存在主张缺乏证据",
+          "caption": "关于流匹配初始分布，论文提出：",
+          "colSpan": 4,
+          "theme": "blue",
+          "evidence": {
+            "text": "However, current methods still set the initial distributions as Standard Gaussians, which neglects the capability of Flow Matching to work like a stochastic interpolant.",
+            "highlight": "Obviously, constructing appropriate prototype as the inital starting point can enhance the intuitiveness and stability of Flow Matching.",
+            "translation": "然而，现有方法仍将初始分布设为标准高斯分布，忽视了流匹配作为随机插值器的能力。",
+            "translationHighlight": "显然，构造合适的原型作为初始起点，可以增强流匹配的直观性和稳定性。"
+          }
+        },
+        {
+          "code": "02",
+          "title": "模块设计过于复杂",
+          "caption": "模块数量多、设计过于刻意，整体结构复杂。",
+          "colSpan": 4,
+          "theme": "blue"
+        },
+        {
+          "code": "03",
+          "title": "合成语料无法核验",
+          "caption": "数据集未公开，语料由 AI 合成，无法验证其合理性。",
+          "colSpan": 4,
+          "theme": "blue",
+          "evidence": {
+            "text": "To generate the textual descriptions for the cross-domain multimodal time series corpus, we provide domain descriptions and raw time series for GPT-4, encouraging it generate the descriptions of data characteristics, which are only used for pretraining Aurora."
+          },
+          "notes": [
+            "据 OpenReview，人工监督了 5%，其余 95% 的内容生成没有人工监督。",
+            "评价：这种做法很容易偏离真实情况。"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "slide-10",
+      "slideNumber": 10,
+      "navTitle": "批判 2",
+      "layout": "bento-slide",
+      "title": "批判 2",
+      "subtitle": "",
+      "bentoCards": [
+        {
+          "code": "04",
+          "title": "没有任何消融实验",
+          "caption": "没有任何消融实验，无法证明任何一个模块是否真的有效，尤其是在模块套模块的情况下。",
+          "colSpan": 4,
+          "theme": "blue"
+        },
+        {
+          "code": "05",
+          "title": "文本语义作用存疑",
+          "caption": "独立研究在 Time-MMD 上干预文本内容：",
+          "colSpan": 4,
+          "theme": "blue",
+          "notes": [
+            "实验：将原文替换为空、常量、打乱、跨域或含未来值的文本，比较 Aurora、TaTS 和 MM-TSFlib 的预测。",
+            "结果：三种模型的平均 MSE 变化均小于 0.5%；最大变化为 +0.16%。Aurora 的变化在 ±0.05% 内。",
+            "分析：TaTS 和 MM-TSFlib 的增益受到同路径数值先验影响；Aurora 的文本路径在该实验中对内容不敏感。",
+            "启用与禁用文本路径的对比，不能单独证明模型利用了文本语义。",
+            "来源：arXiv:2608.22321，§4–5"
+          ]
+        },
+        {
+          "code": "06",
+          "title": "效果来源有待验证",
+          "caption": "猜测效果改善可能来自数据泄露，或 Prototype Bank 引入的先验。",
+          "colSpan": 4,
+          "theme": "blue",
+          "notes": [
+            "Prototype 的部分设计与 TimeBase（ICML 2025）中的方法类似：",
+            "TimeBase 通过时间序列分解与矩阵学习得到潜在高频基，并用损失项抑制高频基之间过于相似。",
+            "序列可表示为高频基的线性组合与低频成分之和。"
+          ]
+        }
+      ]
     }
   ]
 };
