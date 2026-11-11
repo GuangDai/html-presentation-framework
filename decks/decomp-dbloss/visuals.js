@@ -141,11 +141,11 @@
           <rect x="${x + 16}" y="${y + 84}" width="868" height="78" fill="#F1F5F9"/>
           <text x="${x + 130}" y="${y + 134}" text-anchor="middle" fill="#0F172A" font-size="20" font-weight="900">${group.firstColumn}</text>
           <text x="${x + 426}" y="${y + 111}" text-anchor="middle" fill="#0F172A" font-size="21" font-weight="900">DLinear</text>
-          <text x="${x + 759}" y="${y + 111}" text-anchor="middle" fill="#0F172A" font-size="21" font-weight="900">PatchTST</text>
+          <text x="${x + 744}" y="${y + 111}" text-anchor="middle" fill="#0F172A" font-size="21" font-weight="900">PatchTST</text>
           <text x="${x + 342}" y="${y + 145}" text-anchor="middle" fill="#475569" font-size="17" font-weight="800">MSE / MAE</text>
           <text x="${x + 510}" y="${y + 145}" text-anchor="middle" fill="#475569" font-size="15" font-weight="800">MSE 相对变化</text>
           <text x="${x + 675}" y="${y + 145}" text-anchor="middle" fill="#475569" font-size="17" font-weight="800">MSE / MAE</text>
-          <text x="${x + 842}" y="${y + 145}" text-anchor="middle" fill="#475569" font-size="15" font-weight="800">MSE 相对变化</text>
+          <text x="${x + 812}" y="${y + 145}" text-anchor="middle" fill="#475569" font-size="15" font-weight="800" textLength="94" lengthAdjust="spacingAndGlyphs">MSE 相对变化</text>
           ${group.rows.map((row, i) => {
             const top = y + 162 + i * rowHeight;
             const value = pair => `${pair[0].toFixed(4)} / ${pair[1].toFixed(4)}`;
@@ -157,7 +157,7 @@
               <text data-model="dlinear" data-role="metrics" x="${x + 342}" y="${top + rowHeight / 2 + 7}" text-anchor="middle" fill="#334155" font-size="18" font-weight="800" font-family="monospace">${value(row[1])}</text>
               <text data-model="dlinear" data-role="change" x="${x + 510}" y="${top + rowHeight / 2 + 7}" text-anchor="middle" fill="${changeColor(dlinearChange)}" font-size="18" font-weight="900" font-family="monospace">${dlinearChange}</text>
               <text data-model="patchtst" data-role="metrics" x="${x + 675}" y="${top + rowHeight / 2 + 7}" text-anchor="middle" fill="#334155" font-size="18" font-weight="800" font-family="monospace">${value(row[2])}</text>
-              <text data-model="patchtst" data-role="change" x="${x + 842}" y="${top + rowHeight / 2 + 7}" text-anchor="middle" fill="${changeColor(patchChange)}" font-size="18" font-weight="900" font-family="monospace">${patchChange}</text>
+              <text data-model="patchtst" data-role="change" x="${x + 812}" y="${top + rowHeight / 2 + 7}" text-anchor="middle" fill="${changeColor(patchChange)}" font-size="18" font-weight="900" font-family="monospace">${patchChange}</text>
               <line x1="${x + 16}" y1="${top + rowHeight}" x2="${x + 884}" y2="${top + rowHeight}" stroke="#E2E8F0" stroke-width="1.3"/>
             </g>`;
           }).join('')}
