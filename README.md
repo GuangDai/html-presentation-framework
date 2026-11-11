@@ -1,6 +1,6 @@
 # 学术论文 16:9 HTML 演示框架
 
-默认演示是 DecompNet 与 DBLoss 的论文汇报，共 7 页。通用布局、样式和交互与论文素材分开存放；可通过演示库、URL 参数或修改 `decks/active.js` 切换论文。页面使用 1920×1080 舞台，支持目录、键盘翻页与动画。
+默认演示是 DecompNet 与 DBLoss 的论文汇报，共 6 页。通用布局、样式和交互与论文素材分开存放；可通过演示库、URL 参数或修改 `decks/active.js` 切换论文。页面使用 1920×1080 舞台，支持目录、键盘翻页与动画。
 
 ## 目录和职责
 
@@ -24,7 +24,7 @@ decks/aurora/               Aurora 论文素材
 decks/paper-template/       可复制的新论文模板，含上述三个文件
 decks/component-showcase/   六种布局的展示示例
 scripts/build_math_cache.py 生成离线公式缓存（需本机 TeX 工具）
-rendered_slides_16x9/       DecompNet 与 DBLoss 的 7 页导出 PNG
+rendered_slides_16x9/       DecompNet 与 DBLoss 的 6 页导出 PNG
 ```
 
 根目录保留 DecompNet 与 DBLoss、Aurora 两套 PDF 和 PPTX；PNG 对应 DecompNet 与 DBLoss。导出文件不会随源码修改自动更新，PPTX 每页包含一张完整的幻灯片图片。本仓库没有附带导出脚本。
