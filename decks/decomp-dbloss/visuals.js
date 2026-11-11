@@ -128,23 +128,36 @@
       ${groups.map((group, index) => {
         const x = index % 2 ? 928 : 12;
         const y = index < 2 ? 8 : 458;
-        const rowHeight = group.rows.length === 4 ? 66 : 87;
-        return `<g>
+        const rowHeight = group.rows.length === 4 ? 64 : 85;
+        const change = (pair, baseline) => {
+          const percent = (pair[0] - baseline[0]) / baseline[0] * 100;
+          if (Math.abs(percent) < 0.005) return '0.00%';
+          return `${percent > 0 ? '+' : ''}${percent.toFixed(2)}%`;
+        };
+        const changeColor = text => text.startsWith('-') ? '#1D4ED8' : (text.startsWith('+') ? '#B45309' : '#475569');
+        return `<g data-dataset="${group.dataset}">
           <rect x="${x}" y="${y}" width="900" height="434" rx="18" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
           ${drawFloatingBadge(x + 18, y + 16, 182, 48, group.dataset)}
-          ${index === 0 ? `<text x="${x + 880}" y="${y + 47}" text-anchor="end" fill="#475569" font-size="19" font-weight="800">MSE / MAE · 4 步长 · 5 种子</text>` : ''}
-          <rect x="${x + 16}" y="${y + 88}" width="868" height="54" fill="#F1F5F9"/>
-          <text x="${x + 156}" y="${y + 123}" text-anchor="middle" fill="#0F172A" font-size="21" font-weight="900">${group.firstColumn}</text>
-          <text x="${x + 465}" y="${y + 123}" text-anchor="middle" fill="#0F172A" font-size="21" font-weight="900">DLinear</text>
-          <text x="${x + 735}" y="${y + 123}" text-anchor="middle" fill="#0F172A" font-size="21" font-weight="900">PatchTST</text>
+          <rect x="${x + 16}" y="${y + 84}" width="868" height="78" fill="#F1F5F9"/>
+          <text x="${x + 130}" y="${y + 134}" text-anchor="middle" fill="#0F172A" font-size="20" font-weight="900">${group.firstColumn}</text>
+          <text x="${x + 426}" y="${y + 111}" text-anchor="middle" fill="#0F172A" font-size="21" font-weight="900">DLinear</text>
+          <text x="${x + 759}" y="${y + 111}" text-anchor="middle" fill="#0F172A" font-size="21" font-weight="900">PatchTST</text>
+          <text x="${x + 342}" y="${y + 145}" text-anchor="middle" fill="#475569" font-size="17" font-weight="800">MSE / MAE</text>
+          <text x="${x + 510}" y="${y + 145}" text-anchor="middle" fill="#475569" font-size="15" font-weight="800">MSE 相对变化</text>
+          <text x="${x + 675}" y="${y + 145}" text-anchor="middle" fill="#475569" font-size="17" font-weight="800">MSE / MAE</text>
+          <text x="${x + 842}" y="${y + 145}" text-anchor="middle" fill="#475569" font-size="15" font-weight="800">MSE 相对变化</text>
           ${group.rows.map((row, i) => {
-            const top = y + 142 + i * rowHeight;
+            const top = y + 162 + i * rowHeight;
             const value = pair => `${pair[0].toFixed(4)} / ${pair[1].toFixed(4)}`;
-            return `<g>
+            const dlinearChange = change(row[1], group.rows[0][1]);
+            const patchChange = change(row[2], group.rows[0][2]);
+            return `<g data-result-row="${i}">
               ${i % 2 ? `<rect x="${x + 16}" y="${top}" width="868" height="${rowHeight}" fill="#F8FAFC"/>` : ''}
-              <text x="${x + 156}" y="${top + rowHeight / 2 + 8}" text-anchor="middle" fill="#0F172A" font-size="21" font-weight="800">${row[0]}</text>
-              <text x="${x + 465}" y="${top + rowHeight / 2 + 8}" text-anchor="middle" fill="#1E3A8A" font-size="23" font-weight="800" font-family="monospace">${value(row[1])}</text>
-              <text x="${x + 735}" y="${top + rowHeight / 2 + 8}" text-anchor="middle" fill="#1E3A8A" font-size="23" font-weight="800" font-family="monospace">${value(row[2])}</text>
+              <text x="${x + 130}" y="${top + rowHeight / 2 + 7}" text-anchor="middle" fill="#0F172A" font-size="19" font-weight="800">${row[0]}</text>
+              <text data-model="dlinear" data-role="metrics" x="${x + 342}" y="${top + rowHeight / 2 + 7}" text-anchor="middle" fill="#334155" font-size="18" font-weight="800" font-family="monospace">${value(row[1])}</text>
+              <text data-model="dlinear" data-role="change" x="${x + 510}" y="${top + rowHeight / 2 + 7}" text-anchor="middle" fill="${changeColor(dlinearChange)}" font-size="18" font-weight="900" font-family="monospace">${dlinearChange}</text>
+              <text data-model="patchtst" data-role="metrics" x="${x + 675}" y="${top + rowHeight / 2 + 7}" text-anchor="middle" fill="#334155" font-size="18" font-weight="800" font-family="monospace">${value(row[2])}</text>
+              <text data-model="patchtst" data-role="change" x="${x + 842}" y="${top + rowHeight / 2 + 7}" text-anchor="middle" fill="${changeColor(patchChange)}" font-size="18" font-weight="900" font-family="monospace">${patchChange}</text>
               <line x1="${x + 16}" y1="${top + rowHeight}" x2="${x + 884}" y2="${top + rowHeight}" stroke="#E2E8F0" stroke-width="1.3"/>
             </g>`;
           }).join('')}
@@ -610,15 +623,14 @@
     /* Relative MSE change: (DBLoss - baseline) / baseline. */
     "slide4.paperResults": `<svg viewBox="0 0 1840 900" fill="none">
       <rect x="12" y="8" width="1816" height="884" rx="18" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
-      <text x="42" y="58" fill="#334155" font-size="21" font-weight="800">MSE / MAE · 复现为 10 个种子均值 · 相对变化按 MSE 计算</text>
-      <line x1="32" y1="82" x2="1808" y2="82" stroke="#0F172A" stroke-width="2"/>
-      <rect x="32" y="84" width="1776" height="100" fill="#F1F5F9"/>
-      <text x="82" y="151" text-anchor="middle" fill="#0F172A" font-size="19" font-weight="900">数据集</text>
-      <text x="170" y="151" text-anchor="middle" fill="#0F172A" font-size="19" font-weight="900">步长</text>
-      <text x="630" y="117" text-anchor="middle" fill="#0F172A" font-size="23" font-weight="900">DLinear</text>
-      <text x="1430" y="117" text-anchor="middle" fill="#0F172A" font-size="23" font-weight="900">PatchTST</text>
-      <line x1="232" y1="129" x2="1808" y2="129" stroke="#CBD5E1" stroke-width="1.5"/>
-      ${['复现基线','复现 DBLoss','复现相对变化','论文相对变化','复现基线','复现 DBLoss','复现相对变化','论文相对变化'].map((label, i) => `<text x="${[340, 575, 770, 925, 1140, 1375, 1570, 1725][i]}" y="160" text-anchor="middle" fill="${i % 4 >= 2 ? '#1D4ED8' : '#334155'}" font-size="18" font-weight="900">${label}</text>`).join('')}
+      <line x1="32" y1="42" x2="1808" y2="42" stroke="#0F172A" stroke-width="2"/>
+      <rect x="32" y="44" width="1776" height="100" fill="#F1F5F9"/>
+      <text x="82" y="111" text-anchor="middle" fill="#0F172A" font-size="19" font-weight="900">数据集</text>
+      <text x="170" y="111" text-anchor="middle" fill="#0F172A" font-size="19" font-weight="900">步长</text>
+      <text x="630" y="77" text-anchor="middle" fill="#0F172A" font-size="23" font-weight="900">DLinear</text>
+      <text x="1430" y="77" text-anchor="middle" fill="#0F172A" font-size="23" font-weight="900">PatchTST</text>
+      <line x1="232" y1="89" x2="1808" y2="89" stroke="#CBD5E1" stroke-width="1.5"/>
+      ${['复现基线 MSE / MAE','复现 DBLoss MSE / MAE','复现 MSE 相对变化','论文 MSE 相对变化','复现基线 MSE / MAE','复现 DBLoss MSE / MAE','复现 MSE 相对变化','论文 MSE 相对变化'].map((label, i) => `<text x="${[340, 575, 770, 925, 1140, 1375, 1570, 1725][i]}" y="120" text-anchor="middle" fill="${i % 4 >= 2 ? '#1D4ED8' : '#334155'}" font-size="16" font-weight="900">${label}</text>`).join('')}
       ${[
         ["ETTh1", "96", "0.4241 / 0.4392", "0.4217 / 0.4353", "-0.57%", "-2.64%", "0.4225 / 0.4438", "0.4305 / 0.4439", "+1.89%", "-1.06%"],
         ["ETTh1", "192", "0.4673 / 0.4736", "0.4640 / 0.4674", "-0.71%", "-1.47%", "0.4880 / 0.4926", "0.4761 / 0.4838", "-2.42%", "-3.42%"],
@@ -637,16 +649,16 @@
         ["ETTm2", "336", "0.2298 / 0.3219", "0.2134 / 0.3035", "-7.17%", "0.00%", "0.2178 / 0.3090", "0.2113 / 0.3029", "-2.99%", "-1.09%"],
         ["ETTm2", "720", "0.2838 / 0.3598", "0.2638 / 0.3408", "-7.07%", "-1.35%", "0.2836 / 0.3526", "0.2771 / 0.3464", "-2.29%", "-1.38%"],
       ].map((row, i) => {
-        const y = 184 + i * 43;
+        const y = 144 + i * 45;
         return `<g>
-          ${Math.floor(i / 4) % 2 ? `<rect x="32" y="${y}" width="1776" height="43" fill="#F8FAFC"/>` : ''}
-          <text x="82" y="${y + 29}" text-anchor="middle" fill="#0F172A" font-size="18" font-weight="900">${row[0]}</text>
-          <text x="170" y="${y + 29}" text-anchor="middle" fill="#334155" font-size="18" font-weight="800">${row[1]}</text>
-          ${row.slice(2).map((value, j) => `<text x="${[340, 575, 770, 925, 1140, 1375, 1570, 1725][j]}" y="${y + 29}" text-anchor="middle" fill="${j % 4 < 2 ? '#334155' : (value.startsWith('-') ? '#1D4ED8' : (value.startsWith('+') ? '#B45309' : '#475569'))}" font-size="18" font-weight="${j % 4 >= 2 ? '900' : '700'}" font-family="monospace">${value}</text>`).join('')}
-          <line x1="32" y1="${y + 43}" x2="1808" y2="${y + 43}" stroke="${(i + 1) % 4 === 0 ? '#94A3B8' : '#E2E8F0'}" stroke-width="${(i + 1) % 4 === 0 ? '1.8' : '1'}"/>
+          ${Math.floor(i / 4) % 2 ? `<rect x="32" y="${y}" width="1776" height="45" fill="#F8FAFC"/>` : ''}
+          <text x="82" y="${y + 30}" text-anchor="middle" fill="#0F172A" font-size="18" font-weight="900">${row[0]}</text>
+          <text x="170" y="${y + 30}" text-anchor="middle" fill="#334155" font-size="18" font-weight="800">${row[1]}</text>
+          ${row.slice(2).map((value, j) => `<text x="${[340, 575, 770, 925, 1140, 1375, 1570, 1725][j]}" y="${y + 30}" text-anchor="middle" fill="${j % 4 < 2 ? '#334155' : (value.startsWith('-') ? '#1D4ED8' : (value.startsWith('+') ? '#B45309' : '#475569'))}" font-size="18" font-weight="${j % 4 >= 2 ? '900' : '700'}" font-family="monospace">${value}</text>`).join('')}
+          <line x1="32" y1="${y + 45}" x2="1808" y2="${y + 45}" stroke="${(i + 1) % 4 === 0 ? '#94A3B8' : '#E2E8F0'}" stroke-width="${(i + 1) % 4 === 0 ? '1.8' : '1'}"/>
         </g>`;
       }).join('')}
-      <line x1="1028" y1="84" x2="1028" y2="872" stroke="#CBD5E1" stroke-width="1.8"/>
+      <line x1="1028" y1="44" x2="1028" y2="864" stroke="#CBD5E1" stroke-width="1.8"/>
     </svg>`,
 
     /* Local test metrics: four ETT horizons and five paired seeds per model.
