@@ -607,37 +607,46 @@
       ${svgTex(780, 492, 996, 360, '\\displaystyle A = \\begin{bmatrix} 1 & 0 & 0 & 0 \\\\[6pt] q & \\alpha & 0 & 0 \\\\[6pt] q^2 & \\alpha q & \\alpha & 0 \\\\[6pt] q^3 & \\alpha q^2 & \\alpha q & \\alpha \\end{bmatrix}, \\qquad q = 1 - \\alpha', '#0F172A', '23px', '', '', 2.22)}
     </svg>`,
 
-    /* Paper Table 1 printed Avg rows, not recalculated from rounded horizons. */
+    /* Paper Table 1 and paired local test means, separated by model and horizon. */
     "slide4.paperResults": `<svg viewBox="0 0 1840 900" fill="none">
       <rect x="12" y="8" width="1816" height="884" rx="18" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
-      <text x="42" y="64" fill="#334155" font-size="23" font-weight="800">四个预测步长的平均结果</text>
-      <line x1="40" y1="94" x2="1800" y2="94" stroke="#0F172A" stroke-width="2.4"/>
-      <rect x="40" y="96" width="1760" height="118" fill="#F1F5F9"/>
-      <text x="160" y="160" text-anchor="middle" fill="#0F172A" font-size="25" font-weight="900">数据集</text>
-      <text x="465" y="160" text-anchor="middle" fill="#0F172A" font-size="25" font-weight="900">模型</text>
-      <text x="905" y="140" text-anchor="middle" fill="#334155" font-size="25" font-weight="900">论文 Baseline</text>
-      <text x="1475" y="140" text-anchor="middle" fill="#1D4ED8" font-size="25" font-weight="900">论文 DBLoss</text>
-      ${[[800, 'MSE'], [1010, 'MAE'], [1370, 'MSE'], [1580, 'MAE']].map(([x, label]) => `<text x="${x}" y="190" text-anchor="middle" fill="#475569" font-size="22" font-weight="800">${label}</text>`).join('')}
+      <text x="42" y="58" fill="#334155" font-size="21" font-weight="800">MSE / MAE · 复现结果为 10 个种子均值</text>
+      <line x1="32" y1="82" x2="1808" y2="82" stroke="#0F172A" stroke-width="2"/>
+      <rect x="32" y="84" width="1776" height="100" fill="#F1F5F9"/>
+      <text x="82" y="151" text-anchor="middle" fill="#0F172A" font-size="19" font-weight="900">数据集</text>
+      <text x="170" y="151" text-anchor="middle" fill="#0F172A" font-size="19" font-weight="900">步长</text>
+      <text x="630" y="117" text-anchor="middle" fill="#0F172A" font-size="23" font-weight="900">DLinear</text>
+      <text x="1430" y="117" text-anchor="middle" fill="#0F172A" font-size="23" font-weight="900">PatchTST</text>
+      <line x1="232" y1="129" x2="1808" y2="129" stroke="#CBD5E1" stroke-width="1.5"/>
+      ${['论文基线','论文 DBLoss','复现基线','复现 DBLoss','论文基线','论文 DBLoss','复现基线','复现 DBLoss'].map((label, i) => `<text x="${330 + i * 200}" y="160" text-anchor="middle" fill="${i % 4 === 3 ? '#1D4ED8' : '#334155'}" font-size="18" font-weight="900">${label}</text>`).join('')}
       ${[
-        ['ETTh1', 'iTransformer', '0.439', '0.448', '0.423', '0.430'],
-        ['ETTh1', 'PatchTST',     '0.419', '0.436', '0.402', '0.420'],
-        ['ETTh1', 'DLinear',      '0.425', '0.439', '0.412', '0.425'],
-        ['ETTh2', 'PatchTST',     '0.351', '0.395', '0.337', '0.381'],
-        ['ETTh2', 'DLinear',      '0.470', '0.468', '0.409', '0.424'],
-        ['ETTm1', 'iTransformer', '0.361', '0.390', '0.350', '0.376'],
-        ['ETTm2', 'iTransformer', '0.269', '0.327', '0.262', '0.317'],
-        ['Weather','DLinear',     '0.242', '0.293', '0.239', '0.280'],
-        ['Traffic','PatchTST',    '0.397', '0.275', '0.395', '0.267']
+        ["ETTh1", "96", "0.379 / 0.403", "0.369 / 0.390", "0.4241 / 0.4392", "0.4217 / 0.4353", "0.377 / 0.397", "0.373 / 0.390", "0.4225 / 0.4438", "0.4305 / 0.4439"],
+        ["ETTh1", "192", "0.408 / 0.419", "0.402 / 0.409", "0.4673 / 0.4736", "0.4640 / 0.4674", "0.409 / 0.425", "0.395 / 0.413", "0.4880 / 0.4926", "0.4761 / 0.4838"],
+        ["ETTh1", "336", "0.440 / 0.440", "0.430 / 0.428", "0.5123 / 0.5078", "0.5085 / 0.5001", "0.431 / 0.444", "0.414 / 0.426", "0.5473 / 0.5324", "0.5286 / 0.5196"],
+        ["ETTh1", "720", "0.471 / 0.493", "0.449 / 0.475", "0.6262 / 0.5930", "0.6233 / 0.5851", "0.457 / 0.477", "0.425 / 0.451", "0.6596 / 0.6076", "0.6524 / 0.6023"],
+        ["ETTh2", "96", "0.300 / 0.364", "0.284 / 0.342", "0.2180 / 0.3172", "0.2137 / 0.3084", "0.274 / 0.337", "0.274 / 0.334", "0.2261 / 0.3223", "0.2182 / 0.3139"],
+        ["ETTh2", "192", "0.387 / 0.423", "0.357 / 0.390", "0.2700 / 0.3586", "0.2596 / 0.3427", "0.348 / 0.384", "0.334 / 0.376", "0.2940 / 0.3670", "0.2795 / 0.3579"],
+        ["ETTh2", "336", "0.490 / 0.487", "0.407 / 0.430", "0.3102 / 0.3926", "0.2905 / 0.3690", "0.377 / 0.416", "0.349 / 0.392", "0.3460 / 0.3994", "0.3241 / 0.3881"],
+        ["ETTh2", "720", "0.704 / 0.597", "0.586 / 0.533", "0.3968 / 0.4516", "0.3769 / 0.4336", "0.406 / 0.441", "0.390 / 0.422", "0.4078 / 0.4390", "0.3883 / 0.4246"],
+        ["ETTm1", "96", "0.300 / 0.345", "0.295 / 0.337", "0.3373 / 0.3730", "0.3302 / 0.3654", "0.289 / 0.343", "0.284 / 0.328", "0.3255 / 0.3778", "0.3199 / 0.3608"],
+        ["ETTm1", "192", "0.336 / 0.366", "0.331 / 0.358", "0.3896 / 0.4044", "0.3867 / 0.3983", "0.329 / 0.368", "0.322 / 0.355", "0.3740 / 0.4103", "0.3739 / 0.3968"],
+        ["ETTm1", "336", "0.367 / 0.386", "0.361 / 0.378", "0.4237 / 0.4324", "0.4210 / 0.4263", "0.362 / 0.390", "0.359 / 0.376", "0.4165 / 0.4412", "0.4221 / 0.4308"],
+        ["ETTm1", "720", "0.419 / 0.416", "0.415 / 0.409", "0.4731 / 0.4712", "0.4712 / 0.4642", "0.416 / 0.423", "0.410 / 0.412", "0.4793 / 0.4850", "0.4811 / 0.4762"],
+        ["ETTm2", "96", "0.164 / 0.255", "0.163 / 0.247", "0.1487 / 0.2534", "0.1433 / 0.2456", "0.165 / 0.255", "0.163 / 0.246", "0.1485 / 0.2544", "0.1432 / 0.2456"],
+        ["ETTm2", "192", "0.224 / 0.304", "0.220 / 0.290", "0.1851 / 0.2855", "0.1754 / 0.2748", "0.221 / 0.293", "0.219 / 0.284", "0.1860 / 0.2847", "0.1768 / 0.2746"],
+        ["ETTm2", "336", "0.277 / 0.337", "0.277 / 0.329", "0.2298 / 0.3219", "0.2134 / 0.3035", "0.276 / 0.327", "0.273 / 0.320", "0.2178 / 0.3090", "0.2113 / 0.3029"],
+        ["ETTm2", "720", "0.371 / 0.401", "0.366 / 0.390", "0.2838 / 0.3598", "0.2638 / 0.3408", "0.362 / 0.381", "0.357 / 0.374", "0.2836 / 0.3526", "0.2771 / 0.3464"],
       ].map((row, i) => {
-        const y = 214 + i * 73;
+        const y = 184 + i * 43;
         return `<g>
-          ${i % 2 ? `<rect x="40" y="${y}" width="1760" height="73" fill="#F8FAFC"/>` : ''}
-          <text x="160" y="${y + 47}" text-anchor="middle" fill="#0F172A" font-size="24" font-weight="900">${row[0]}</text>
-          <text x="465" y="${y + 47}" text-anchor="middle" fill="#334155" font-size="24" font-weight="800">${row[1]}</text>
-          ${[800, 1010, 1370, 1580].map((x, j) => `<text x="${x}" y="${y + 47}" text-anchor="middle" fill="${j >= 2 ? '#1D4ED8' : '#334155'}" font-size="25" font-weight="${j >= 2 ? '900' : '700'}" font-family="monospace">${row[j + 2]}</text>`).join('')}
-          <line x1="40" y1="${y + 73}" x2="1800" y2="${y + 73}" stroke="#E2E8F0" stroke-width="1.3"/>
+          ${Math.floor(i / 4) % 2 ? `<rect x="32" y="${y}" width="1776" height="43" fill="#F8FAFC"/>` : ''}
+          <text x="82" y="${y + 29}" text-anchor="middle" fill="#0F172A" font-size="18" font-weight="900">${row[0]}</text>
+          <text x="170" y="${y + 29}" text-anchor="middle" fill="#334155" font-size="18" font-weight="800">${row[1]}</text>
+          ${row.slice(2).map((value, j) => `<text x="${330 + j * 200}" y="${y + 29}" text-anchor="middle" fill="${j % 4 === 3 ? '#1D4ED8' : '#334155'}" font-size="18" font-weight="${j % 4 === 3 ? '900' : '700'}" font-family="monospace">${value}</text>`).join('')}
+          <line x1="32" y1="${y + 43}" x2="1808" y2="${y + 43}" stroke="${(i + 1) % 4 === 0 ? '#94A3B8' : '#E2E8F0'}" stroke-width="${(i + 1) % 4 === 0 ? '1.8' : '1'}"/>
         </g>`;
       }).join('')}
+      <line x1="1028" y1="84" x2="1028" y2="872" stroke="#CBD5E1" stroke-width="1.8"/>
     </svg>`,
 
     /* Local test metrics: four ETT horizons and five paired seeds per model.

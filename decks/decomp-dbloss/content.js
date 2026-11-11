@@ -49,9 +49,9 @@ window.PresentationContent = {
     {
       id: 'slide-04',
       slideNumber: 4,
-      navTitle: '论文结果',
+      navTitle: '主结果复现',
       layout: 'canvas-slide',
-      title: '论文结果：基线与 DBLoss',
+      title: '主结果复现：基线与 DBLoss',
       subtitle: '',
       visualKey: 'slide4.paperResults'
     },
