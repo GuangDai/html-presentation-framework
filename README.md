@@ -1,6 +1,6 @@
 # 学术论文 16:9 HTML 演示框架
 
-默认演示是 Aurora 论文汇报。通用布局、样式和交互与论文素材分开存放；切换论文只需在 `decks/active.js` 修改目录名。页面使用 1920×1080 舞台，提供对比页、双层架构页、流程公式页及三种扩展布局，支持目录、键盘翻页与动画。
+默认演示是 DecompNet 与 DBLoss 的论文汇报，共 5 页。通用布局、样式和交互与论文素材分开存放；可通过演示库、URL 参数或修改 `decks/active.js` 切换论文。页面使用 1920×1080 舞台，支持目录、键盘翻页与动画。
 
 ## 目录和职责
 
@@ -11,11 +11,12 @@ css/layout.css              舞台、页面及控件布局和样式
 css/components.css          阶段条和扩展布局组件样式
 css/typography.css          PPT 物理字号对应的页面字号
 css/animations.css          动画预设
-js/slide-layouts.js         六种页面的 HTML 结构
+js/slide-layouts.js         七种页面的 HTML 结构
 js/visual-components.js     阶段条和扩展布局的组件构建器
 js/presentation-variants.js A、B、C 版式配置与分页计算
 js/presentation-engine.js   渲染、公式、区域等高和交互
 decks/active.js             当前论文目录选择
+decks/decomp-dbloss/        DecompNet 与 DBLoss 论文素材
 decks/aurora/               Aurora 论文素材
   content.js                页面文字、公式、图形引用和导航配置
   visuals.js                论文专用 SVG 图形
@@ -23,10 +24,10 @@ decks/aurora/               Aurora 论文素材
 decks/paper-template/       可复制的新论文模板，含上述三个文件
 decks/component-showcase/   六种布局的展示示例
 scripts/build_math_cache.py 生成离线公式缓存（需本机 TeX 工具）
-rendered_slides_16x9/       Aurora 当前导出 PNG
+rendered_slides_16x9/       DecompNet 与 DBLoss 的 5 页导出 PNG
 ```
 
-根目录中的 PDF、PPTX 与 `rendered_slides_16x9/` 中的 PNG 是默认 A 版式的导出结果，不会随源码修改自动更新。PPTX 每页包含一张完整的幻灯片图片。本仓库没有附带导出脚本。
+根目录保留 DecompNet 与 DBLoss、Aurora 两套 PDF 和 PPTX；PNG 对应 DecompNet 与 DBLoss。导出文件不会随源码修改自动更新，PPTX 每页包含一张完整的幻灯片图片。本仓库没有附带导出脚本。
 
 ## 新建和切换论文
 
@@ -40,15 +41,15 @@ rendered_slides_16x9/       Aurora 当前导出 PNG
 
 ## 内容格式
 
-`content.js` 定义 `window.PresentationContent = { deckMeta, slides }`。模板提供六种页面的可编辑示例；Aurora 的完整实例在 `decks/aurora/content.js`。
+`content.js` 定义 `window.PresentationContent = { deckMeta, slides }`。模板提供六种页面的可编辑示例；DecompNet 与 DBLoss 使用画布页，实例在 `decks/decomp-dbloss/`。
 
 ### A、B、C 版式
 
 演示右下角的“版式 A／B／C”控件可切换版式，默认 A。也可在页面 URL 后使用 `?style=A`、`?style=B` 或 `?style=C`，并与 `?deck=` 参数组合使用：例如 `?deck=aurora&style=B`。
 
-- A：每页最多七步，Aurora 为 7 页。
-- B：每页最多四步，Aurora 为 9 页。
-- C：每页最多三步，Aurora 为 13 页。
+- A：每页最多七步，Aurora 为 10 页。
+- B：每页最多四步，Aurora 为 12 页。
+- C：每页最多三步，Aurora 为 14 页。
 
 三个版式读取同一份内容、图形和样式；修改论文数据后自动体现在所有版式中。分页按步骤顺序计算，目录会列出分页后的页面；总架构图和卡片链接仍以原页面索引为目标，切换版式后会跳到对应的第一页。各版式的步骤上限和默认值在 `js/presentation-variants.js` 修改；`design-previews/` 是本机生成的预览，不属于配置。
 
@@ -68,17 +69,19 @@ rendered_slides_16x9/       Aurora 当前导出 PNG
 
 `bento-slide`、`benchmark-slide` 和 `matrix-slide` 的字段示例见 `decks/paper-template/content.js` 与 `decks/component-showcase/content.js`。这些扩展布局使用 `visual-components.js` 中的组件。
 
+`canvas-slide` 通过 `visualKey` 加载整页 SVG，适合自由排布的图解；示例见 `decks/decomp-dbloss/content.js` 和 `visuals.js`。
+
 正文行内公式用 `$...$`；JavaScript 字符串中的 TeX 反斜杠写成 `\\`。长公式或多个公式应拆成多行，避免溢出。内容和 SVG 均作为 HTML 插入，因此只能使用可信来源。
 
 ### 图形和离线公式
 
 `visuals.js` 定义 `window.PresentationVisuals`，将图形键映射到 SVG 字符串；`visualKey` 支持完整字符串键或嵌套对象路径。SVG 中可使用带 `latex-formula` 类和 `data-latex` 属性的元素渲染公式，参见 Aurora 图形库。
 
-公式优先使用在线 KaTeX 或 MathJax；两者不可用时查找 `window.PresentationMathSvgs` 中的缓存，缓存也不存在时显示原始 TeX。Aurora 的缓存沿用 `window.AURORA_MATH_SVGS`，引擎兼容该旧名称。新论文的空缓存不会自动生成新公式 SVG。
+公式优先使用 `window.PresentationMathSvgs` 中的离线缓存，其次使用已加载的 KaTeX 或 MathJax；均不可用时显示原始 TeX。在线排版库加载完成后，引擎会重试尚未排版的公式。Aurora 的缓存沿用 `window.AURORA_MATH_SVGS`，引擎兼容该旧名称。新论文的空缓存不会自动生成新公式 SVG。
 
 ## PPT 字号与页面尺寸
 
-舞台固定为 1920×1080，导出的 PPT 页面宽 13⅓ 英寸、高 7½ 英寸，故 2 个舞台 CSS 像素对应 PPT 的 1 磅。`css/variables.css` 中字号分别为标题 18 磅（36 px）、正文及图表主标注 10 磅（20 px）和图表次标注 8 磅（16 px）。`css/typography.css` 将这些字号应用于页面文字和数学区域。
+舞台固定为 1920×1080，导出的 PPT 页面宽 13⅓ 英寸、高 7½ 英寸，故 2 个舞台 CSS 像素对应 PPT 的 1 磅。字号由 `css/variables.css` 设置，并由 `css/typography.css` 针对页面文字和数学区域调整。
 
 SVG 图形按画布等比缩放，其内部文字不自动遵循舞台字号；复杂图形尤其是多列页面的图内标签仍需要逐图重新排版，才能达到 8 或 10 磅。三个版式共享同一份正式演示数据。
 

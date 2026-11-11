@@ -2,13 +2,13 @@
  * ============================================================================
  * @file decks/active.js
  * @description Active Deck Router.
- *              - Default deck: 'aurora'
- *              - Can also be switched dynamically via URL query `?deck=component-showcase`
- *                or `?deck=paper-template` without modifying source files.
+ *              - Default deck: 'decomp-dbloss'
+ *              - Can also be switched dynamically via URL query `?deck=aurora`,
+ *                `?deck=component-showcase`, or `?deck=paper-template`.
  * ============================================================================
  */
 (function () {
-  const defaultDeck = 'aurora';
+  const defaultDeck = 'decomp-dbloss';
   let requestedDeck = defaultDeck;
   try {
     const params = new URLSearchParams(window.location.search);

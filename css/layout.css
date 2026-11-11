@@ -48,6 +48,11 @@ html, body {
   flex-shrink: 0;
 }
 
+body.export-mode .viewport-scaler {
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
+}
+
 body.export-mode .presentation-stage {
   transform: none !important;
   box-shadow: none !important;
@@ -71,7 +76,7 @@ body.export-mode .presentation-stage {
   left: 0;
   right: 0;
   height: 3.5px;
-  background: linear-gradient(90deg, #2563EB 0%, #2563EB 45%, #0D9488 78%, #D97706 100%);
+  background: linear-gradient(90deg, #1E3A8A 0%, #1D4ED8 55%, #60A5FA 100%);
   z-index: 5;
 }
 
@@ -1865,7 +1870,7 @@ body.export-mode .drawer-backdrop {
 }
 
 .v-bar-fill.is-ours {
-  background: linear-gradient(90deg, #2563EB 0%, #0D9488 100%);
+  background: linear-gradient(90deg, #1E3A8A 0%, #2563EB 100%);
 }
 
 /* ============================================================================

@@ -8,7 +8,7 @@
   <!-- ======================================================================
        1. MATH RENDERING ENGINE: KaTeX + MathJax + 100% Offline Vector SVG Cache
        ====================================================================== -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" media="print" onload="this.media='all'" crossorigin="anonymous" />
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
   <script>
     window.MathJax = {
@@ -16,7 +16,7 @@
       svg: { fontCache: 'global' }
     };
   </script>
-  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" crossorigin="anonymous"></script>
+  <script id="mathjax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" crossorigin="anonymous"></script>
 
   <!-- ======================================================================
        2. MODULAR PRESENTATION STYLESHEETS (Tokens, Layout, Components, Animations)
@@ -78,10 +78,17 @@
       <p class="drawer-subtitle">支持通过 URL 参数 <code>?deck=名称</code> 或修改 <code>decks/active.js</code> 切换当前演示</p>
     </div>
     <div class="deck-options-grid">
+      <button class="deck-option-btn active" data-deck-option="decomp-dbloss">
+        <span class="toc-num">00</span>
+        <div>
+          <div class="toc-title">DecompNet 与 DBLoss 时序分解双论文解析 (NeurIPS 2025 · 5 页)</div>
+          <div class="toc-sub">涵盖双范式抽象结构对比、DecompNet 参数融合、DBLoss 下三角矩阵算子、实验评测与复现反思</div>
+        </div>
+      </button>
       <button class="deck-option-btn" data-deck-option="aurora">
         <span class="toc-num">01</span>
         <div>
-          <div class="toc-title">Aurora 多模态时间序列生成框架 (ICLR 2026 完整实例 · 7 页)</div>
+          <div class="toc-title">Aurora 多模态时间序列生成框架 (ICLR 2026 完整实例 · 10 页)</div>
           <div class="toc-sub">涵盖问题诊断对比、多路总架构、1D/2D/文本蒸馏、双路引导融合与流匹配生成</div>
         </div>
       </button>

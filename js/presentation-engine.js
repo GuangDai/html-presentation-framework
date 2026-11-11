@@ -6,8 +6,8 @@
  * Global Export: window.PresentationEngine / window.AuroraEngine
  *
  * CAPABILITIES:
- * - Renders 6 standardized layouts (`contrast-slide`, `architecture-slide`,
- *   `pipeline-slide`, `bento-slide`, `benchmark-slide`, `matrix-slide`)
+ * - Renders 7 layouts (`contrast-slide`, `architecture-slide`, `pipeline-slide`,
+ *   `bento-slide`, `benchmark-slide`, `matrix-slide`, `canvas-slide`)
  * - Integrates declarative visual-semantic components (`window.PresentationComponents`)
  * - Typesets TeX via KaTeX / MathJax / 100% pre-compiled offline vector SVG cache
  * - Equalizes sibling card regions across rows with pixel-level precision
@@ -33,7 +33,6 @@ class AuroraPresentationEngine {
       viewport: document.getElementById('viewport-scaler'),
       stage: document.getElementById('presentation-stage'),
       slideContainer: document.getElementById('slides-container'),
-      headerAgenda: document.getElementById('header-agenda-rail'),
       tocList: document.getElementById('toc-list'),
       tocDrawer: document.getElementById('toc-drawer'),
       animDrawer: document.getElementById('anim-drawer'),
@@ -76,7 +75,6 @@ class AuroraPresentationEngine {
 
   /** Initialize DOM, math rendering, row height equalization, and listeners */
   init() {
-    this.renderHeaderAgenda();
     this.renderTocDrawer();
     this.renderAllSlides();
     this.typesetAllMath();
@@ -156,6 +154,8 @@ class AuroraPresentationEngine {
         bodyHtml = this.buildBenchmarkSlide(slide);
       } else if (slide.layout === 'matrix-slide') {
         bodyHtml = this.buildMatrixSlide(slide);
+      } else if (slide.layout === 'canvas-slide') {
+        bodyHtml = this.buildCanvasSlide(slide);
       }
 
       return `
@@ -190,7 +190,7 @@ class AuroraPresentationEngine {
           <div class="slide-title-row">
             <h1 class="slide-title">${this.formatInlineMath(slide.title)}</h1>
           </div>
-          <p class="slide-subtitle">${this.formatInlineMath(slide.subtitle)}</p>
+          ${slide.subtitle ? `<p class="slide-subtitle">${this.formatInlineMath(slide.subtitle)}</p>` : ""}
         </div>
         <nav class="slide-agenda-rail" aria-label="Slide Navigation">
           ${agendaHtml}
@@ -264,14 +264,20 @@ class AuroraPresentationEngine {
     return String(str).replace(/&/g, '&amp;').replace(/"/g, '&quot;');
   }
 
-  /** Typeset all `.latex-formula[data-latex]` elements (KaTeX -> MathJax -> Offline Vector Cache) */
-  typesetAllMath() {
+  /** Typeset formulas with the offline cache, KaTeX, or MathJax. */
+  typesetAllMath(pendingOnly = false) {
     const mathNodes = document.querySelectorAll('.latex-formula[data-latex]');
     mathNodes.forEach(node => {
+      if (pendingOnly && node.querySelector('svg, .katex, mjx-container')) return;
       const latex = node.getAttribute('data-latex');
       if (!latex) return;
 
       const mathCache = window.PresentationMathSvgs || window.AURORA_MATH_SVGS;
+
+      if (mathCache && mathCache[latex]) {
+        node.innerHTML = mathCache[latex];
+        return;
+      }
 
       if (window.katex && typeof window.katex.render === 'function') {
         try {
@@ -294,11 +300,6 @@ class AuroraPresentationEngine {
         } catch (err) {
           console.warn('[PresentationEngine] MathJax render warning:', err);
         }
-      }
-
-      if (mathCache && mathCache[latex]) {
-        node.innerHTML = mathCache[latex];
-        return;
       }
 
       node.textContent = latex;
@@ -547,11 +548,42 @@ Object.assign(
 window.PresentationEngine = AuroraPresentationEngine;
 window.AuroraEngine = AuroraPresentationEngine;
 
-document.addEventListener('DOMContentLoaded', () => {
+function bootPresentationApp() {
+  if (window.presentationApp) return;
   const content = window.PresentationContent || window.AuroraContent;
   const visuals = window.PresentationVisuals || window.AuroraVisuals || {};
-  if (content) {
+  if (content && document.getElementById('slides-container')) {
     window.presentationApp = new AuroraPresentationEngine(content, visuals);
     window.auroraApp = window.presentationApp;
+
+    // Deferred KaTeX and asynchronous MathJax can finish after the first render.
+    const retryPendingMath = () => {
+      window.presentationApp.typesetAllMath(true);
+      window.presentationApp.equalizeAllSlidesRegions();
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', retryPendingMath, { once: true });
+    }
+    const waitForMathJax = () => {
+      const startup = window.MathJax && window.MathJax.startup;
+      if (startup && startup.promise) {
+        startup.promise.then(retryPendingMath).catch(err => {
+          console.warn('[PresentationEngine] MathJax startup warning:', err);
+        });
+      } else {
+        retryPendingMath();
+      }
+    };
+    const mathJaxScript = document.getElementById('mathjax-script');
+    if (window.MathJax && window.MathJax.startup && window.MathJax.startup.promise) {
+      waitForMathJax();
+    } else if (mathJaxScript) {
+      mathJaxScript.addEventListener('load', waitForMathJax, { once: true });
+    }
   }
-});
+}
+if (document.getElementById('slides-container')) {
+  bootPresentationApp();
+} else {
+  document.addEventListener('DOMContentLoaded', bootPresentationApp);
+}

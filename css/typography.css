@@ -28,10 +28,13 @@
 .chain-tier-math .offline-tex-svg, .dim-badge .offline-tex-svg { zoom: 1.25; }
 .latex-inline .offline-tex-svg { zoom: 1.25; }
 
-/* 导航独占一行，为较大的标题和副标题留出横向空间。 */
-.slide-header { flex-wrap: wrap; row-gap: 6px; }
-.slide-header-left { flex: 1 1 100%; }
-.slide-agenda-rail { max-width: 100%; }
+/* 单行紧凑顶栏：标题居左，1-5导航胶囊居右，不挤压下方画布空间，并放大TV端字号 */
+.slide-header { flex-wrap: nowrap; padding: 10px 20px; }
+.slide-header-left { flex: 1 1 auto; min-width: 0; }
+.slide-title { font-size: 30px !important; line-height: 1.15 !important; }
+.slide-agenda-rail { flex-shrink: 0; padding: 5px 8px; gap: 6px; }
+.agenda-pill { font-size: 16px !important; padding: 7px 14px !important; font-weight: 800 !important; }
+.pill-num { font-size: 15px !important; font-weight: 900 !important; }
 .pipe-cards-grid:is(.cols-7, .density-compact) .pipe-step-caption { text-align: left; }
 
 /* 正文采用 10 pt，以常规字重和适度行距减少拥挤。 */
@@ -61,7 +64,7 @@
 
 /* 在图形内加粗数学符号；正文和底部公式保持原字重。 */
 .svg-tex-cell .katex { -webkit-text-stroke: 0.3px currentColor; }
-.svg-tex-cell .offline-tex-svg { stroke: currentColor; stroke-width: 0.18; stroke-linejoin: round; paint-order: stroke fill; }
+.svg-tex-cell .offline-tex-svg { stroke: currentColor; stroke-width: 0.28; stroke-linejoin: round; paint-order: stroke fill; }
 
 .svg-tex-cell .latex-formula > svg:not(.offline-tex-svg) { stroke: currentColor; stroke-width: 15; stroke-linejoin: round; paint-order: stroke fill; }
 
@@ -103,3 +106,5 @@
 
 /* 控件选项使用系统可读的深色文字。 */
 #hud-variant option { color: #0F172A; background: #FFFFFF; }
+
+.svg-tex-cell .offline-tex-svg { zoom: var(--tex-zoom, 1.15); }

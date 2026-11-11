@@ -13,6 +13,19 @@
 
 window.PresentationLayouts = {
   /**
+   * Layout 7: Full-Stage Graphical Canvas Slide (`canvas-slide`)
+   */
+  buildCanvasSlide(slide) {
+    return `
+      <div class="ms-arch-stage canvas-stage" style="background:transparent;border:none;padding:0;box-shadow:none;flex:1;display:flex;flex-direction:column;min-height:0;overflow:hidden;">
+        <div class="ms-svg-canvas" style="flex:1;width:100%;height:100%;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+          ${this.resolveVisual(slide.visualKey)}
+        </div>
+      </div>
+    `;
+  },
+
+  /**
    * Layout 1: Contrast Slide (Top Challenges vs Bottom Contributions)
    */
   buildContrastSlide(slide) {

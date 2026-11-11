@@ -147,7 +147,7 @@ def main():
     print(f'[build_math_cache] Loaded {len(master_cache)} existing cached formulas.')
 
     all_needed = set()
-    deck_names = ['aurora', 'component-showcase', 'paper-template']
+    deck_names = ['decomp-dbloss', 'aurora', 'component-showcase', 'paper-template']
     for dname in deck_names:
         ddir = DECKS_DIR / dname
         if ddir.exists():
