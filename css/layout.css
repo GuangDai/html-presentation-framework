@@ -80,6 +80,10 @@ body.export-mode .presentation-stage {
   z-index: 5;
 }
 
+.presentation-stage.is-blank::after {
+  display: none;
+}
+
 .slides-container {
   position: relative;
   width: 100%;

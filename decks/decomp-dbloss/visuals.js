@@ -122,6 +122,37 @@
     </g>`;
   }
 
+  /** Dataset-level means over four horizons and five paired seeds. */
+  function drawResultTables(groups) {
+    return `<svg viewBox="0 0 1840 900" fill="none">
+      ${groups.map((group, index) => {
+        const x = index % 2 ? 928 : 12;
+        const y = index < 2 ? 8 : 458;
+        const rowHeight = group.rows.length === 4 ? 66 : 87;
+        return `<g>
+          <rect x="${x}" y="${y}" width="900" height="434" rx="18" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
+          ${drawFloatingBadge(x + 18, y + 16, 182, 48, group.dataset)}
+          ${index === 0 ? `<text x="${x + 880}" y="${y + 47}" text-anchor="end" fill="#475569" font-size="19" font-weight="800">MSE / MAE · 4 步长 · 5 种子</text>` : ''}
+          <rect x="${x + 16}" y="${y + 88}" width="868" height="54" fill="#F1F5F9"/>
+          <text x="${x + 156}" y="${y + 123}" text-anchor="middle" fill="#0F172A" font-size="21" font-weight="900">${group.firstColumn}</text>
+          <text x="${x + 465}" y="${y + 123}" text-anchor="middle" fill="#0F172A" font-size="21" font-weight="900">DLinear</text>
+          <text x="${x + 735}" y="${y + 123}" text-anchor="middle" fill="#0F172A" font-size="21" font-weight="900">PatchTST</text>
+          ${group.rows.map((row, i) => {
+            const top = y + 142 + i * rowHeight;
+            const value = pair => `${pair[0].toFixed(4)} / ${pair[1].toFixed(4)}`;
+            return `<g>
+              ${i % 2 ? `<rect x="${x + 16}" y="${top}" width="868" height="${rowHeight}" fill="#F8FAFC"/>` : ''}
+              <text x="${x + 156}" y="${top + rowHeight / 2 + 8}" text-anchor="middle" fill="#0F172A" font-size="21" font-weight="800">${row[0]}</text>
+              <text x="${x + 465}" y="${top + rowHeight / 2 + 8}" text-anchor="middle" fill="#1E3A8A" font-size="23" font-weight="800" font-family="monospace">${value(row[1])}</text>
+              <text x="${x + 735}" y="${top + rowHeight / 2 + 8}" text-anchor="middle" fill="#1E3A8A" font-size="23" font-weight="800" font-family="monospace">${value(row[2])}</text>
+              <line x1="${x + 16}" y1="${top + rowHeight}" x2="${x + 884}" y2="${top + rowHeight}" stroke="#E2E8F0" stroke-width="1.3"/>
+            </g>`;
+          }).join('')}
+        </g>`;
+      }).join('')}
+    </svg>`;
+  }
+
   window.PresentationVisuals = window.AuroraVisuals = {
 
     /* ========================================================================
@@ -576,326 +607,82 @@
       ${svgTex(780, 492, 996, 360, '\\displaystyle A = \\begin{bmatrix} 1 & 0 & 0 & 0 \\\\[6pt] q & \\alpha & 0 & 0 \\\\[6pt] q^2 & \\alpha q & \\alpha & 0 \\\\[6pt] q^3 & \\alpha q^2 & \\alpha q & \\alpha \\end{bmatrix}, \\qquad q = 1 - \\alpha', '#0F172A', '23px', '', '', 2.22)}
     </svg>`,
 
-    /* ========================================================================
-     * SLIDE 4: DBLOSS EXPERIMENTAL RESULTS (100% Compiled TeX Symbols)
-     * ======================================================================== */
-    "slide4.experiments": `<svg viewBox="0 0 1840 900" fill="none">
-      <!-- ==================== LEFT PANEL: HAIRLINE ACADEMIC COMPARISON TABLE ==================== -->
-      <rect x="12" y="8" width="1104" height="884" rx="18" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
-
-      <!-- Compact Floating Badge + Status Pill on the Right -->
-      ${drawFloatingBadge(28, 22, 432, 48, '主流主干 MSE vs DBLoss (MSE / MAE)')}
-      <rect x="832" y="22" width="260" height="48" rx="12" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.8"/>
-      <text x="962" y="54" text-anchor="middle" fill="#1D4ED8" font-size="18.5" font-weight="900">状态：本地复现运行中</text>
-
-      <!-- Clean Academic Table Header -->
-      <line x1="28" y1="88" x2="1092" y2="88" stroke="#0F172A" stroke-width="2.5"/>
-      <rect x="28" y="90" width="1064" height="54" fill="#F8FAFC"/>
-      <text x="104" y="124" text-anchor="middle" fill="#0F172A" font-size="18.5" font-weight="900">数据集</text>
-      <text x="256" y="124" text-anchor="middle" fill="#0F172A" font-size="18.5" font-weight="900">预测主干</text>
-      <text x="438" y="124" text-anchor="middle" fill="#475569" font-size="18.5" font-weight="900">Original (MSE)</text>
-      <text x="646" y="124" text-anchor="middle" fill="#1D4ED8" font-size="18.5" font-weight="900">DBLoss (论文)</text>
-      <text x="860" y="124" text-anchor="middle" fill="#0F172A" font-size="18.5" font-weight="900">DBLoss (复现)</text>
-      <text x="1024" y="124" text-anchor="middle" fill="#475569" font-size="18.5" font-weight="900">相对变化</text>
-      <line x1="28" y1="144" x2="1092" y2="144" stroke="#CBD5E1" stroke-width="2"/>
-
-      <!-- Table Rows Separated by Clean Hairlines -->
+    /* Paper Table 1 printed Avg rows, not recalculated from rounded horizons. */
+    "slide4.paperResults": `<svg viewBox="0 0 1840 900" fill="none">
+      <rect x="12" y="8" width="1816" height="884" rx="18" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
+      <text x="42" y="64" fill="#334155" font-size="23" font-weight="800">四个预测步长的平均结果</text>
+      <line x1="40" y1="94" x2="1800" y2="94" stroke="#0F172A" stroke-width="2.4"/>
+      <rect x="40" y="96" width="1760" height="118" fill="#F1F5F9"/>
+      <text x="160" y="160" text-anchor="middle" fill="#0F172A" font-size="25" font-weight="900">数据集</text>
+      <text x="465" y="160" text-anchor="middle" fill="#0F172A" font-size="25" font-weight="900">模型</text>
+      <text x="905" y="140" text-anchor="middle" fill="#334155" font-size="25" font-weight="900">论文 Baseline</text>
+      <text x="1475" y="140" text-anchor="middle" fill="#1D4ED8" font-size="25" font-weight="900">论文 DBLoss</text>
+      ${[[800, 'MSE'], [1010, 'MAE'], [1370, 'MSE'], [1580, 'MAE']].map(([x, label]) => `<text x="${x}" y="190" text-anchor="middle" fill="#475569" font-size="22" font-weight="800">${label}</text>`).join('')}
       ${[
-        { ds: 'ETTh1',   model: 'iTransformer', ori: '0.439 / 0.448', paper: '0.423 / 0.430', gain: '-3.6%' },
-        { ds: 'ETTh1',   model: 'PatchTST',     ori: '0.419 / 0.436', paper: '0.402 / 0.420', gain: '-4.1%' },
-        { ds: 'ETTh1',   model: 'DLinear',      ori: '0.425 / 0.439', paper: '0.412 / 0.425', gain: '-3.1%' },
-        { ds: 'ETTh2',   model: 'PatchTST',     ori: '0.351 / 0.395', paper: '0.337 / 0.381', gain: '-4.0%' },
-        { ds: 'ETTh2',   model: 'DLinear',      ori: '0.470 / 0.468', paper: '0.409 / 0.424', gain: '-13.0%' },
-        { ds: 'ETTm1',   model: 'iTransformer', ori: '0.361 / 0.390', paper: '0.350 / 0.376', gain: '-3.0%' },
-        { ds: 'ETTm2',   model: 'iTransformer', ori: '0.269 / 0.327', paper: '0.262 / 0.317', gain: '-2.6%' },
-        { ds: 'Weather', model: 'DLinear',      ori: '0.242 / 0.293', paper: '0.239 / 0.280', gain: '-4.4%' },
-        { ds: 'Traffic', model: 'PatchTST',     ori: '0.397 / 0.275', paper: '0.395 / 0.267', gain: '-2.9%' }
-      ].map((row, idx) => {
-        const y = 146 + idx * 80;
-        const rowBg = idx % 2 === 1 ? `<rect x="28" y="${y}" width="1064" height="80" fill="#F8FAFC" fill-opacity="0.7"/>` : '';
-        return `
-          <g>
-            ${rowBg}
-            <text x="104" y="${y + 49}" text-anchor="middle" fill="#0F172A" font-size="20" font-weight="900">${row.ds}</text>
-            <text x="256" y="${y + 49}" text-anchor="middle" fill="#334155" font-size="19.5" font-weight="800">${row.model}</text>
-            <text x="438" y="${y + 49}" text-anchor="middle" fill="#475569" font-size="19.5" font-weight="700" font-family="JetBrains Mono, monospace">${row.ori}</text>
-            <text x="646" y="${y + 49}" text-anchor="middle" fill="#1D4ED8" font-size="20" font-weight="900" font-family="JetBrains Mono, monospace">${row.paper}</text>
-            <rect x="776" y="${y + 20}" width="168" height="40" rx="8" fill="#EFF6FF" stroke="#93C5FD" stroke-width="1.8" stroke-dasharray="5 3"/>
-            <text x="860" y="${y + 47}" text-anchor="middle" fill="#1D4ED8" font-size="17" font-weight="900">Running · 待填入</text>
-            <text x="1024" y="${y + 49}" text-anchor="middle" fill="#0F172A" font-size="19.5" font-weight="900" font-family="JetBrains Mono, monospace">${row.gain}</text>
-            <line x1="28" y1="${y + 80}" x2="1092" y2="${y + 80}" stroke="${idx === 8 ? '#0F172A' : '#E2E8F0'}" stroke-width="${idx === 8 ? '2.5' : '1.2'}"/>
-          </g>
-        `;
+        ['ETTh1', 'iTransformer', '0.439', '0.448', '0.423', '0.430'],
+        ['ETTh1', 'PatchTST',     '0.419', '0.436', '0.402', '0.420'],
+        ['ETTh1', 'DLinear',      '0.425', '0.439', '0.412', '0.425'],
+        ['ETTh2', 'PatchTST',     '0.351', '0.395', '0.337', '0.381'],
+        ['ETTh2', 'DLinear',      '0.470', '0.468', '0.409', '0.424'],
+        ['ETTm1', 'iTransformer', '0.361', '0.390', '0.350', '0.376'],
+        ['ETTm2', 'iTransformer', '0.269', '0.327', '0.262', '0.317'],
+        ['Weather','DLinear',     '0.242', '0.293', '0.239', '0.280'],
+        ['Traffic','PatchTST',    '0.397', '0.275', '0.395', '0.267']
+      ].map((row, i) => {
+        const y = 214 + i * 73;
+        return `<g>
+          ${i % 2 ? `<rect x="40" y="${y}" width="1760" height="73" fill="#F8FAFC"/>` : ''}
+          <text x="160" y="${y + 47}" text-anchor="middle" fill="#0F172A" font-size="24" font-weight="900">${row[0]}</text>
+          <text x="465" y="${y + 47}" text-anchor="middle" fill="#334155" font-size="24" font-weight="800">${row[1]}</text>
+          ${[800, 1010, 1370, 1580].map((x, j) => `<text x="${x}" y="${y + 47}" text-anchor="middle" fill="${j >= 2 ? '#1D4ED8' : '#334155'}" font-size="25" font-weight="${j >= 2 ? '900' : '700'}" font-family="monospace">${row[j + 2]}</text>`).join('')}
+          <line x1="40" y1="${y + 73}" x2="1800" y2="${y + 73}" stroke="#E2E8F0" stroke-width="1.3"/>
+        </g>`;
       }).join('')}
-
-
-      <!-- ==================== RIGHT PANEL: GENERALIZATION & HYPERPARAMETER VISUALS ==================== -->
-      <!-- Top-Right Card: Generalization Curve Schematic -->
-      <rect x="1136" y="8" width="692" height="432" rx="18" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
-
-      <!-- Compact Floating Badge at Top-Left + Legend Occupying Right Side! -->
-      ${drawFloatingBadge(1152, 22, 236, 48, '误差收敛轨迹对比')}
-      <rect x="1404" y="18" width="406" height="60" rx="10" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.8"/>
-      <line x1="1420" y1="36" x2="1458" y2="36" stroke="#64748B" stroke-width="4.5"/>
-      <text x="1470" y="42" fill="#334155" font-size="16" font-weight="800">MSE 测试误差 (后期过拟合反弹)</text>
-      <line x1="1420" y1="62" x2="1458" y2="62" stroke="#1D4ED8" stroke-width="5.5"/>
-      <text x="1470" y="68" fill="#1D4ED8" font-size="16" font-weight="900">DBLoss 测试误差 (收敛更低更稳)</text>
-
-      <rect x="1152" y="88" width="658" height="288" rx="14" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1.8"/>
-      <line x1="1224" y1="328" x2="1784" y2="328" stroke="#94A3B8" stroke-width="2.5"/>
-      <line x1="1224" y1="108" x2="1224" y2="328" stroke="#94A3B8" stroke-width="2.5"/>
-      <text x="1504" y="360" text-anchor="middle" fill="#334155" font-size="17" font-weight="800">Training Epochs (训练轮次)</text>
-      <text x="1190" y="220" text-anchor="middle" fill="#334155" font-size="17" font-weight="800" transform="rotate(-90 1190 220)">MSE Error</text>
-
-      <!-- MSE Test (Slate solid) vs DBLoss Test (Royal Blue solid) -->
-      <path d="M 1244 128 C 1310 212, 1372 222, 1456 200 C 1540 182, 1640 206, 1770 190" stroke="#64748B" stroke-width="4.5" fill="none"/>
-      <path d="M 1244 138 C 1310 236, 1392 260, 1496 266 C 1596 268, 1676 268, 1770 268" stroke="#1D4ED8" stroke-width="5.5" fill="none"/>
-      <path d="M 1244 152 C 1330 248, 1456 284, 1770 296" stroke="#60A5FA" stroke-width="3.2" stroke-dasharray="7 5" fill="none"/>
-      <path d="M 1244 160 C 1330 270, 1456 304, 1770 316" stroke="#94A3B8" stroke-width="3" stroke-dasharray="5 5" fill="none"/>
-
-      <text x="1482" y="414" text-anchor="middle" fill="#0F172A" font-size="18.5" font-weight="900">分解损失起到隐式正则化作用，抑制对训练集高频噪声的过拟合</text>
-
-
-      <!-- Bottom-Right Card: De-Boxed Hyperparameter (\alpha, \beta) Grid & Notes -->
-      <rect x="1136" y="456" width="692" height="436" rx="18" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
-
-      <!-- Compact Floating Badge at Top-Left with Compiled TeX (\alpha, \beta) -->
-      ${drawFloatingBadge(1152, 472, 276, 48, '超参数 $(\\alpha, \\beta)$ 敏感度')}
-
-      <!-- Left inside Bottom-Right: Clean Open 4x4 Heatmap Grid -->
-      ${svgRich(1160, 540, 264, 36, '$(\\alpha, \\beta)$ 误差分布网格', '#0F172A', '18.5px', '900', 1.35)}
-      <g transform="translate(1188, 586)">
-        ${Array.from({ length: 4 }).map((_, r) =>
-          Array.from({ length: 4 }).map((__, c) => {
-            const palette = [
-              ['#F1F5F9', '#DBEAFE', '#93C5FD', '#60A5FA'],
-              ['#DBEAFE', '#93C5FD', '#3B82F6', '#60A5FA'],
-              ['#93C5FD', '#3B82F6', '#1D4ED8', '#2563EB'],
-              ['#DBEAFE', '#93C5FD', '#3B82F6', '#93C5FD']
-            ];
-            const isBest = (r === 2 && c === 2);
-            return `<rect x="${c * 54}" y="${r * 50}" width="48" height="44" rx="6" fill="${palette[r][c]}" stroke="${isBest ? '#0F172A' : 'none'}" stroke-width="${isBest ? '3' : '0'}"/>`;
-          }).join('')
-        ).join('')}
-      </g>
-      ${svgRich(1156, 800, 272, 34, '横轴：权重 $\\beta$ · 纵轴：系数 $\\alpha$', '#334155', '17px', '800', 1.32)}
-      ${svgRich(1156, 836, 272, 34, '深蓝格：最优 $(\\alpha^*, \\beta^*)$', '#1D4ED8', '17.5px', '900', 1.32)}
-
-      <line x1="1444" y1="476" x2="1444" y2="870" stroke="#CBD5E1" stroke-width="1.8"/>
-
-      <!-- Right inside Bottom-Right: Occupies full vertical space y=478..870 next to Floating Badge! -->
-      <g transform="translate(1464, 478)">
-        <text x="0" y="30" fill="#0F172A" font-size="19.5" font-weight="900">1. 强周期数据 (Traffic)</text>
-        ${svgRich(0, 42, 344, 34, '宜取较大 $\\beta$ (强化周期) 与小 $\\alpha$', '#334155', '17px', '700', 1.32, 'flex-start')}
-        <text x="0" y="96" fill="#1D4ED8" font-size="17" font-weight="900">本地最优：[待实验填入]</text>
-
-        <line x1="0" y1="124" x2="344" y2="124" stroke="#CBD5E1" stroke-width="1.5"/>
-
-        <text x="0" y="160" fill="#0F172A" font-size="19.5" font-weight="900">2. 强趋势数据 (ETTh2)</text>
-        ${svgRich(0, 172, 344, 34, '宜取均衡 $\\beta \\in [0.4, 0.5]$ 兼顾双项', '#334155', '17px', '700', 1.32, 'flex-start')}
-        <text x="0" y="226" fill="#1D4ED8" font-size="17" font-weight="900">本地最优：[待实验填入]</text>
-
-        <line x1="0" y1="254" x2="344" y2="254" stroke="#CBD5E1" stroke-width="1.5"/>
-
-        <text x="0" y="290" fill="#0F172A" font-size="19.5" font-weight="900">3. 复现差异核对重点</text>
-        <text x="0" y="324" fill="#334155" font-size="17" font-weight="700">对比默认超参 vs 逐数据集搜索</text>
-        <text x="0" y="356" fill="#0F172A" font-size="17" font-weight="800">核查长步长 EMA 浮点稳定性</text>
-      </g>
     </svg>`,
 
-    /* ========================================================================
-     * SLIDE 5: REFLECTIONS & CRITICAL ANALYSIS (100% Compiled TeX Symbols)
-     * ======================================================================== */
-    "slide5.reflection": `<svg viewBox="0 0 1840 900" fill="none">
-      <!-- ==================== CARD 01: DECOMPNET ==================== -->
-      <rect x="12" y="8" width="584" height="884" rx="18" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
+    /* Local test metrics: four ETT horizons and five paired seeds per model.
+       Source: 4090D unified_evaluation_20261111_06/completion.jsonl and
+       f07/evaluations/unified_20261111_01/summary.json. */
+    "slide5.normResults": drawResultTables([
+      {dataset:'ETTh1', firstColumn:'季节 / 趋势', rows:[
+        ['L2 / L1（基准）',[0.50429027,0.49688665],[0.52196402,0.51247610]],
+        ['L1 / L1',[0.50337669,0.49520457],[0.52181007,0.51087913]],
+        ['L1 / L2',[0.50537613,0.50157976],[0.52645760,0.51766973]],
+        ['L2 / L2',[0.50636785,0.50273487],[0.52337809,0.51708478]]]},
+      {dataset:'ETTh2', firstColumn:'季节 / 趋势', rows:[
+        ['L2 / L1（基准）',[0.28533199,0.36354291],[0.30690315,0.37475124]],
+        ['L1 / L1',[0.28414079,0.36209795],[0.29738989,0.36654839]],
+        ['L1 / L2',[0.30097330,0.38043734],[0.30825290,0.37584488]],
+        ['L2 / L2',[0.30429363,0.38308631],[0.31024443,0.37848904]]]},
+      {dataset:'ETTm1', firstColumn:'季节 / 趋势', rows:[
+        ['L2 / L1（基准）',[0.40226219,0.41354479],[0.45898647,0.45528809]],
+        ['L1 / L1',[0.40138299,0.41218611],[0.41212256,0.42772875]],
+        ['L1 / L2',[0.40511723,0.41928983],[0.40169811,0.43284897]],
+        ['L2 / L2',[0.40553262,0.41970056],[0.42559843,0.44906167]]]},
+      {dataset:'ETTm2', firstColumn:'季节 / 趋势', rows:[
+        ['L2 / L1（基准）',[0.19876701,0.29095749],[0.21469834,0.30542242]],
+        ['L1 / L1',[0.19819588,0.29017898],[0.20194874,0.29322978]],
+        ['L1 / L2',[0.20409499,0.29829091],[0.20551103,0.29814531]],
+        ['L2 / L2',[0.20599123,0.30033701],[0.20994487,0.30327172]]]}
+    ]),
 
-      <!-- Compact Floating Badge 01 -->
-      ${drawFloatingBadge(28, 22, 360, 48, 'DecompNet 失效剖析', '01')}
-      <rect x="424" y="22" width="152" height="48" rx="10" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.8"/>
-      <text x="500" y="53" text-anchor="middle" fill="#475569" font-size="17.5" font-weight="900">参数硬融合</text>
-
-      <!-- Single Top Visual Well (y: 86..452) -->
-      <rect x="28" y="86" width="548" height="366" rx="14" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.8"/>
-
-      <!-- Visual Flow: Un-decomposed \tilde{X} entering Fused Weight (W_A + \lambda W_B) -->
-      <rect x="44" y="110" width="138" height="94" rx="12" fill="#FFFFFF" stroke="#94A3B8" stroke-width="2.2"/>
-      <text x="113" y="142" text-anchor="middle" fill="#0F172A" font-size="18" font-weight="900">未分解输入</text>
-      ${svgTex(52, 152, 122, 40, 'X_T + X_S', '#0F172A', '17.5px', '', '', 1.48)}
-
-      ${svgTex(184, 140, 32, 36, '\\times', '#475569', '20px', '', '', 1.65)}
-
-      <rect x="218" y="110" width="162" height="94" rx="12" fill="#EFF6FF" stroke="#2563EB" stroke-width="2.2"/>
-      <text x="299" y="142" text-anchor="middle" fill="#1E3A8A" font-size="18" font-weight="900">融合层权重</text>
-      ${svgTex(226, 152, 146, 40, 'W_A + \\lambda W_B', '#1D4ED8', '17.5px', '', '', 1.48)}
-
-      <line x1="380" y1="157" x2="412" y2="157" stroke="#64748B" stroke-width="3.2"/>
-      <polygon points="406,149 422,157 406,165" fill="#64748B"/>
-
-      <!-- Output Split into Valid vs Polluted Cross-Terms -->
-      <rect x="424" y="102" width="136" height="50" rx="10" fill="#FFFFFF" stroke="#2563EB" stroke-width="2.2"/>
-      <text x="492" y="134" text-anchor="middle" fill="#1D4ED8" font-size="17" font-weight="900">正常专家项</text>
-
-      <rect x="424" y="162" width="136" height="50" rx="10" fill="#F1F5F9" stroke="#64748B" stroke-width="2.2" stroke-dasharray="5 3"/>
-      <text x="492" y="194" text-anchor="middle" fill="#334155" font-size="17" font-weight="900">交叉污染项</text>
-
-      <line x1="44" y1="228" x2="560" y2="228" stroke="#CBD5E1" stroke-width="1.5"/>
-
-      <!-- Visual Parameter Basin Diagram -->
-      <ellipse cx="132" cy="316" rx="76" ry="48" fill="#FFFFFF" stroke="#2563EB" stroke-width="2.4"/>
-      <text x="132" y="304" text-anchor="middle" fill="#334155" font-size="16.5" font-weight="800">趋势流形</text>
-      ${svgTex(92, 312, 80, 38, '\\Theta_A', '#1D4ED8', '18px', '', '', 1.52)}
-
-      <ellipse cx="472" cy="316" rx="76" ry="48" fill="#FFFFFF" stroke="#2563EB" stroke-width="2.4"/>
-      <text x="472" y="304" text-anchor="middle" fill="#334155" font-size="16.5" font-weight="800">季节流形</text>
-      ${svgTex(432, 312, 80, 38, '\\Theta_B', '#1D4ED8', '18px', '', '', 1.52)}
-
-      <line x1="208" y1="316" x2="396" y2="316" stroke="#94A3B8" stroke-width="2.5" stroke-dasharray="6 4"/>
-      <rect x="224" y="272" width="156" height="88" rx="12" fill="#F1F5F9" stroke="#475569" stroke-width="2.4" stroke-dasharray="6 4"/>
-      <text x="302" y="302" text-anchor="middle" fill="#0F172A" font-size="17" font-weight="900">非线性失配</text>
-      ${svgTex(232, 312, 140, 38, '\\Theta_A + \\lambda\\Theta_B', '#334155', '17px', '', '', 1.42)}
-
-      ${svgTex(40, 388, 524, 50, 'f(X_T;\\Theta_A) + f(X_S;\\Theta_B) \\;\\neq\\; f(\\tilde{X};\\, \\Theta_A + \\lambda\\Theta_B)', '#0F172A', '18px', '', '', 1.52)}
-
-      <!-- Open Editorial Insights -->
-      <g transform="translate(32, 478)">
-        <rect x="0" y="4" width="5" height="88" rx="2.5" fill="#1D4ED8"/>
-        <text x="20" y="32" fill="#0F172A" font-size="21" font-weight="900">未分解输入激活跨分量交叉污染项</text>
-        ${svgTex(20, 46, 520, 46, '(X_T+X_S)(W_A+\\lambda W_B) = (X_T W_A+\\lambda X_S W_B) + (\\lambda X_T W_B+X_S W_A)', '#1E3A8A', '16px', '', '', 1.32, 'flex-start')}
-
-        <line x1="0" y1="116" x2="544" y2="116" stroke="#CBD5E1" stroke-width="1.5"/>
-
-        <rect x="0" y="140" width="5" height="86" rx="2.5" fill="#64748B"/>
-        <text x="20" y="168" fill="#0F172A" font-size="21" font-weight="900">非线性激活与注意力破坏参数可加性</text>
-        <text x="20" y="202" fill="#334155" font-size="18" font-weight="700">Softmax、LayerNorm 与激活函数均为强非线性，</text>
-        <text x="20" y="232" fill="#334155" font-size="18" font-weight="700">按层权重线性相加会偏离各自收敛的特征子空间。</text>
-
-        <line x1="0" y1="260" x2="544" y2="260" stroke="#CBD5E1" stroke-width="1.5"/>
-
-        <rect x="0" y="284" width="5" height="78" rx="2.5" fill="#64748B"/>
-        <text x="20" y="312" fill="#0F172A" font-size="21" font-weight="900">三阶段微调链路脆弱，实测无法复现</text>
-        ${svgRich(20, 322, 520, 36, '微调单标量 $\\lambda$ 远不足以消除深层交叉干扰，复现失败。', '#334155', '18px', '700', 1.35, 'flex-start')}
-      </g>
-
-
-      <!-- ==================== CARD 02: DBLOSS EFFECTIVENESS ==================== -->
-      <rect x="628" y="8" width="584" height="884" rx="18" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
-
-      <!-- Compact Floating Badge 02 -->
-      ${drawFloatingBadge(644, 22, 352, 48, 'DBLoss 稳定有效机制', '02')}
-      <rect x="1032" y="22" width="160" height="48" rx="10" fill="#EFF6FF" stroke="#93C5FD" stroke-width="1.8"/>
-      <text x="1112" y="53" text-anchor="middle" fill="#1D4ED8" font-size="17.5" font-weight="900">输出线性正交</text>
-
-      <!-- Single Top Visual Well (y: 86..452) -->
-      <rect x="644" y="86" width="548" height="366" rx="14" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.8"/>
-
-      <!-- Upper Half of Visual Well: MSE Cross-Coupling -->
-      <text x="918" y="122" text-anchor="middle" fill="#475569" font-size="17.5" font-weight="900">传统 MSE：趋势残差与季节梯度相互耦合干扰</text>
-      <rect x="664" y="138" width="186" height="74" rx="12" fill="#FFFFFF" stroke="#94A3B8" stroke-width="2.2"/>
-      <text x="757" y="166" text-anchor="middle" fill="#0F172A" font-size="17.5" font-weight="900">趋势残差</text>
-      ${svgTex(680, 172, 154, 36, 'T - \\hat{T}', '#0F172A', '17.5px', '', '', 1.45)}
-
-      <line x1="850" y1="175" x2="986" y2="175" stroke="#64748B" stroke-width="3.2" stroke-dasharray="6 4"/>
-      <polygon points="978,167 994,175 978,183" fill="#64748B"/>
-      <polygon points="858,167 842,175 858,183" fill="#64748B"/>
-      <text x="918" y="160" text-anchor="middle" fill="#334155" font-size="16.5" font-weight="900">耦合互扰</text>
-
-      <rect x="986" y="138" width="186" height="74" rx="12" fill="#FFFFFF" stroke="#94A3B8" stroke-width="2.2"/>
-      <text x="1079" y="166" text-anchor="middle" fill="#0F172A" font-size="17.5" font-weight="900">季节雅可比</text>
-      ${svgTex(1002, 172, 154, 36, '\\mathbf{J}_S = \\nabla_\\Theta \\hat{S}', '#0F172A', '17.5px', '', '', 1.45)}
-
-      <line x1="664" y1="230" x2="1172" y2="230" stroke="#CBD5E1" stroke-width="1.5"/>
-
-      <!-- Lower Half of Visual Well: DBLoss Orthogonal Linear Projection -->
-      <text x="918" y="262" text-anchor="middle" fill="#1E3A8A" font-size="17.5" font-weight="900">DBLoss：线性矩阵算子正交拆解 · 双路独立回传梯度</text>
-
-      <rect x="664" y="280" width="166" height="66" rx="10" fill="#1D4ED8"/>
-      ${svgRich(670, 294, 154, 38, '趋势算子 $A\\hat{Y}$', '#FFFFFF', '17.5px', '900', 1.35)}
-      <line x1="830" y1="313" x2="876" y2="313" stroke="#1D4ED8" stroke-width="3.8"/>
-      <polygon points="870,305 886,313 870,321" fill="#1D4ED8"/>
-      <rect x="888" y="280" width="284" height="66" rx="10" fill="#FFFFFF" stroke="#2563EB" stroke-width="2.2"/>
-      ${svgRich(896, 294, 268, 38, '经 $A^\\top$ 回传纯趋势 $L_1$ 梯度', '#1E3A8A', '17.5px', '900', 1.35)}
-
-      <rect x="664" y="362" width="166" height="66" rx="10" fill="#2563EB"/>
-      ${svgRich(670, 376, 154, 38, '季节算子 $(I-A)\\hat{Y}$', '#FFFFFF', '16.5px', '900', 1.3)}
-      <line x1="830" y1="395" x2="876" y2="395" stroke="#2563EB" stroke-width="3.8"/>
-      <polygon points="870,387 886,395 870,403" fill="#2563EB"/>
-      <rect x="888" y="362" width="284" height="66" rx="10" fill="#FFFFFF" stroke="#2563EB" stroke-width="2.2"/>
-      ${svgRich(896, 376, 268, 38, '经 $(I-A)^\\top$ 回传纯季节 $L_2$ 梯度', '#1E3A8A', '17.5px', '900', 1.35)}
-
-      <!-- Open Editorial Insights (Col 2) -->
-      <g transform="translate(648, 478)">
-        <rect x="0" y="4" width="5" height="88" rx="2.5" fill="#1D4ED8"/>
-        <text x="20" y="32" fill="#0F172A" font-size="21" font-weight="900">从根源消除 MSE 的趋势-季节交叉耦合梯度</text>
-        ${svgTex(20, 46, 520, 46, '\\mathbf{G}_{\\text{coupling}} = -2\\big[(T-\\hat{T})\\mathbf{J}_S + (S-\\hat{S})\\mathbf{J}_T\\big] \\neq \\mathbf{0}', '#1E3A8A', '16.5px', '', '', 1.38, 'flex-start')}
-
-        <line x1="0" y1="116" x2="544" y2="116" stroke="#CBD5E1" stroke-width="1.5"/>
-
-        <rect x="0" y="140" width="5" height="86" rx="2.5" fill="#64748B"/>
-        <text x="20" y="168" fill="#0F172A" font-size="21" font-weight="900">线性矩阵算子可微且无损，梯度回传干净</text>
-        ${svgRich(20, 180, 520, 34, '$A$ 与 $I - A$ 均为固定线性变换，反向传播通过矩阵转置', '#334155', '18px', '700', 1.32, 'flex-start')}
-        ${svgRich(20, 210, 520, 34, '将 $L_1$ 趋势与 $L_2$ 季节监督精确回传至输出端，无流形失配。', '#334155', '18px', '700', 1.32, 'flex-start')}
-
-        <line x1="0" y1="260" x2="544" y2="260" stroke="#CBD5E1" stroke-width="1.5"/>
-
-        <rect x="0" y="284" width="5" height="78" rx="2.5" fill="#64748B"/>
-        <text x="20" y="312" fill="#0F172A" font-size="21" font-weight="900">stopgrad 尺度对齐兼顾双分量，即插即用</text>
-        <text x="20" y="346" fill="#334155" font-size="18" font-weight="700">无需修改模型结构，在多主干与数据集上均稳健提升。</text>
-      </g>
-
-
-      <!-- ==================== CARD 03: REPRODUCTION DISCREPANCIES ==================== -->
-      <rect x="1244" y="8" width="584" height="884" rx="18" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
-
-      <!-- Compact Floating Badge 03 -->
-      ${drawFloatingBadge(1260, 22, 352, 48, '复现差异与超参匹配', '03')}
-      <rect x="1648" y="22" width="160" height="48" rx="10" fill="#EFF6FF" stroke="#93C5FD" stroke-width="1.8"/>
-      <text x="1728" y="53" text-anchor="middle" fill="#1D4ED8" font-size="17.5" font-weight="900">矩阵化与调参</text>
-
-      <!-- Single Top Visual Well (y: 86..452) -->
-      <rect x="1260" y="86" width="548" height="366" rx="14" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.8"/>
-
-      <!-- Upper Half of Visual Well: Cumsum Division vs Matrix A -->
-      <rect x="1280" y="106" width="508" height="116" rx="12" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
-      <text x="1534" y="136" text-anchor="middle" fill="#475569" font-size="17" font-weight="900">论文伪代码 (Algorithm 1)：前缀和除以衰减项 (易下溢)</text>
-      ${svgTex(1292, 146, 484, 64, '\\mathrm{Trend}_t = \\frac{\\mathrm{cumsum}(\\hat{Y} \\odot W)_t}{D_{\\text{div}, t}}, \\quad D_{\\text{div}, t} = q^{F-1-t}', '#0F172A', '17px', '', '', 1.42)}
-
-      <line x1="1534" y1="222" x2="1534" y2="248" stroke="#1D4ED8" stroke-width="3.8"/>
-      <polygon points="1526,242 1534,254 1542,242" fill="#1D4ED8"/>
-
-      <rect x="1280" y="254" width="508" height="106" rx="12" fill="#EFF6FF" stroke="#1D4ED8" stroke-width="2.4"/>
-      ${svgRich(1292, 264, 484, 34, '矩阵化实现：下三角矩阵 $A$ 直接相乘 (避免除法 · 全步长稳定)', '#1E3A8A', '17px', '900', 1.32)}
-      ${svgTex(1292, 296, 484, 52, 'A_{t,0} = q^t,\\;\\; A_{t,k} = \\alpha q^{t-k} \\implies \\mathrm{Trend} = A\\hat{Y}', '#1E3A8A', '17px', '', '', 1.42)}
-
-      <!-- Mini Spectrum Bar at bottom of Visual Well -->
-      <rect x="1280" y="372" width="244" height="66" rx="10" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.8"/>
-      <text x="1402" y="400" text-anchor="middle" fill="#0F172A" font-size="17" font-weight="900">强周期数据 (Traffic)</text>
-      ${svgRich(1290, 404, 224, 30, '偏好大 $\\beta$ 与小 $\\alpha$', '#1D4ED8', '16px', '900', 1.3)}
-
-      <rect x="1544" y="372" width="244" height="66" rx="10" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.8"/>
-      <text x="1666" y="400" text-anchor="middle" fill="#0F172A" font-size="17" font-weight="900">强趋势数据 (ETTh2)</text>
-      ${svgRich(1554, 404, 224, 30, '偏好均衡 $\\beta \\in [0.4, 0.5]$', '#1D4ED8', '16px', '900', 1.3)}
-
-      <!-- Open Editorial Insights (Col 3) -->
-      <g transform="translate(1264, 478)">
-        <rect x="0" y="4" width="5" height="88" rx="2.5" fill="#1D4ED8"/>
-        <text x="20" y="32" fill="#0F172A" font-size="21" font-weight="900">长预测步长下前缀和除法的浮点下溢隐患</text>
-        ${svgRich(20, 44, 520, 34, '步长 $F = 720$ 时因子 $q^{719}$ 在 FP32 下易下溢为 $0$；', '#334155', '18px', '700', 1.32, 'flex-start')}
-        ${svgRich(20, 74, 520, 34, '直接采用下三角矩阵乘法 $A\\hat{Y}$ 可彻底消除小量除法误差。', '#334155', '18px', '700', 1.32, 'flex-start')}
-
-        <line x1="0" y1="116" x2="544" y2="116" stroke="#CBD5E1" stroke-width="1.5"/>
-
-        <rect x="0" y="140" width="5" height="86" rx="2.5" fill="#64748B"/>
-        ${svgRich(20, 142, 520, 36, '超参数 $(\\alpha, \\beta)$ 跨数据集敏感性导致指标差异', '#0F172A', '21px', '900', 1.35, 'flex-start')}
-        ${svgRich(20, 180, 520, 34, '原论文针对不同数据集与步长单独搜索了 $(\\alpha, \\beta)$；固定', '#334155', '18px', '700', 1.32, 'flex-start')}
-        <text x="20" y="232" fill="#334155" font-size="18" font-weight="700">单一超参时虽优于 MSE，但与论文最优汇报值存在差异。</text>
-
-        <line x1="0" y1="260" x2="544" y2="260" stroke="#CBD5E1" stroke-width="1.5"/>
-
-        <rect x="0" y="284" width="5" height="78" rx="2.5" fill="#64748B"/>
-        ${svgRich(20, 286, 520, 36, '后续优化：自相关先验驱动自适应 $\\alpha$', '#0F172A', '21px', '900', 1.35, 'flex-start')}
-        ${svgRich(20, 322, 520, 34, '结合序列主导周期自动设定 $\\alpha$，免去逐数据集网格搜索。', '#334155', '18px', '700', 1.32, 'flex-start')}
-      </g>
-    </svg>`
+    "slide6.operatorResults": drawResultTables([
+      {dataset:'ETTh1', firstColumn:'分解算子', rows:[
+        ['EMA（基准）',[0.50429027,0.49688665],[0.52196411,0.51247617]],
+        ['因果 SMA-9',[0.50528423,0.49767376],[0.51831752,0.51018617]],
+        ['中心 MA-25',[0.50524190,0.49838626],[0.51902837,0.51142810]]]},
+      {dataset:'ETTh2', firstColumn:'分解算子', rows:[
+        ['EMA（基准）',[0.28533199,0.36354291],[0.30690303,0.37475105]],
+        ['因果 SMA-9',[0.28563631,0.36388294],[0.30578502,0.37366885]],
+        ['中心 MA-25',[0.28571856,0.36389508],[0.30599023,0.37388992]]]},
+      {dataset:'ETTm1', firstColumn:'分解算子', rows:[
+        ['EMA（基准）',[0.40226219,0.41354479],[0.45898748,0.45528876]],
+        ['因果 SMA-9',[0.40221961,0.41325668],[0.46035923,0.45461031]],
+        ['中心 MA-25',[0.40188572,0.41247105],[0.52900612,0.48896118]]]},
+      {dataset:'ETTm2', firstColumn:'分解算子', rows:[
+        ['EMA（基准）',[0.19876701,0.29095749],[0.21469833,0.30542243]],
+        ['因果 SMA-9',[0.19875170,0.29088211],[0.21299649,0.30380288]],
+        ['中心 MA-25',[0.19874437,0.29070168],[0.21533430,0.30674314]]]}
+    ])
   };
 })();

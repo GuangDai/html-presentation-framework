@@ -2,7 +2,7 @@
  * ============================================================================
  * @file decks/decomp-dbloss/content.js
  * @description Content & Structure Configuration for DecompNet & DBLoss
- *              5-Slide Graphical Presentation (16:9 Widescreen).
+ *              7-Slide Graphical Presentation (16:9 Widescreen).
  * ============================================================================
  */
 
@@ -13,7 +13,7 @@ window.PresentationContent = {
     homeSlide: 0,
     homeButtonLabel: '⊞ 结构总览 (P1)',
     homeButtonTitle: '返回第 1 页双论文抽象结构总览 (快捷键: M)',
-    tocSubtitle: '点击章节直达对应页面 · 键盘左右方向键或数字键 1–5 快速翻页',
+    tocSubtitle: '点击章节直达对应页面 · 键盘左右方向键或数字键 1–7 快速翻页',
     title: 'DecompNet & DBLoss',
     subtitle: '时间序列趋势与季节性分解的两种范式 (NeurIPS 2025)'
   },
@@ -49,20 +49,38 @@ window.PresentationContent = {
     {
       id: 'slide-04',
       slideNumber: 4,
-      navTitle: 'DBLoss 实验结果',
+      navTitle: '论文结果',
       layout: 'canvas-slide',
-      title: 'DBLoss 实验结果与本地复现对比（运行中）',
+      title: '论文结果：基线与 DBLoss',
       subtitle: '',
-      visualKey: 'slide4.experiments'
+      visualKey: 'slide4.paperResults'
     },
     {
       id: 'slide-05',
       slideNumber: 5,
+      navTitle: '范数组合',
+      layout: 'canvas-slide',
+      title: '范数组合消融（本地复现）',
+      subtitle: '',
+      visualKey: 'slide5.normResults'
+    },
+    {
+      id: 'slide-06',
+      slideNumber: 6,
+      navTitle: '分解算子',
+      layout: 'canvas-slide',
+      title: '分解算子消融（本地复现）',
+      subtitle: '',
+      visualKey: 'slide6.operatorResults'
+    },
+    {
+      id: 'slide-07',
+      slideNumber: 7,
       navTitle: '复现反思',
       layout: 'canvas-slide',
-      title: '复现反思：DecompNet 与 DBLoss 机制对比与差异剖析',
+      title: '复现反思',
       subtitle: '',
-      visualKey: 'slide5.reflection'
+      blank: true
     }
   ]
 };

@@ -141,6 +141,9 @@ class AuroraPresentationEngine {
   renderAllSlides() {
     if (!this.dom.slideContainer) return;
     this.dom.slideContainer.innerHTML = this.slides.map((slide, idx) => {
+      if (slide.blank) {
+        return `<section class="slide-frame" id="${slide.id}" data-index="${idx}"></section>`;
+      }
       let bodyHtml = '';
       if (slide.layout === 'contrast-slide') {
         bodyHtml = this.buildContrastSlide(slide);
@@ -313,6 +316,9 @@ class AuroraPresentationEngine {
 
     this.clearSpotlight();
     this.currentSlideIndex = targetIdx;
+    if (this.dom.stage) {
+      this.dom.stage.classList.toggle('is-blank', Boolean(this.slides[targetIdx].blank));
+    }
 
     const allFrames = document.querySelectorAll('.slide-frame');
     allFrames.forEach((frame, idx) => {
