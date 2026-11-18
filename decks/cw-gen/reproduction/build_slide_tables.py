@@ -38,7 +38,7 @@ def build():
                 raise ValueError(f'Invalid metric for {dataset} {model} {metric}')
             writer.writerow((dataset, model, metric, cw, without, cw - without, 100 * (cw / without - 1)))
             if metric in ('mse', 'mae'):
-                display.extend([f'{cw:.3f}', f'{without:.3f}'])
+                display.extend([f'{without:.3f}', f'{cw:.3f}'])
         tables[model].append(display)
 
     path = ROOT.parent / 'visuals.js'

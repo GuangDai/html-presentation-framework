@@ -88,7 +88,7 @@ window.PresentationContent = {
       slideNumber: 8,
       navTitle: '误差对比',
       layout: 'canvas-slide',
-      title: 'CW 与 w/o CW 的 MSE、MAE 对比',
+      title: 'w/o CW 与 CW 的 MSE、MAE 对比',
       subtitle: '',
       visualKey: 'slide8.exp1'
     },

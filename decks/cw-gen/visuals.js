@@ -176,58 +176,57 @@
   // Begin generated reproduction tables.
   const reproductionTables = {
     "FlowTS": [
-      ["ETTh1", "0.623", "0.872", "0.551", "0.685"],
-      ["ETTh2", "0.698", "7.122", "0.615", "2.265"],
-      ["Weather 原版", "0.312", "0.390", "0.345", "0.409"],
-      ["Weather 去重分段版", "0.323", "0.372", "0.351", "0.399"],
+      ["ETTh1", "0.872", "0.623", "0.685", "0.551"],
+      ["ETTh2", "7.122", "0.698", "2.265", "0.615"],
+      ["Weather 原版", "0.390", "0.312", "0.409", "0.345"],
+      ["Weather 去重分段版", "0.372", "0.323", "0.399", "0.351"],
     ],
     "Diffusion-TS": [
-      ["ETTh1", "0.653", "1.125", "0.558", "0.810"],
-      ["ETTh2", "0.751", "9.686", "0.644", "2.691"],
-      ["Weather 原版", "0.325", "0.489", "0.367", "0.452"],
-      ["Weather 去重分段版", "0.316", "0.447", "0.354", "0.420"],
+      ["ETTh1", "1.125", "0.653", "0.810", "0.558"],
+      ["ETTh2", "9.686", "0.751", "2.691", "0.644"],
+      ["Weather 原版", "0.489", "0.325", "0.452", "0.367"],
+      ["Weather 去重分段版", "0.447", "0.316", "0.420", "0.354"],
     ],
   };
   // End generated reproduction tables.
 
-  function drawModelMetricsPanel(x, model) {
-    return `<g>
-      <rect x="${x}" y="63" width="896" height="760" rx="20" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
-      <text x="${x + 40}" y="144" fill="#0F172A" font-size="42" font-weight="850">${model}</text>
-      <rect x="${x + 308}" y="195" width="276" height="56" rx="10" fill="#EFF6FF"/>
-      <rect x="${x + 584}" y="195" width="276" height="56" rx="10" fill="#EFF6FF"/>
-      <text x="${x + 446}" y="231" text-anchor="middle" fill="#1E3A8A" font-size="26" font-weight="800">均方误差（MSE）</text>
-      <text x="${x + 722}" y="231" text-anchor="middle" fill="#1E3A8A" font-size="26" font-weight="800">平均绝对误差（MAE）</text>
-      ${drawMetricTable(x + 36, 251, [272, 138, 138, 138, 138],
-        ['数据版本', 'CW', 'w/o CW', 'CW', 'w/o CW'], reproductionTables[model])}
-    </g>`;
-  }
+  function drawModelMetricsTable(x, model) {
+    const rows = reproductionTables[model];
+    const columns = [331, 478, 625, 772];
+    const methods = ['w/o CW', 'CW', 'w/o CW', 'CW'];
+    const rowHeight = 62;
+    const bodyTop = 194;
+    const bottom = bodyTop + rowHeight * rows.length;
+    return `<g class="cw-metrics-table" transform="translate(${x}, 200)"
+               fill="#0F172A" font-size="27" style="font-variant-numeric:tabular-nums">
+      <text x="12" y="32" font-weight="800">${model}</text>
 
-  function drawMetricTable(x, y, widths, headers, rows) {
-    const width = widths.reduce((sum, col) => sum + col, 0);
-    const centers = widths.map((col, index) => x + col / 2
-      + widths.slice(0, index).reduce((sum, preceding) => sum + preceding, 0));
-    const rowHeight = 111;
-    const headerHeight = 61;
-    const height = headerHeight + rows.length * rowHeight;
-    return `<g>
-      <rect x="${x}" y="${y}" width="${width}" height="${height}" rx="14" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
-      <path d="M${x + 14} ${y} H${x + width - 14} Q${x + width} ${y} ${x + width} ${y + 14} V${y + headerHeight} H${x} V${y + 14} Q${x} ${y} ${x + 14} ${y}Z" fill="#E2E8F0"/>
-      ${headers.map((label, index) => `<text x="${centers[index]}" y="${y + 38}" text-anchor="middle" fill="#0F172A" font-size="25" font-weight="800">${label}</text>`).join('')}
-      ${rows.map((row, index) => {
-        const top = y + headerHeight + index * rowHeight;
-        return `<g>
-          ${index % 2 === 0 ? `<rect x="${x + 1}" y="${top}" width="${width - 2}" height="${rowHeight}" fill="#F8FAFC"/>` : ''}
-          <line x1="${x + 1}" y1="${top}" x2="${x + width - 1}" y2="${top}" stroke="#E2E8F0"/>
-          ${row.map((cell, col) => {
-            const highlighted = headers[col] === 'CW';
-            return `<text x="${centers[col]}" y="${top + rowHeight / 2 + 10}" text-anchor="middle" fill="${highlighted ? '#1D4ED8' : '#0F172A'}" font-size="${col === 0 ? 26 : 33}" font-weight="${highlighted ? 850 : 650}">${cell}</text>`;
+      <line x1="0" y1="64" x2="846" y2="64" stroke="#0F172A" stroke-width="2.5"/>
+      <g text-anchor="middle" font-weight="750">
+        <text x="404.5" y="108">MSE</text>
+        <text x="698.5" y="108">MAE</text>
+      </g>
+      <path d="M270 127 H539 M564 127 H834" stroke="#64748B" stroke-width="1.25"/>
+      <g class="cw-metrics-header" font-weight="650">
+        <text x="12" y="170">数据版本</text>
+        ${methods.map((method, index) => `<text x="${columns[index]}" y="170" text-anchor="middle">${method}</text>`).join('')}
+      </g>
+      <line x1="0" y1="${bodyTop}" x2="846" y2="${bodyTop}" stroke="#475569" stroke-width="1.5"/>
+
+      ${rows.map(([dataset, ...scores], rowIndex) => {
+        const y = bodyTop + 40 + rowIndex * rowHeight;
+        return `<g class="cw-metrics-row">
+          <text x="12" y="${y}">${dataset}</text>
+          ${scores.map((score, col) => {
+            const other = scores[col % 2 === 0 ? col + 1 : col - 1];
+            const best = Number(score) < Number(other);
+            return `<text x="${columns[col]}" y="${y}" text-anchor="middle" font-weight="${best ? 800 : 500}">${score}</text>`;
           }).join('')}
         </g>`;
       }).join('')}
+      <line x1="0" y1="${bottom}" x2="846" y2="${bottom}" stroke="#0F172A" stroke-width="2.5"/>
     </g>`;
   }
-
 
   window.PresentationVisuals = window.AuroraVisuals = {
 
@@ -738,8 +737,8 @@
     </svg>`,
 
     "slide8.exp1": `<svg viewBox="0 0 1840 900" fill="none">
-      ${drawModelMetricsPanel(12, 'FlowTS')}
-      ${drawModelMetricsPanel(932, 'Diffusion-TS')}
+      ${drawModelMetricsTable(38, 'FlowTS')}
+      ${drawModelMetricsTable(956, 'Diffusion-TS')}
     </svg>`,
 
     "slide9.exp2": `<svg viewBox="0 0 1840 900" role="img" aria-label="ETTh1 和 ETTh2 的历史、真实值以及 CW 与 w/o CW 预测轨迹">
