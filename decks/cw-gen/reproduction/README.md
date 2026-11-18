@@ -1,45 +1,36 @@
-# CW-Gen 第 8–9 页的复现数据
+# CW 与 w/o CW 的结果和轨迹
 
-第 8 页比较标准高斯先验基线 Raw 与接入联合均值和协方差估计器（Joint Mean–Covariance Estimator，JMCE）的 Full。第 9 页展示两项消融。A1 在 Weather 原版比较对角协方差 Diag 与完整协方差 Full。A2 在 ETTh1、ETTh2 和 Weather 原版比较直接从 JMCE 条件高斯采样的 Gaussian 与使用同一先验的 Full。
+演示第 8 页将 FlowTS 和 Diffusion-TS 分开，分别对照 CW 与 w/o CW 的 MSE、MAE。第 9 页用 `ETTh1_ETTh2_all_models_28channels.pdf` 对应的原始数组重绘四个轨迹示例。
 
-## 点预测怎么算
-
-在 4090D 上从 `cwgen_v4_user_resume_20261114` 留存的 80 个 `evaluate.P.*` 测试目录读取 `samples.npz`。每个数组按测试起点、轨迹、预测时点和通道排列。首先在 100 条轨迹上取算术均值 `p`，再在该种子的全部测试起点、未来 192 步和全部通道上等权平均 `(p−y)²` 与 `|p−y|`，分别得到均方误差（Mean Squared Error，MSE）与平均绝对误差（Mean Absolute Error，MAE）。`y` 是测试真值。随后按组等权汇总 10 个配对种子。相对变化为 `100 × (Full 均值 / 对照均值 − 1)`。
-
-每版数据以各自训练集拟合的均值和标准差标准化。跨 Weather 版本时使用 `common_scale_mse`、`common_scale_mae`，这两列将两版误差统一到 Weather 原版训练集标准差。历史长度为 168 步，测试起点步幅为 192。ETTh1 与 ETTh2 各用 15 个起点和 7 个通道，Weather 两版各用 54 个起点和 21 个通道。各方法的采样预算相同。Raw、Full 与 Diag 使用各自训练的生成器。Gaussian 直接采样，无新增生成器训练。
-
-这次重算覆盖 240 条方法级记录、148,680 个起点与通道组合，以及 28,546,560 个方法级标量目标。240 条 MSE 与 MAE 均与原评估匹配，最大绝对差分别为 1.78 × 10⁻¹⁵ 和 4.44 × 10⁻¹⁶。
-
-## 文件
+## 结果数据
 
 | 文件 | 内容 |
 | --- | --- |
-| `metrics_by_seed.csv` | 240 条逐数据版本、骨干、种子、方法结果。包含重算的 MSE 和 MAE，以及原评估的连续排序概率得分（Continuous Ranked Probability Score，CRPS）和空间公平变分分数（Spatial Fair Variogram Score，VS）。 |
-| `errors_by_origin_channel.csv.gz` | 148,680 行训练标准化尺度的点预测误差。每行保存一个种子、方法、测试起点和通道上的未来步数、平方误差和 `sse`、绝对误差和 `sae`。按所需范围汇总后，以总 `sse` 或总 `sae` 除以总 `time_steps` 可还原 MSE 或 MAE。 |
-| `paired_summary.csv` | 8 个主实验组、2 个 A1 组、6 个 A2 组的均值、配对差值、相对变化和 Full 误差更低的种子个数。Weather 行额外含共同尺度的 MSE 和 MAE。 |
-| `audit.json` | 80 项测试的实际起点、通道、数据和预测的 Git 对象标识、冻结检查点标识，以及与原评估的数值核对。 |
-| `probabilistic_results.json` | 正式评估的 CRPS、各通道原始尺度 CRPS、空间 VS 和 16 个配对统计槽。保留原先的 Holm 校正与暂停的条件 FID（Conditional Fréchet Inception Distance，条件 Fréchet 分布距离）记录。 |
-| `forecast_examples/` | 8 份 seed 0 首窗口的历史、真值与 Raw、Full 各 100 条轨迹，供绘图使用。`index.json` 给出数组尺度、时间、通道和文件来源。Weather 样例来自正式测试，ETT 样例来自较早的配对测试，按各自来源解读。 |
+| `main_metrics.csv` | 4 个数据版本 × 2 个生成骨干 × 2 种方法，共 16 行汇总值。 |
+| `paired_summary.csv` | 8 组的 CW 与 w/o CW 汇总值、差值和相对变化。 |
+| `errors_by_origin_channel.csv.gz` | 9,912 行按数据版本、骨干、方法、起点和变量汇总的误差。每行的 `sse`、`sae` 分别是平方和绝对误差之和，除以 `target_count` 得到对应的 MSE、MAE。 |
+| `audit.json` | 测试数、标量目标数、各数据版本的起点和通道，以及与保存指标的数值核对。 |
 
-`forecast_examples/` 的 `Raw` 和 `Full` 维度均为 100 × 192 × 通道数，`history` 为 168 × 通道数，`truth` 为 192 × 通道数。ETT 数组可按 `值 × scaler_scale + scaler_mean` 恢复到源数据尺度。Weather 数组已还原。部分 Weather 源字段的单位含替换字符，索引保留原字段名。
+归档中的 `Full` 对应 CW，`Raw` 对应 w/o CW。重算读取 4090D 上 `cwgen_v4_user_resume_20261114` 中的 80 个正式测试目录。每个起点的 100 条预测轨迹先取均值，再用训练集标准化后的真值计算均方误差（Mean Squared Error，MSE）和平均绝对误差（Mean Absolute Error，MAE）。每组等权汇总 10 个配对种子。跨 Weather 版本可用 `common_scale_mse`、`common_scale_mae`，两列都使用 Weather 原版的训练集标准差。
 
-## 更新与核对
+重算使用已有预测。160 个方法评估的 MSE、MAE 与保存指标的最大绝对差分别为 1.78 × 10⁻¹⁵、4.44 × 10⁻¹⁶。本地生成器使用项目的条件输入和采样适配，测试集曾提前开放，结果按探索性比较解读。Weather 去重分段版处理了重复时间和跨缺口窗口，两版各有 81 个 `−9999` 值参与标准化和训练。
+
+## 轨迹数据
+
+`forecast_examples/index.json` 索引了 8 份首窗口数组。每份保存同一窗口的观测历史、真实未来及两种方法各 100 条轨迹。`Raw` 和 `Full` 的维度为 100 × 192 × 通道数。`history` 和 `truth` 分别对应 168 和 192 个时点。ETT 数组乘 `scaler_scale` 再加 `scaler_mean` 可恢复原始数据尺度，Weather 数组已还原。
+
+第 9 页从图册的四个数据集与骨干组合中各选一个误差下降明显的变量，绘制算术均值轨迹。图册的 ETT 样例来自早期配对测试，图中样例用于观察轨迹形态，第 8 页的均值来自正式测试。`forecast_examples/selected_window_metrics.csv` 保存四张图对应窗口的原始尺度误差，`forecast_comparison.svg` 是可单独打开的矢量图。
+
+## 更新方法
 
 ```sh
-# 4090D 或有完整存档的机器，使用含 NumPy 的 Python 环境
+# 使用带 NumPy 的 Python，从正式存档写入一个新目录
 python recompute_point_metrics.py /path/to/cwgen_v4_user_resume_20261114 /path/to/new-output
 
-# 将重算数据放入本目录后，刷新 HTML 中供第 8–9 页读取的表格
+# 将新数据复制到本目录，刷新演示表格
 python build_slide_tables.py
 python build_slide_tables.py --check
+
+# 用 NumPy、Matplotlib 和中文字体重绘第 9 页
+python plot_forecast_examples.py --font /path/to/NotoSansCJK-Regular.ttc
 ```
-
-指标重算脚本依据复现项目 `CWGen_v4_execution` 的 `evaluate_p_formal.py` 和 `metrics.py`，跨版本 Weather 按原始测试行号及原始尺度真值核对。数据包的概率指标来自该项目的 `P_80_metrics_compact.json`，轨迹来自已留存的 `outputs/figures/`。完整的 80 份多轨迹预测档案保存在 4090D，当前目录收录逐起点逐通道误差与首窗口轨迹样例。
-
-更新表格后，检查第 8–9 页的自然语言结论是否仍与数据一致，并重新导出到根目录的 PPTX、PDF 和 `rendered_cwgen_16x9/`。
-
-## 解释边界
-
-这是本地协议重建，Raw 历史训练材料有缺项，当前生成器使用本地条件输入和采样适配。测试集曾提前开放，结果按探索性比较解读。独立作者分支的 60 项密集测试已取消，概率评估中的条件 FID 已暂停。
-
-ETTh2 的 Raw 误差较高，应同时阅读原值和相对变化。Weather 去重分段版调整了重复时间和跨缺口窗口。两版各 81 个 `−9999` 在训练时参与标准化和拟合，对预测的影响有待单独验证。

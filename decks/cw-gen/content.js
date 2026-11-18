@@ -43,7 +43,7 @@ window.PresentationContent = {
       slideNumber: 3,
       navTitle: '理论分析 (一)',
       layout: 'canvas-slide',
-      title: '理论分析（一）：从标准高斯到条件高斯参考分布',
+      title: '理论分析（一）',
       subtitle: '',
       visualKey: 'slide3.theory1'
     },
@@ -52,7 +52,7 @@ window.PresentationContent = {
       slideNumber: 4,
       navTitle: '理论分析 (二)',
       layout: 'canvas-slide',
-      title: '理论分析（二）：替换标准高斯的充分条件',
+      title: '理论分析（二）',
       subtitle: '',
       visualKey: 'slide4.theory2'
     },
@@ -61,7 +61,7 @@ window.PresentationContent = {
       slideNumber: 5,
       navTitle: 'JMCE 总览',
       layout: 'canvas-slide',
-      title: 'JMCE 总览：联合条件均值与滑窗协方差估计器',
+      title: 'JMCE 总览',
       subtitle: '',
       visualKey: 'slide5.jmce'
     },
@@ -70,7 +70,7 @@ window.PresentationContent = {
       slideNumber: 6,
       navTitle: 'CW-Diff',
       layout: 'canvas-slide',
-      title: 'CW-Diff：条件白化扩散模型的训练与推理',
+      title: 'CW-Diff',
       subtitle: '',
       visualKey: 'slide6.cwdiff'
     },
@@ -79,25 +79,25 @@ window.PresentationContent = {
       slideNumber: 7,
       navTitle: 'CW-Flow',
       layout: 'canvas-slide',
-      title: 'CW-Flow：条件白化流匹配的训练与推理',
+      title: 'CW-Flow',
       subtitle: '',
       visualKey: 'slide7.cwflow'
     },
     {
       id: 'slide-08',
       slideNumber: 8,
-      navTitle: '复现实验 (一)',
+      navTitle: '误差对比',
       layout: 'canvas-slide',
-      title: '复现实验（一）：条件先验的点预测误差',
+      title: 'CW 与 w/o CW 的 MSE、MAE 对比',
       subtitle: '',
       visualKey: 'slide8.exp1'
     },
     {
       id: 'slide-09',
       slideNumber: 9,
-      navTitle: '复现实验 (二)',
+      navTitle: '预测轨迹',
       layout: 'canvas-slide',
-      title: '复现实验（二）：协方差与生成器消融',
+      title: 'ETTh1 与 ETTh2 的预测轨迹示例',
       subtitle: '',
       visualKey: 'slide9.exp2'
     },

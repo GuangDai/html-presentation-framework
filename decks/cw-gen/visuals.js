@@ -97,77 +97,8 @@
     </g>`;
   }
 
-  function drawReservedSlide(badgeTitle, mainTitle) {
-    return `<svg viewBox="0 0 1840 900" fill="none">
-      <rect x="12" y="8" width="1816" height="884" rx="18" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2" stroke-dasharray="10 8"/>
-      ${drawFloatingBadge(28, 22, 340, 48, badgeTitle)}
-      <rect x="520" y="360" width="800" height="180" rx="20" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2.4"/>
-      <text x="920" y="462" text-anchor="middle" fill="#1E3A8A" font-size="32" font-weight="900">${mainTitle}</text>
-    </svg>`;
-  }
-
-  // Begin generated reproduction tables.
-  const reproductionTables = {
-    main: [
-      ["ETTh1", "FlowTS", "0.872", "0.623", "-28.5%", "0.685", "0.551", "-19.6%"],
-      ["ETTh1", "Diffusion-TS", "1.125", "0.653", "-41.9%", "0.810", "0.558", "-31.0%"],
-      ["ETTh2", "FlowTS", "7.122", "0.698", "-90.2%", "2.265", "0.615", "-72.8%"],
-      ["ETTh2", "Diffusion-TS", "9.686", "0.751", "-92.3%", "2.691", "0.644", "-76.1%"],
-      ["Weather 原版", "FlowTS", "0.390", "0.312", "-20.0%", "0.409", "0.345", "-15.6%"],
-      ["Weather 原版", "Diffusion-TS", "0.489", "0.325", "-33.4%", "0.452", "0.367", "-18.8%"],
-      ["Weather 去重分段版", "FlowTS", "0.372", "0.323", "-13.3%", "0.399", "0.351", "-11.9%"],
-      ["Weather 去重分段版", "Diffusion-TS", "0.447", "0.316", "-29.5%", "0.420", "0.354", "-15.6%"],
-    ],
-    covariance: [
-      ["Weather 原版", "FlowTS", "0.328 → 0.312", "0.355 → 0.345"],
-      ["Weather 原版", "Diffusion-TS", "0.328 → 0.325", "0.359 → 0.367"],
-    ],
-    gaussian: [
-      ["ETTh1", "FlowTS", "0.668 → 0.623", "0.560 → 0.551"],
-      ["ETTh1", "Diffusion-TS", "0.668 → 0.653", "0.560 → 0.558"],
-      ["ETTh2", "FlowTS", "0.537 → 0.698", "0.486 → 0.615"],
-      ["ETTh2", "Diffusion-TS", "0.537 → 0.751", "0.486 → 0.644"],
-      ["Weather 原版", "FlowTS", "0.269 → 0.312", "0.314 → 0.345"],
-      ["Weather 原版", "Diffusion-TS", "0.269 → 0.325", "0.314 → 0.367"],
-    ],
-  };
-  // End generated reproduction tables.
-
-  function drawMetricTable(x, y, widths, headers, rows, rowHeight = 57) {
-    const width = widths.reduce((sum, col) => sum + col, 0);
-    const centers = widths.map((col, index) => x + col / 2
-      + widths.slice(0, index).reduce((sum, preceding) => sum + preceding, 0));
-    const headerHeight = 51;
-    const height = headerHeight + rows.length * rowHeight;
-    return `<g>
-      <rect x="${x}" y="${y}" width="${width}" height="${height}" rx="14" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
-      <path d="M${x + 14} ${y} H${x + width - 14} Q${x + width} ${y} ${x + width} ${y + 14} V${y + headerHeight} H${x} V${y + 14} Q${x} ${y} ${x + 14} ${y}Z" fill="#E2E8F0"/>
-      ${headers.map((label, index) => `<text x="${centers[index]}" y="${y + 33}" text-anchor="middle" fill="#0F172A" font-size="23" font-weight="800">${label}</text>`).join('')}
-      ${rows.map((row, index) => {
-        const top = y + headerHeight + index * rowHeight;
-        return `<g>
-          ${index % 2 === 0 ? `<rect x="${x + 1}" y="${top}" width="${width - 2}" height="${rowHeight}" fill="#F8FAFC"/>` : ''}
-          <line x1="${x + 1}" y1="${top}" x2="${x + width - 1}" y2="${top}" stroke="#E2E8F0"/>
-          ${row.map((cell, col) => {
-            const highlighted = cell.endsWith('%');
-            const color = highlighted ? (cell.startsWith('-') ? '#1D4ED8' : '#9A3412') : '#0F172A';
-            return `<text x="${centers[col]}" y="${top + rowHeight / 2 + 8}" text-anchor="middle" fill="${color}" font-size="24" font-weight="${highlighted ? 850 : 650}">${cell}</text>`;
-          }).join('')}
-        </g>`;
-      }).join('')}
-    </g>`;
-  }
-
-
-  window.PresentationVisuals = window.AuroraVisuals = {
-
-    /* ========================================================================
-     * SLIDE 1: OVERALL ARCHITECTURE (Matches Hand-Drawn Sketch Page 1)
-     * Pure Unified Notation: X^{H \times d}, Y^{L \times d}, \widehat{\mu}(X), \widehat{\Sigma}(X)
-     * Zero grey annotations inside boxes!
-     * ======================================================================== */
-    "slide1.overview": `<svg viewBox="0 0 1840 900" fill="none">
-      <!-- ==================== LEFT PANEL: Joint Mean-Covariance Estimator ==================== -->
+  function drawJmceOverview() {
+    return `<g class="jmce-overview">
       <rect x="12" y="8" width="896" height="784" rx="18" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
       ${drawFloatingBadge(28, 22, 436, 48, 'Joint Mean-Covariance Estimator')}
 
@@ -230,7 +161,84 @@
       <!-- Backprop Feedback Loop from Loss to JMCE Model -->
       <path d="M 808 386 L 808 96 L 330 96 L 330 138" stroke="#1D4ED8" stroke-width="4.2" fill="none"/>
       <polygon points="320,132 330,152 340,132" fill="#1D4ED8"/>
+    </g>`;
+  }
 
+  function drawReservedSlide(badgeTitle, mainTitle) {
+    return `<svg viewBox="0 0 1840 900" fill="none">
+      <rect x="12" y="8" width="1816" height="884" rx="18" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2" stroke-dasharray="10 8"/>
+      ${drawFloatingBadge(28, 22, 340, 48, badgeTitle)}
+      <rect x="520" y="360" width="800" height="180" rx="20" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2.4"/>
+      <text x="920" y="462" text-anchor="middle" fill="#1E3A8A" font-size="32" font-weight="900">${mainTitle}</text>
+    </svg>`;
+  }
+
+  // Begin generated reproduction tables.
+  const reproductionTables = {
+    "FlowTS": [
+      ["ETTh1", "0.623", "0.872", "0.551", "0.685"],
+      ["ETTh2", "0.698", "7.122", "0.615", "2.265"],
+      ["Weather 原版", "0.312", "0.390", "0.345", "0.409"],
+      ["Weather 去重分段版", "0.323", "0.372", "0.351", "0.399"],
+    ],
+    "Diffusion-TS": [
+      ["ETTh1", "0.653", "1.125", "0.558", "0.810"],
+      ["ETTh2", "0.751", "9.686", "0.644", "2.691"],
+      ["Weather 原版", "0.325", "0.489", "0.367", "0.452"],
+      ["Weather 去重分段版", "0.316", "0.447", "0.354", "0.420"],
+    ],
+  };
+  // End generated reproduction tables.
+
+  function drawModelMetricsPanel(x, model) {
+    return `<g>
+      <rect x="${x}" y="63" width="896" height="760" rx="20" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
+      <text x="${x + 40}" y="144" fill="#0F172A" font-size="42" font-weight="850">${model}</text>
+      <rect x="${x + 308}" y="195" width="276" height="56" rx="10" fill="#EFF6FF"/>
+      <rect x="${x + 584}" y="195" width="276" height="56" rx="10" fill="#EFF6FF"/>
+      <text x="${x + 446}" y="231" text-anchor="middle" fill="#1E3A8A" font-size="26" font-weight="800">均方误差（MSE）</text>
+      <text x="${x + 722}" y="231" text-anchor="middle" fill="#1E3A8A" font-size="26" font-weight="800">平均绝对误差（MAE）</text>
+      ${drawMetricTable(x + 36, 251, [272, 138, 138, 138, 138],
+        ['数据版本', 'CW', 'w/o CW', 'CW', 'w/o CW'], reproductionTables[model])}
+    </g>`;
+  }
+
+  function drawMetricTable(x, y, widths, headers, rows) {
+    const width = widths.reduce((sum, col) => sum + col, 0);
+    const centers = widths.map((col, index) => x + col / 2
+      + widths.slice(0, index).reduce((sum, preceding) => sum + preceding, 0));
+    const rowHeight = 111;
+    const headerHeight = 61;
+    const height = headerHeight + rows.length * rowHeight;
+    return `<g>
+      <rect x="${x}" y="${y}" width="${width}" height="${height}" rx="14" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
+      <path d="M${x + 14} ${y} H${x + width - 14} Q${x + width} ${y} ${x + width} ${y + 14} V${y + headerHeight} H${x} V${y + 14} Q${x} ${y} ${x + 14} ${y}Z" fill="#E2E8F0"/>
+      ${headers.map((label, index) => `<text x="${centers[index]}" y="${y + 38}" text-anchor="middle" fill="#0F172A" font-size="25" font-weight="800">${label}</text>`).join('')}
+      ${rows.map((row, index) => {
+        const top = y + headerHeight + index * rowHeight;
+        return `<g>
+          ${index % 2 === 0 ? `<rect x="${x + 1}" y="${top}" width="${width - 2}" height="${rowHeight}" fill="#F8FAFC"/>` : ''}
+          <line x1="${x + 1}" y1="${top}" x2="${x + width - 1}" y2="${top}" stroke="#E2E8F0"/>
+          ${row.map((cell, col) => {
+            const highlighted = headers[col] === 'CW';
+            return `<text x="${centers[col]}" y="${top + rowHeight / 2 + 10}" text-anchor="middle" fill="${highlighted ? '#1D4ED8' : '#0F172A'}" font-size="${col === 0 ? 26 : 33}" font-weight="${highlighted ? 850 : 650}">${cell}</text>`;
+          }).join('')}
+        </g>`;
+      }).join('')}
+    </g>`;
+  }
+
+
+  window.PresentationVisuals = window.AuroraVisuals = {
+
+    /* ========================================================================
+     * SLIDE 1: OVERALL ARCHITECTURE (Matches Hand-Drawn Sketch Page 1)
+     * Pure Unified Notation: X^{H \times d}, Y^{L \times d}, \widehat{\mu}(X), \widehat{\Sigma}(X)
+     * Zero grey annotations inside boxes!
+     * ======================================================================== */
+    "slide1.overview": `<svg viewBox="0 0 1840 900" fill="none">
+      <!-- ==================== LEFT PANEL: Joint Mean-Covariance Estimator ==================== -->
+      ${drawJmceOverview()}
 
       <!-- ==================== CENTER VERTICAL DIVIDER ==================== -->
       <line x1="920" y1="28" x2="920" y2="776" stroke="#CBD5E1" stroke-width="2.5" stroke-dasharray="8 6"/>
@@ -545,71 +553,11 @@
      *   Right Bottom: Clean Loss = \mathcal{L}_2 + \mathcal{L}_{\mathrm{SVD}} + \mathcal{L}_F + \mathcal{R}_{\lambda_{\min}}
      * ======================================================================== */
     "slide5.jmce": `<svg viewBox="0 0 1840 900" fill="none">
-      <!-- ==================== LEFT PANEL: JMCE DATAFLOW DIAGRAM ==================== -->
-      <rect x="12" y="8" width="884" height="884" rx="18" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
-      ${drawFloatingBadge(28, 22, 260, 48, '1. JMCE 结构总览')}
-
-      <!-- Top Input: X^{H \times d} -->
-      <rect x="36" y="168" width="148" height="240" rx="16" fill="#F8FAFC" stroke="#94A3B8" stroke-width="2.4"/>
-      <text x="110" y="220" text-anchor="middle" fill="#0F172A" font-size="22" font-weight="900">历史输入</text>
-      ${svgTex(44, 240, 132, 54, 'X^{H \\times d}', '#0F172A', '23px', '', '', 1.95)}
-      <path d="M 54 360 C 74 320, 92 372, 112 334 C 128 304, 146 348, 166 316" stroke="#475569" stroke-width="4.5" stroke-linecap="round" fill="none"/>
-
-      <line x1="184" y1="288" x2="226" y2="288" stroke="#2563EB" stroke-width="4.2"/>
-      <polygon points="220,279 238,288 220,297" fill="#2563EB"/>
-
-      <!-- JMCE Model Block -->
-      ${drawNeuralStack(240, 168, 180, 240, '#2563EB', '#EFF6FF', ['#1D4ED8', '#3B82F6', '#60A5FA'])}
-      <text x="330" y="348" text-anchor="middle" fill="#1E3A8A" font-size="23" font-weight="900">JMCE Model</text>
-
-      <line x1="420" y1="288" x2="462" y2="288" stroke="#1D4ED8" stroke-width="4.2"/>
-      <polygon points="456,279 474,288 456,297" fill="#1D4ED8"/>
-
-      <!-- Predicted Outputs Box -->
-      <rect x="476" y="156" width="236" height="264" rx="18" fill="#EFF6FF" stroke="#1D4ED8" stroke-width="2.8"/>
-      <rect x="496" y="182" width="196" height="96" rx="12" fill="#FFFFFF" stroke="#93C5FD" stroke-width="2"/>
-      ${svgTex(504, 202, 180, 56, '\\widehat{\\mu}(X)^{L \\times d}', '#1E3A8A', '21px', '', '', 1.85)}
-      <rect x="496" y="298" width="196" height="96" rx="12" fill="#FFFFFF" stroke="#93C5FD" stroke-width="2"/>
-      ${svgTex(504, 318, 180, 56, '\\widehat{\\Sigma}(X)^{L \\times d \\times d}', '#1E3A8A', '21px', '', '', 1.85)}
-
-      <!-- Bottom Input: Y^{L \times d} -->
-      <rect x="36" y="536" width="148" height="240" rx="16" fill="#F8FAFC" stroke="#94A3B8" stroke-width="2.4"/>
-      <text x="110" y="588" text-anchor="middle" fill="#0F172A" font-size="22" font-weight="900">未来真值</text>
-      ${svgTex(44, 608, 132, 54, 'Y^{L \\times d}', '#0F172A', '23px', '', '', 1.95)}
-      <path d="M 54 728 C 74 688, 92 740, 112 702 C 128 672, 146 716, 166 684" stroke="#2563EB" stroke-width="4.5" stroke-linecap="round" fill="none"/>
-
-      <line x1="184" y1="656" x2="226" y2="656" stroke="#64748B" stroke-width="4.2"/>
-      <polygon points="220,647 238,656 220,665" fill="#64748B"/>
-
-      <!-- Sliding Window Covariance Block -->
-      <rect x="240" y="536" width="180" height="240" rx="16" fill="#F8FAFC" stroke="#94A3B8" stroke-width="2.4"/>
-      <text x="330" y="640" text-anchor="middle" fill="#0F172A" font-size="21.5" font-weight="900">Sliding Window</text>
-      <text x="330" y="680" text-anchor="middle" fill="#0F172A" font-size="21.5" font-weight="900">Covariance</text>
-
-      <line x1="420" y1="656" x2="462" y2="656" stroke="#64748B" stroke-width="4.2"/>
-      <polygon points="456,647 474,656 456,665" fill="#64748B"/>
-
-      <!-- Ground Truth Supervision Box -->
-      <rect x="476" y="524" width="236" height="264" rx="18" fill="#F8FAFC" stroke="#94A3B8" stroke-width="2.6"/>
-      <rect x="496" y="550" width="196" height="96" rx="12" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
-      ${svgTex(504, 570, 180, 56, '\\mu(Y)^{L \\times d}', '#0F172A', '21px', '', '', 1.85)}
-      <rect x="496" y="666" width="196" height="96" rx="12" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
-      ${svgTex(504, 686, 180, 56, '\\Sigma(Y)^{L \\times d \\times d}', '#0F172A', '21px', '', '', 1.85)}
-
-      <!-- Right-side Supervision Alignment Bracket to Right Panel Loss -->
-      <path d="M 712 288 L 776 288 L 776 436" stroke="#1D4ED8" stroke-width="4.2" fill="none"/>
-      <polygon points="766,430 776,450 786,430" fill="#1D4ED8"/>
-
-      <path d="M 712 656 L 776 656 L 776 508" stroke="#64748B" stroke-width="4.2" fill="none"/>
-      <polygon points="766,514 776,494 786,514" fill="#64748B"/>
-
-      <rect x="722" y="450" width="152" height="44" rx="10" fill="#EFF6FF" stroke="#2563EB" stroke-width="2.2"/>
-      <text x="798" y="479" text-anchor="middle" fill="#1D4ED8" font-size="19" font-weight="900">联合监督对齐</text>
-
+      ${drawJmceOverview()}
 
       <!-- ==================== RIGHT-TOP PANEL: JMCE MODEL BACKBONE ==================== -->
       <rect x="916" y="8" width="912" height="248" rx="18" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
-      ${drawFloatingBadge(932, 22, 540, 48, '2. JMCE Model：Non-stationary Transformer')}
+      ${drawFloatingBadge(932, 22, 540, 48, 'JMCE Model：Non-stationary Transformer')}
 
       <rect x="932" y="88" width="880" height="144" rx="16" fill="#EFF6FF" stroke="#2563EB" stroke-width="2.6"/>
       ${svgTex(952, 100, 840, 62, '\\displaystyle \\widehat{\\mu}(X),\\; \\widehat{L}_1,\\, \\dots,\\, \\widehat{L}_L = \\mathrm{JMCE}(X)', '#0F172A', '22px', '', '', 1.92)}
@@ -618,7 +566,7 @@
 
       <!-- ==================== RIGHT-BOTTOM PANEL: LOSS FORMULATION & 4 COMPONENTS ==================== -->
       <rect x="916" y="272" width="912" height="620" rx="18" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
-      ${drawFloatingBadge(932, 288, 340, 48, '3. Loss 函数与四项分解')}
+      ${drawFloatingBadge(932, 288, 340, 48, 'Loss 函数与四项分解')}
 
       <!-- Master Loss Box -->
       <rect x="932" y="352" width="880" height="104" rx="16" fill="#EFF6FF" stroke="#1D4ED8" stroke-width="3"/>
@@ -790,50 +738,12 @@
     </svg>`,
 
     "slide8.exp1": `<svg viewBox="0 0 1840 900" fill="none">
-      <rect x="12" y="8" width="1816" height="884" rx="18" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
-      ${drawFloatingBadge(28, 22, 336, 48, 'Raw 与 CW Full 配对对照')}
-      <text x="40" y="112" fill="#0F172A" font-size="25" font-weight="730">Raw 使用标准高斯先验，Full 接入 JMCE 的条件均值和完整协方差。</text>
-      <text x="40" y="154" fill="#475569" font-size="23" font-weight="700">历史 168 步，预测 192 步。每起点取 100 条轨迹的均值，每组 10 对种子。ETTh1、ETTh2 各 15 个测试起点，Weather 两版各 54 个。</text>
-
-      <rect x="529" y="188" width="630" height="48" rx="10" fill="#EFF6FF"/>
-      <rect x="1159" y="188" width="645" height="48" rx="10" fill="#EFF6FF"/>
-      <text x="844" y="219" text-anchor="middle" fill="#1E3A8A" font-size="23" font-weight="850">均方误差（MSE）</text>
-      <text x="1481" y="219" text-anchor="middle" fill="#1E3A8A" font-size="23" font-weight="850">平均绝对误差（MAE）</text>
-      ${drawMetricTable(36, 236, [248, 245, 190, 190, 250, 190, 190, 265],
-        ['数据版本', '生成骨干', 'Raw', 'Full', 'Full 相对变化', 'Raw', 'Full', 'Full 相对变化'],
-        reproductionTables.main, 56)}
-
-      <text x="40" y="779" fill="#1E3A8A" font-size="25" font-weight="850">八组 Full 的两项平均误差均低于 Raw。ETTh2 的 Raw 误差偏高，降幅需结合表中基线读。</text>
-      <text x="40" y="819" fill="#475569" font-size="22" font-weight="700">各版本沿用各自训练段标准化。相对变化为 Full 均值 / Raw 均值 − 1，数值越低越好。</text>
-      <text x="40" y="857" fill="#475569" font-size="22" font-weight="700">本地协议重建，测试集曾提前开放。以上结果按探索性比较解读。</text>
+      ${drawModelMetricsPanel(12, 'FlowTS')}
+      ${drawModelMetricsPanel(932, 'Diffusion-TS')}
     </svg>`,
 
-    "slide9.exp2": `<svg viewBox="0 0 1840 900" fill="none">
-      <rect x="12" y="8" width="668" height="696" rx="18" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
-      ${drawFloatingBadge(28, 22, 556, 48, 'A1｜对角协方差 → 完整协方差')}
-      <text x="36" y="115" fill="#334155" font-size="24" font-weight="700">Weather 原版，每个骨干 10 对种子</text>
-      ${drawMetricTable(36, 148, [176, 222, 222],
-        ['骨干', 'MSE  Diag → Full', 'MAE  Diag → Full'],
-        reproductionTables.covariance.map(([, backbone, ...scores]) => [backbone, ...scores]), 70)}
-      <rect x="36" y="376" width="620" height="296" rx="16" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
-      <text x="56" y="429" fill="#1E3A8A" font-size="24" font-weight="850">FlowTS 的两项误差均下降</text>
-      <text x="56" y="477" fill="#0F172A" font-size="24" font-weight="740">Diffusion-TS 的 MSE 下降、MAE 上升</text>
-      <line x1="56" y1="511" x2="636" y2="511" stroke="#CBD5E1" stroke-width="2"/>
-      <text x="56" y="563" fill="#334155" font-size="23" font-weight="700">按预登记的空间变分分数与 CRPS</text>
-      <text x="56" y="605" fill="#334155" font-size="23" font-weight="700">联合判据，两组均未达到 Holm 0.05 阈值。</text>
-
-      <rect x="700" y="8" width="1128" height="696" rx="18" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
-      ${drawFloatingBadge(716, 22, 648, 48, 'A2｜直接条件高斯 → 加生成器')}
-      <text x="724" y="115" fill="#334155" font-size="24" font-weight="700">两种方法共享同一 JMCE 先验，每组 10 对种子</text>
-      ${drawMetricTable(724, 148, [244, 236, 300, 300],
-        ['数据', '骨干', 'MSE  Gaussian → Full', 'MAE  Gaussian → Full'],
-        reproductionTables.gaussian, 62)}
-      <text x="724" y="625" fill="#1E3A8A" font-size="24" font-weight="850">ETTh1 两组 Full 的点误差更低。其余四组直接高斯更低。</text>
-      <text x="724" y="662" fill="#334155" font-size="23" font-weight="700">按连续排序概率得分（CRPS），直接高斯在六组中有五组均值更低。</text>
-
-      <rect x="12" y="731" width="1816" height="151" rx="18" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
-      <text x="40" y="781" fill="#0F172A" font-size="25" font-weight="850">Weather 数据边界</text>
-      <text x="40" y="830" fill="#334155" font-size="23" font-weight="700">去重分段版处理时间重复和缺口。两版训练数据各有 81 个 −9999 值参与了标准化和训练，影响仍待单独检验。</text>
+    "slide9.exp2": `<svg viewBox="0 0 1840 900" role="img" aria-label="ETTh1 和 ETTh2 的历史、真实值以及 CW 与 w/o CW 预测轨迹">
+      <image x="12" y="12" width="1816" height="876" href="decks/cw-gen/reproduction/forecast_comparison.svg"/>
     </svg>`,
 
 
