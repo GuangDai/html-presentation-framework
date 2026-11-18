@@ -1,6 +1,6 @@
 # 学术论文 16:9 HTML 演示框架
 
-默认打开 CW-Gen 条件白化生成模型演示，共 12 页。第 5–7 页展示 JMCE 的训练伪算法、滑窗协方差与损失，第 10–11 页展示[复现实验](decks/cw-gen/reproduction/README.md)，第 12 页是个人分析。可按 D 打开演示库，或通过 `?deck=decomp-dbloss` 等 URL 参数切换论文。页面使用 1920×1080 舞台，支持目录、键盘翻页与动画。
+默认打开 CW-Gen 条件白化生成模型演示，共 13 页。第 5–7 页展示 JMCE 的训练伪算法、滑窗协方差与损失，第 10–11 页展示[复现实验](decks/cw-gen/reproduction/README.md)，第 12–13 页分别比较中心化、标准化与白化，并讨论方法局限。可按 D 打开演示库，或通过 `?deck=decomp-dbloss` 等 URL 参数切换论文。页面使用 1920×1080 舞台，支持目录、键盘翻页与动画。
 
 JMCE 三页按论文第 3.2 节、附录 B 算法 1 和作者代码的滑窗实现整理。个人分析区分了第 4.1 节的对称白化与附录 E.9 的三角因子实现。[ICLR 2026 论文](https://openreview.net/pdf/f432c68f6a40faf1e92fe144d16f3a59ca636095.pdf) · [作者代码](https://github.com/Yanfeng-Yang-0316/Conditionally_whitened_generative_models)
 
@@ -33,7 +33,7 @@ decks/aurora/               Aurora 论文素材
 decks/paper-template/       可复制的新论文模板，含上述三个文件
 decks/component-showcase/   六种布局的展示示例
 scripts/build_math_cache.py 生成离线公式缓存（需本机 TeX 工具）
-rendered_cwgen_16x9/        CW-Gen 的 12 页导出 PNG
+rendered_cwgen_16x9/        CW-Gen 的 13 页导出 PNG
 rendered_slides_16x9/       DecompNet 与 DBLoss 的 6 页导出 PNG
 ```
 

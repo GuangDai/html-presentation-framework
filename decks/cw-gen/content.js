@@ -2,7 +2,7 @@
  * ============================================================================
  * @file decks/cw-gen/content.js
  * @description Content & Structure Configuration for CW-Gen (ICLR 2026)
- *              12-Slide Graphical Presentation (16:9 Widescreen).
+ *              13-Slide Graphical Presentation (16:9 Widescreen).
  *              Unified Notation: Input X \in R^{H \times d}, Target Y \in R^{L \times d}.
  * ============================================================================
  */
@@ -61,7 +61,7 @@ window.PresentationContent = {
       slideNumber: 5,
       navTitle: 'JMCE 总览',
       layout: 'canvas-slide',
-      title: 'JMCE 总览',
+      title: 'JMCE 总览与训练伪算法',
       subtitle: '',
       visualKey: 'slide5.jmce'
     },
@@ -70,7 +70,7 @@ window.PresentationContent = {
       slideNumber: 6,
       navTitle: '滑窗协方差',
       layout: 'canvas-slide',
-      title: 'Sliding Window 算法',
+      title: '滑窗协方差（Sliding Window）计算',
       subtitle: '',
       visualKey: 'jmce.slidingWindow'
     },
@@ -79,7 +79,7 @@ window.PresentationContent = {
       slideNumber: 7,
       navTitle: 'JMCE 损失',
       layout: 'canvas-slide',
-      title: 'JMCE 训练流程与 Loss',
+      title: 'JMCE 损失函数与定理 1 映射',
       subtitle: '',
       visualKey: 'jmce.trainingFlow'
     },
@@ -122,11 +122,20 @@ window.PresentationContent = {
     {
       id: 'slide-12',
       slideNumber: 12,
-      navTitle: '个人分析',
+      navTitle: '分析 (一)：白化几何',
       layout: 'canvas-slide',
-      title: '个人分析',
+      title: '个人分析（一）：中心化、标准化与白化对比',
       subtitle: '',
-      visualKey: 'personal.analysis'
+      visualKey: 'personal.whitening'
+    },
+    {
+      id: 'slide-13',
+      slideNumber: 13,
+      navTitle: '分析 (二)：方法局限',
+      layout: 'canvas-slide',
+      title: '个人分析（二）：方法局限性剖析（三大核心问题）',
+      subtitle: '',
+      visualKey: 'personal.limitations'
     }
   ]
 };
