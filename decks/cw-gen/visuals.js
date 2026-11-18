@@ -103,8 +103,15 @@
 
   function drawJmceOverview(fullHeight = false) {
     const cardH = fullHeight ? 884 : 784;
+    const windowArrowY = fullHeight ? 658 : 604;
+    const meanTarget = fullHeight ? 'Y^{L \\times d}' : '\\mu(Y)^{L \\times d}';
+    const observationBypass = fullHeight
+      ? '<path d="M184 550 H208 V450 H450 V550 H462" stroke="#64748B" stroke-width="4.2" fill="none"/>'
+        + '<polygon points="456,541 474,550 456,559" fill="#64748B"/>'
+      : '';
     const bottomFooter = fullHeight
-      ? `<rect x="36" y="768" width="848" height="96" rx="14" fill="#EFF6FF" stroke="#93C5FD" stroke-width="2.2"/>
+      ? `${svgRich(36, 733, 848, 34, '$\\Sigma$ 为理论协方差 · $\\widetilde{\\Sigma}(Y)$ 为滑窗监督目标 · $\\widehat{\\Sigma}(X)$ 为模型估计', '#334155', '18px', '800', 1.35)}
+         <rect x="36" y="768" width="848" height="96" rx="14" fill="#EFF6FF" stroke="#93C5FD" stroke-width="2.2"/>
          ${svgRich(52, 778, 816, 38, '非自回归联合映射（主干网络：Non-stationary Transformer）', '#1E3A8A', '20px', '900', 1.4)}
          ${svgTex(52, 816, 816, 42, '\\mathrm{JMCE}_\\theta(X) \\;\\mapsto\\; \\big(\\widehat{\\mu}(X) \\in \\mathbb{R}^{L \\times d},\\; \\widehat{L}_{1:L}(X) \\in \\mathbb{R}^{L \\times d \\times d}\\big)', '#0F172A', '19.5px', '', '', 1.68)}`
       : '';
@@ -134,28 +141,27 @@
       <rect x="496" y="272" width="196" height="92" rx="12" fill="#FFFFFF" stroke="#93C5FD" stroke-width="2"/>
       ${svgTex(504, 290, 180, 56, '\\widehat{\\Sigma}(X)^{L \\times d \\times d}', '#1E3A8A', '21px', '', '', 1.85)}
 
-      <!-- Observed Y supervises the mean directly and supplies the sliding-window covariance target. -->
+      <!-- Bottom Path: Observed future and sliding-window covariance -->
       <rect x="36" y="492" width="148" height="224" rx="16" fill="#F8FAFC" stroke="#94A3B8" stroke-width="2.4"/>
       <text x="110" y="540" text-anchor="middle" fill="#0F172A" font-size="22" font-weight="900">未来序列</text>
       ${svgTex(44, 558, 132, 54, 'Y^{L \\times d}', '#0F172A', '23px', '', '', 1.95)}
       <path d="M 54 674 C 74 634, 92 686, 112 648 C 128 618, 146 662, 166 630" stroke="#2563EB" stroke-width="4.5" stroke-linecap="round" fill="none"/>
 
-      <path d="M184 550 H208 V450 H450 V550 H462" stroke="#64748B" stroke-width="4.2" fill="none"/>
-      <polygon points="456,541 474,550 456,559" fill="#64748B"/>
-      <line x1="184" y1="658" x2="226" y2="658" stroke="#64748B" stroke-width="4.2"/>
-      <polygon points="220,649 238,658 220,667" fill="#64748B"/>
+      ${observationBypass}
+      <line x1="184" y1="${windowArrowY}" x2="226" y2="${windowArrowY}" stroke="#64748B" stroke-width="4.2"/>
+      <polygon points="220,${windowArrowY - 9} 238,${windowArrowY} 220,${windowArrowY + 9}" fill="#64748B"/>
 
       <rect x="240" y="492" width="180" height="224" rx="16" fill="#F8FAFC" stroke="#94A3B8" stroke-width="2.4"/>
       <text x="330" y="588" text-anchor="middle" fill="#0F172A" font-size="21.5" font-weight="900">Sliding Window</text>
       <text x="330" y="628" text-anchor="middle" fill="#0F172A" font-size="21.5" font-weight="900">Covariance</text>
 
-      <line x1="420" y1="658" x2="462" y2="658" stroke="#64748B" stroke-width="4.2"/>
-      <polygon points="456,649 474,658 456,667" fill="#64748B"/>
+      <line x1="420" y1="${windowArrowY}" x2="462" y2="${windowArrowY}" stroke="#64748B" stroke-width="4.2"/>
+      <polygon points="456,${windowArrowY - 9} 474,${windowArrowY} 456,${windowArrowY + 9}" fill="#64748B"/>
 
       <!-- Training Targets -->
       <rect x="476" y="480" width="236" height="248" rx="18" fill="#F8FAFC" stroke="#94A3B8" stroke-width="2.6"/>
       <rect x="496" y="504" width="196" height="92" rx="12" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
-      ${svgTex(504, 522, 180, 56, 'Y^{L \\times d}', '#0F172A', '21px', '', '', 1.85)}
+      ${svgTex(504, 522, 180, 56, meanTarget, '#0F172A', '21px', '', '', 1.85)}
       <rect x="496" y="612" width="196" height="92" rx="12" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
       ${svgTex(504, 630, 180, 56, '\\widetilde{\\Sigma}(Y)^{L \\times d \\times d}', '#0F172A', '21px', '', '', 1.85)}
 
@@ -174,7 +180,6 @@
       <path d="M 808 386 L 808 96 L 330 96 L 330 138" stroke="#1D4ED8" stroke-width="4.2" fill="none"/>
       <polygon points="320,132 330,152 340,132" fill="#1D4ED8"/>
 
-      ${svgRich(36, 733, 848, 34, '$\\Sigma$ 为理论协方差 · $\\widetilde{\\Sigma}(Y)$ 为滑窗监督目标 · $\\widehat{\\Sigma}(X)$ 为模型估计', '#334155', '18px', '800', 1.35)}
       ${bottomFooter}
     </g>`;
   }
