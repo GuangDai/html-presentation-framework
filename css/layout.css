@@ -2073,8 +2073,8 @@ body.export-mode .drawer-backdrop {
   line-height: 1.65;
   font-weight: 400;
 }
-:is(#slide-09, #slide-10) .slide-header { border-left-color: #D97706; }
-:is(#slide-09, #slide-10) .agenda-pill.active {
+[data-active-deck="aurora"] :is(#slide-09, #slide-10) .slide-header { border-left-color: #D97706; }
+[data-active-deck="aurora"] :is(#slide-09, #slide-10) .agenda-pill.active {
   background: #D97706;
   border-color: #B45309;
   box-shadow: 0 2px 8px rgba(217, 119, 6, 0.24);

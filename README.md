@@ -1,6 +1,6 @@
 # 学术论文 16:9 HTML 演示框架
 
-默认演示是 DecompNet 与 DBLoss 的论文汇报，共 6 页。通用布局、样式和交互与论文素材分开存放；可通过演示库、URL 参数或修改 `decks/active.js` 切换论文。页面使用 1920×1080 舞台，支持目录、键盘翻页与动画。
+默认打开 CW-Gen 条件白化生成模型演示，共 10 页。第 8–9 页预留给复现实验，第 10 页预留给批判与个人分析。可按 D 打开演示库，或通过 `?deck=decomp-dbloss` 等 URL 参数切换论文。页面使用 1920×1080 舞台，支持目录、键盘翻页与动画。
 
 ## 为新稿选组件
 
@@ -22,6 +22,7 @@ js/visual-components.js     阶段条和扩展布局的组件构建器
 js/presentation-variants.js A、B、C 版式配置与分页计算
 js/presentation-engine.js   渲染、公式、区域等高和交互
 decks/active.js             当前论文目录选择
+decks/cw-gen/               CW-Gen 论文素材
 decks/decomp-dbloss/        DecompNet 与 DBLoss 论文素材
 decks/aurora/               Aurora 论文素材
   content.js                页面文字、公式、图形引用和导航配置
@@ -30,10 +31,11 @@ decks/aurora/               Aurora 论文素材
 decks/paper-template/       可复制的新论文模板，含上述三个文件
 decks/component-showcase/   六种布局的展示示例
 scripts/build_math_cache.py 生成离线公式缓存（需本机 TeX 工具）
+rendered_cwgen_16x9/        CW-Gen 的 10 页导出 PNG
 rendered_slides_16x9/       DecompNet 与 DBLoss 的 6 页导出 PNG
 ```
 
-根目录保留 DecompNet 与 DBLoss、Aurora 两套 PDF 和 PPTX；PNG 对应 DecompNet 与 DBLoss。导出文件不会随源码修改自动更新，PPTX 每页包含一张完整的幻灯片图片。本仓库没有附带导出脚本。
+根目录提供 CW-Gen、DecompNet 与 DBLoss、Aurora 三套 PDF 和 PPTX。CW-Gen 导出文件为 [PDF](CW_Gen_Presentation_16x9.pdf) 和 [PPTX](CW_Gen_Presentation_16x9.pptx)。导出文件需要单独更新，PPTX 每页包含一张完整的幻灯片图片。
 
 ## 新建和切换论文
 
