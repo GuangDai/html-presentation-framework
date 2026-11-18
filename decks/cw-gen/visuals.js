@@ -219,6 +219,30 @@
     </g>`;
   }
 
+  function drawObservationPair(x, y, lengths, angle, labels) {
+    const radians = angle * Math.PI / 180;
+    const scale = 68;
+    const a = lengths[0] * scale;
+    const bx = lengths[1] * scale * Math.cos(radians);
+    const by = -lengths[1] * scale * Math.sin(radians);
+    const rightAngle = angle === 90;
+    const arcRadius = 62;
+    const mark = rightAngle
+      ? 'M 26 0 V -26 H 0'
+      : `M ${arcRadius} 0 A ${arcRadius} ${arcRadius} 0 0 0 ${arcRadius * Math.cos(radians)} ${-arcRadius * Math.sin(radians)}`;
+    return `<g class="observation-vectors" data-angle="${angle}" transform="translate(${x},${y})">
+      <path d="${mark}" fill="none" stroke="#94A3B8" stroke-width="2"/>
+      <line x1="0" y1="0" x2="${a}" y2="0" stroke="#1D4ED8" stroke-width="4.5" marker-end="url(#obs-blue)"/>
+      <line x1="0" y1="0" x2="${bx}" y2="${by}" stroke="#B45322" stroke-width="4.5" marker-end="url(#obs-orange)"/>
+      <circle cx="0" cy="0" r="4" fill="#334155"/>
+      <text x="${rightAngle ? 41 : 88}" y="${rightAngle ? -38 : -25}" text-anchor="middle"
+            font-size="22" font-weight="750" fill="#475569">${rightAngle ? '90°' : '36.9°'}</text>
+      ${svgTex(a - 35, 5, 70, 38, labels[0], '#1D4ED8', '21px', '', '', 1.7)}
+      ${svgTex(bx - 35, by - 46, 70, 38, labels[1], '#B45322', '21px', '', '', 1.7)}
+    </g>`;
+  }
+
+
   window.PresentationVisuals = window.AuroraVisuals = {
 
     /* ========================================================================
@@ -536,72 +560,77 @@
 
     "slide5.jmce": `<svg viewBox="0 0 1840 900" fill="none">
       ${drawJmceOverview()}
-      <rect x="932" y="8" width="896" height="784" rx="18" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
-      ${drawFloatingBadge(948, 22, 450, 48, 'JMCE 训练伪算法')}
-      ${svgRich(966, 96, 824, 46, '输入为训练样本 $(X,Y)$，分别是历史观测和未来真值。', '#0F172A', '24px', '700', 1.65, 'flex-start')}
-      <text x="966" y="170" fill="#334155" font-size="23" font-weight="650">输出训练好的 JMCE。</text>
+      <g class="jmce-pseudocode">
+        <text x="952" y="48" font-size="28" font-weight="900" fill="#111827">算法 1　训练 JMCE</text>
+        <line x1="952" y1="68" x2="1812" y2="68" stroke="#111827" stroke-width="3"/>
+        ${svgRich(960, 80, 840, 38, '输入　训练对 $(X,Y)$（历史、未来），阈值 $\\lambda_{\\min}$ 和权重 $w_{\\mathrm{Eigen}}$', '#111827', '23px', '650', 1.6, 'flex-start')}
+        ${svgRich(960, 120, 840, 38, '输出　训练好的估计器 $\\mathrm{JMCE}_{\\theta}$', '#111827', '23px', '650', 1.6, 'flex-start')}
+        <line x1="952" y1="168" x2="1812" y2="168" stroke="#111827" stroke-width="1.5"/>
 
-      <rect x="956" y="192" width="848" height="496" rx="15" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
-      ${[
-        ['01', '构造监督', '$\\widetilde{\\Sigma}_{1:L}\\leftarrow\\mathrm{SlidingCov}(Y)$'],
-        ['02', '每个训练批次从历史并行预测', '$(\\widehat{\\mu},\\widehat{L}_1,\\ldots,\\widehat{L}_L)\\leftarrow\\mathrm{JMCE}(X)$'],
-        ['03', '在每个预测时点重建协方差', '计算预测矩阵的特征值和协方差误差矩阵的奇异值。'],
-        ['04', '合成四项损失并更新参数', '反向传播，重复预测、分解和更新，直到训练结束。']
-      ].map(([step, label, detail], index) => {
-        const y = 192 + index * 124;
-        return `<g>
-          ${index ? `<line x1="980" x2="1780" y1="${y}" y2="${y}" stroke="#CBD5E1" stroke-width="1.5"/>` : ''}
-          <text x="984" y="${y + 48}" fill="#1D4ED8" font-size="23" font-weight="850">${step}</text>
-          <text x="1050" y="${y + 45}" fill="#0F172A" font-size="25" font-weight="850">${label}</text>
-          ${svgRich(1050, y + 64, 720, 42, detail, '#334155', '23px', '650', 1.9, 'flex-start')}
-        </g>`;
-      }).join('')}
+        ${[
+          [0, '从每个未来真值 $Y$ 计算滑窗协方差标签 $\\widetilde{\\Sigma}_{1:L}$'],
+          [0, '初始化 JMCE 参数 $\\theta$'],
+          [0, 'while 未满足停止条件 do'],
+          [1, '取一批 $(X,Y)$ 及对应的滑窗标签'],
+          [1, '$(\\widehat{\\mu},\\widehat{L}_{1:L})\\leftarrow\\mathrm{JMCE}_{\\theta}(X)$'],
+          [1, 'for $t=1,\\ldots,L$ do'],
+          [2, '$\\widehat{\\Sigma}_t\\leftarrow\\widehat{L}_t\\widehat{L}_t^\\top$，$E_t\\leftarrow\\widetilde{\\Sigma}_t-\\widehat{\\Sigma}_t$'],
+          [2, '$s_t\\leftarrow\\operatorname{svdvals}(E_t)$，$\\lambda_t\\leftarrow\\operatorname{eigvalsh}(\\widehat{\\Sigma}_t)$'],
+          [1, 'end for'],
+          [1, '合成四项损失，令 $\\ell$ 为批次内的总损失均值'],
+          [1, '用梯度 $\\nabla_\\theta\\ell$ 更新参数 $\\theta$'],
+          [0, 'end while'],
+          [0, 'return $\\mathrm{JMCE}_{\\theta}$']
+        ].map(([level, instruction], i) => {
+          const y = 178 + i * 44;
+          const indent = 1020 + level * 44;
+          const control = /^(while|for|end|return)\b/.test(instruction);
+          return `<g class="jmce-code-line">
+            <text x="990" y="${y + 29}" text-anchor="end" fill="#475569" font-size="20"
+                  style="font-variant-numeric:tabular-nums">${i + 1}</text>
+            ${svgRich(indent, y, 1798 - indent, 42, instruction, '#111827', '23px', control ? '850' : '600', 1.75, 'flex-start')}
+          </g>`;
+        }).join('')}
 
-      ${svgRich(966, 719, 824, 42, '预测时只输入历史 $X$，得到各未来时点的均值和协方差。', '#1E3A8A', '23px', '800', 1.7, 'flex-start')}
+        <line x1="952" y1="760" x2="1812" y2="760" stroke="#111827" stroke-width="3"/>
+        ${svgRich(960, 772, 840, 62, '$s_t$ 是误差矩阵的奇异值。$\\lambda_t$ 是预测协方差的特征值。', '#334155', '21px', '600', 1.7, 'flex-start')}
+      </g>
     </svg>`,
 
     "jmce.slidingWindow": `<svg viewBox="0 0 1840 900" fill="none">
-      <rect x="12" y="8" width="1816" height="443" rx="18" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
-      ${drawFloatingBadge(28, 22, 410, 48, '在未来真值上滑动固定宽度的窗口')}
-      ${svgRich(52, 90, 1712, 54, '未来真值 $Y\\in\\mathbb{R}^{L\\times d}$ 有 $L$ 个时点和 $d$ 个通道。窗口宽度为 $W$，按时点居中取样，首尾用反射填充。', '#0F172A', '25px', '700', 1.9, 'flex-start')}
+      <g class="sliding-window-steps">
+        <text x="48" y="63" fill="#0F172A" font-size="29" font-weight="850">1. 左右各补几步</text>
+        ${svgRich(48, 82, 1740, 48, '给定未来真值 $Y=(y_1,\\ldots,y_L)$。窗口宽度 $W=2r+1$，左右各反射补 $r$ 步。$W=95$ 时，每侧补 $47$ 步。', '#334155', '25px', '700', 1.8, 'flex-start')}
 
-      ${[
-        { y: 168, title: '中间时点', labels: ['y₁', 'y₂', 'y₃', 'y₄', 'y₅', 'y₆', 'y₇'], first: 1, center: 3, padding: 0, caption: '以第 4 步为中心，取第 2–6 步。' },
-        { y: 293, title: '首个时点', labels: ['y₃', 'y₂', 'y₁', 'y₂', 'y₃', 'y₄', 'y₅'], first: 0, center: 2, padding: 2, caption: '越界的两步用已有数据镜像补齐。' }
-      ].map(({ y, title, labels, first, center, padding, caption }) => `<g>
-        <text x="72" y="${y + 49}" fill="#0F172A" font-size="25" font-weight="850">${title}</text>
-        ${labels.map((label, index) => {
-          const x = 332 + index * 121;
-          const used = index >= first && index < first + 5;
-          const focal = index === center;
-          return `<g>
-            <rect x="${x}" y="${y}" width="106" height="76" rx="12" fill="${focal ? '#1D4ED8' : used ? '#EFF6FF' : '#F8FAFC'}"
-                  stroke="${used ? '#2563EB' : '#CBD5E1'}" stroke-width="${focal ? 2.5 : 1.5}"${index < padding ? ' stroke-dasharray="5 4"' : ''}/>
-            <text x="${x + 53}" y="${y + 49}" text-anchor="middle" fill="${focal ? '#FFFFFF' : '#0F172A'}" font-size="28" font-weight="800">${label}</text>
-          </g>`;
-        }).join('')}
-        <text x="1220" y="${y + 49}" fill="#334155" font-size="24" font-weight="650">${caption}</text>
-      </g>`).join('')}
-      ${svgRich(52, 390, 1700, 42, '示意窗口取 $W=5$。论文主实验使用 $W=95$，ILI 数据集使用 $W=15$。', '#475569', '23px', '650', 1.75, 'flex-start')}
+        ${[
+          [48, 476, '左补 r 步', '[y_{r+1},\\ldots,y_2]'],
+          [548, 744, '原序列 L 步', '[y_1,\\ldots,y_L]'],
+          [1316, 476, '右补 r 步', '[y_{L-1},\\ldots,y_{L-r}]']
+        ].map(([x, width, label, formula], i) => `<g>
+          <rect x="${x}" y="154" width="${width}" height="139" rx="12"
+                fill="${i === 1 ? '#EFF6FF' : '#F8FAFC'}" stroke="${i === 1 ? '#2563EB' : '#CBD5E1'}" stroke-width="2"/>
+          <text x="${x + width / 2}" y="201" text-anchor="middle" fill="#0F172A" font-size="24" font-weight="800">${label}</text>
+          ${svgTex(x + 20, 213, width - 40, 61, formula, '#1E3A8A', '25px', '', '', 2.05)}
+        </g>`).join('')}
+        ${svgRich(48, 305, 1740, 44, '拼接得到补齐后的序列 $P=(p_1,\\ldots,p_{L+2r})$。', '#334155', '24px', '650', 1.8, 'flex-start')}
 
-      <rect x="12" y="471" width="1816" height="417" rx="18" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
-      ${drawFloatingBadge(28, 486, 385, 48, '每个窗口生成一张协方差标签')}
-      ${svgRich(52, 550, 1712, 46, '对时点 $t$，用 $\\mathcal{W}_t$ 表示反射填充后该窗口内的 $W$ 个位置，$y_j$ 是该位置的通道向量。', '#334155', '24px', '700', 1.8, 'flex-start')}
+        <line x1="48" y1="372" x2="1792" y2="372" stroke="#CBD5E1" stroke-width="2"/>
+        <text x="48" y="423" fill="#0F172A" font-size="29" font-weight="850">2. 均值和协方差分别怎么算</text>
+        ${svgRich(48, 444, 1740, 46, 'MoveAverage 每次取连续 $W$ 步，向右移 1 步。均值直接平均向量，协方差用外积的平均减去均值的外积。', '#334155', '25px', '700', 1.8, 'flex-start')}
+        <rect x="48" y="514" width="700" height="121" rx="12" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+        <rect x="772" y="514" width="1020" height="121" rx="12" fill="#EFF6FF" stroke="#2563EB" stroke-width="2"/>
+        <text x="76" y="576" fill="#0F172A" font-size="25" font-weight="850">均值</text>
+        <text x="800" y="576" fill="#1E3A8A" font-size="25" font-weight="850">协方差</text>
+        ${svgTex(190, 523, 526, 104, '\\displaystyle m_t=\\frac1W\\sum_{j=0}^{W-1}p_{t+j}', '#0F172A', '25px', '', '', 2.1)}
+        ${svgTex(932, 523, 834, 104, '\\displaystyle \\widetilde{\\Sigma}_t=\\frac1W\\sum_{j=0}^{W-1}p_{t+j}p_{t+j}^{\\top}-m_tm_t^{\\top}', '#1E3A8A', '25px', '', '', 2.1)}
 
-      <rect x="44" y="610" width="524" height="153" rx="14" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
-      <text x="306" y="655" text-anchor="middle" fill="#0F172A" font-size="25" font-weight="850">窗口内均值</text>
-      ${svgTex(60, 661, 492, 95, '\\displaystyle \\overline{y}_t=\\frac{1}{W}\\sum_{j\\in\\mathcal{W}_t}y_j', '#0F172A', '24px', '', '', 2.0)}
-
-      <rect x="596" y="610" width="552" height="153" rx="14" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
-      <text x="872" y="655" text-anchor="middle" fill="#0F172A" font-size="25" font-weight="850">窗口内二阶矩</text>
-      ${svgTex(612, 661, 520, 95, '\\displaystyle M_t=\\frac{1}{W}\\sum_{j\\in\\mathcal{W}_t}y_jy_j^\\top', '#0F172A', '24px', '', '', 2.0)}
-
-      <rect x="1176" y="610" width="620" height="153" rx="14" fill="#EFF6FF" stroke="#2563EB" stroke-width="2.4"/>
-      <text x="1486" y="655" text-anchor="middle" fill="#1E3A8A" font-size="25" font-weight="850">滑窗协方差</text>
-      ${svgTex(1194, 668, 584, 76, '\\displaystyle \\widetilde{\\Sigma}_t=M_t-\\overline{y}_t\\overline{y}_t^\\top\\in\\mathbb{R}^{d\\times d}', '#1D4ED8', '24px', '', '', 2.0)}
-
-      ${svgRich(52, 796, 1720, 48, '直接计算需要对 $L$ 个时点的 $d^2$ 项二阶矩做宽度 $W$ 的滑窗平均，单样本耗时 $O(LWd^2)$。', '#1E3A8A', '24px', '800', 1.85, 'flex-start')}
+        <line x1="48" y1="670" x2="1792" y2="670" stroke="#CBD5E1" stroke-width="2"/>
+        <text x="48" y="722" fill="#0F172A" font-size="29" font-weight="850">3. 为什么输出正好有 L 步</text>
+        ${svgRich(48, 737, 1740, 54, '步幅为 1 时，窗口数为 $(L+2r)-W+1=L$。每步输出一个 $d\\times d$ 协方差，堆叠为 $L\\times d\\times d$。', '#334155', '25px', '700', 1.9, 'flex-start')}
+        ${svgRich(48, 813, 1740, 46, '逐窗口直接计算的单样本复杂度为 $O(LWd^2)$，其中 $d$ 是通道数。', '#334155', '24px', '650', 1.8, 'flex-start')}
+      </g>
     </svg>`,
+
 
     "jmce.trainingFlow": `<svg viewBox="0 0 1840 900" fill="none">
       <rect x="12" y="8" width="820" height="884" rx="18" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
@@ -813,34 +842,61 @@
 
 
     "personal.analysis": `<svg viewBox="0 0 1840 900" fill="none">
-      <rect x="12" y="8" width="896" height="192" rx="18" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
-      ${drawFloatingBadge(28, 22, 270, 48, '基线强度')}
-      <text x="52" y="118" fill="#0F172A" font-size="25" font-weight="800">ETTh2 的 w/o CW 误差偏高。</text>
-      <text x="52" y="162" fill="#334155" font-size="24" font-weight="650">更强的基线或许能自行学到类似白化的跨通道变换。</text>
+      <defs>
+        <marker id="obs-blue" markerWidth="14" markerHeight="14" refX="12" refY="7"
+                orient="auto" markerUnits="userSpaceOnUse">
+          <path d="M0 0 L14 7 L0 14 Z" fill="#1D4ED8"/>
+        </marker>
+        <marker id="obs-orange" markerWidth="14" markerHeight="14" refX="12" refY="7"
+                orient="auto" markerUnits="userSpaceOnUse">
+          <path d="M0 0 L14 7 L0 14 Z" fill="#B45322"/>
+        </marker>
+      </defs>
+      <text x="48" y="51" fill="#0F172A" font-size="30" font-weight="850">从通道观测向量看白化</text>
+      ${svgRich(48, 65, 1744, 52, '把一个通道的 $n$ 次观测排成一个 $n$ 维向量。图画出两根中心化向量张成的平面，示例取 $n=4$。', '#334155', '25px', '700', 1.78, 'flex-start')}
+      <rect x="48" y="123" width="1744" height="85" rx="12" fill="#F1F5F9"/>
+      ${svgTex(70, 125, 1010, 80, '\\displaystyle \\operatorname{Cov}_n(X,Y)=\\frac{\\widetilde{\\mathbf{x}}^\\top\\widetilde{\\mathbf{y}}}{n},\\qquad \\rho=\\frac{\\widetilde{\\mathbf{x}}^\\top\\widetilde{\\mathbf{y}}}{\\|\\widetilde{\\mathbf{x}}\\|\\,\\|\\widetilde{\\mathbf{y}}\\|}=\\cos\\theta', '#0F172A', '26px', '', '', 2.0)}
+      <line x1="1145" y1="137" x2="1145" y2="194" stroke="#CBD5E1" stroke-width="1.5"/>
+      <text x="1180" y="156" fill="#334155" font-size="22" font-weight="650">协方差同时取决于向量的长度和夹角。</text>
+      <text x="1180" y="187" fill="#334155" font-size="22" font-weight="650">皮尔逊相关系数约去长度，只剩夹角的余弦。</text>
 
-      <rect x="932" y="8" width="896" height="192" rx="18" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
-      ${drawFloatingBadge(948, 22, 360, 48, 'CW-Diff 的可逆条件')}
-      ${svgRich(966, 91, 826, 45, '$\\widehat{\\Sigma}_t=\\widehat{L}_t\\widehat{L}_t^\\top$ 保证半正定。$\\widehat{\\Sigma}_t^{-1/2}$ 要求正定。', '#0F172A', '24px', '750', 1.7, 'flex-start')}
-      ${svgRich(966, 142, 826, 42, '论文惩罚过小特征值，复现时将特征值截断到至少 $0.1$。', '#334155', '23px', '650', 1.65, 'flex-start')}
+      <line x1="614" y1="233" x2="614" y2="593" stroke="#CBD5E1" stroke-width="1.5"/>
+      <line x1="1224" y1="233" x2="1224" y2="593" stroke="#CBD5E1" stroke-width="1.5"/>
+      <text x="48" y="261" fill="#0F172A" font-size="28" font-weight="850">中心化（减均值）</text>
+      <text x="656" y="261" fill="#0F172A" font-size="28" font-weight="850">标准化</text>
+      <text x="1264" y="261" fill="#0F172A" font-size="28" font-weight="850">白化</text>
 
-      <rect x="12" y="216" width="1816" height="516" rx="18" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
-      ${drawFloatingBadge(28, 232, 415, 48, '减均值、标准化与白化')}
-      <circle cx="1428" cy="257" r="5" fill="#C2410C"/>
-      <text x="1444" y="265" fill="#475569" font-size="22" font-weight="650">橙色向量对应同一个样本</text>
-      ${[
-        [315, '减均值', 'x-\\mu', '平移到原点，协方差保持不变。'],
-        [920, '标准化', 'D^{-1/2}(x-\\mu),\\quad D=\\operatorname{diag}(\\Sigma)', '沿各通道轴缩放，方差变为 1，相关性保留。'],
-        [1525, '白化', '\\Sigma^{-1/2}(x-\\mu)', '重组并缩放通道，协方差变为单位阵。']
-      ].map(([x, title, formula, note]) => `<g>
-        <text x="${x}" y="319" text-anchor="middle" fill="#0F172A" font-size="28" font-weight="850">${title}</text>
-        ${svgTex(x - 272, 330, 544, 52, formula, '#1E3A8A', '24px', '', '', 1.95)}
-        <text x="${x}" y="705" text-anchor="middle" fill="#334155" font-size="23" font-weight="750">${note}</text>
-      </g>`).join('')}
-      <image x="36" y="383" width="1768" height="294" href="decks/cw-gen/assets/whitening_comparison.svg"/>
+      ${drawObservationPair(168, 432, [3.2, 1.5], Math.acos(0.8) * 180 / Math.PI, ['\\widetilde{\\mathbf{x}}', '\\widetilde{\\mathbf{y}}'])}
+      ${drawObservationPair(786, 432, [2, 2], Math.acos(0.8) * 180 / Math.PI, ['\\mathbf{u}', '\\mathbf{v}'])}
+      ${drawObservationPair(1394, 432, [2, 2], 90, ['\\mathbf{z}_1', '\\mathbf{z}_2'])}
 
-      <rect x="12" y="748" width="1816" height="140" rx="18" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
-      <text x="52" y="791" fill="#1E3A8A" font-size="25" font-weight="850">高维协方差的计算开销</text>
-      ${svgRich(52, 806, 1720, 56, '按时点做密集特征分解需 $O(Ld^3)$。论文附录 E.9 复用下三角因子，逐时点解 $\\widehat{L}_t z_t=x_t-\\widehat{\\mu}_t$，单轨迹需 $O(Ld^2)$。', '#334155', '23px', '700', 1.7, 'flex-start')}
+      <text x="48" y="499" fill="#0F172A" font-size="24" font-weight="750">每个通道减去自己的均值。</text>
+      ${svgRich(48, 514, 532, 46, '长度反映波动。本例 $\\rho=0.8$，夹角约 $36.9^\\circ$。', '#334155', '23px', '650', 1.65, 'flex-start')}
+      ${svgTex(48, 557, 532, 40, '\\widetilde{\\mathbf{x}}=\\mathbf{x}-\\bar{x}\\mathbf{1}', '#1D4ED8', '22px', '', '', 1.65, 'flex-start')}
+      <text x="656" y="499" fill="#0F172A" font-size="24" font-weight="750">每个向量除以自身的标准差。</text>
+      ${svgRich(656, 514, 532, 46, '长度都变成 $\\sqrt{n}$，夹角仍约为 $36.9^\\circ$。', '#334155', '23px', '650', 1.65, 'flex-start')}
+      ${svgTex(656, 557, 532, 40, '\\mathbf{u}=\\widetilde{\\mathbf{x}}/\\sigma_X,\\qquad \\mathbf{v}=\\widetilde{\\mathbf{y}}/\\sigma_Y', '#1D4ED8', '22px', '', '', 1.65, 'flex-start')}
+      <text x="1264" y="499" fill="#0F172A" font-size="24" font-weight="750">从第二根向量中减去它在第一根上的投影。</text>
+      ${svgRich(1264, 514, 532, 46, '再缩放到同一长度。两向量正交，$\\rho=0$。', '#334155', '23px', '650', 1.65, 'flex-start')}
+      ${svgTex(1264, 557, 532, 40, '\\mathbf{z}_1=\\mathbf{u},\\qquad \\mathbf{z}_2=(\\mathbf{v}-0.8\\mathbf{u})/0.6', '#1D4ED8', '22px', '', '', 1.65, 'flex-start')}
+
+      <text x="48" y="630" fill="#475569" font-size="23" font-weight="650">图中采用三角白化。正交表示样本线性相关为零，非线性依赖仍可能存在。</text>
+      <line x1="48" y1="652" x2="1792" y2="652" stroke="#94A3B8" stroke-width="2"/>
+
+      <text x="48" y="698" fill="#0F172A" font-size="25" font-weight="850">更强的基线会怎样</text>
+      <text x="48" y="742" fill="#334155" font-size="23" font-weight="650">ETTh2 的 w/o CW 误差偏高。</text>
+      <text x="48" y="783" fill="#334155" font-size="23" font-weight="650">如果更强的模型能自行学到跨通道变换，</text>
+      <text x="48" y="824" fill="#334155" font-size="23" font-weight="650">额外加 CW 的增益可能会缩小。</text>
+
+      <text x="656" y="698" fill="#0F172A" font-size="25" font-weight="850">CW-Diff 何时可逆</text>
+      ${svgRich(656, 716, 540, 43, '$\\widehat{L}_t\\widehat{L}_t^\\top$ 可能奇异，逆平方根要求正定。', '#334155', '23px', '650', 1.65, 'flex-start')}
+      ${svgRich(656, 757, 540, 43, '本次复现把特征值下限设为 $0.1$，', '#334155', '23px', '650', 1.65, 'flex-start')}
+      <text x="656" y="823" fill="#334155" font-size="23" font-weight="650">避免零特征值进入逆变换。</text>
+
+      <text x="1264" y="698" fill="#0F172A" font-size="25" font-weight="850">高维白化的时间开销</text>
+      ${svgRich(1264, 716, 540, 43, '密集特征分解需 $O(Ld^3)$。', '#334155', '23px', '650', 1.65, 'flex-start')}
+      <text x="1264" y="783" fill="#334155" font-size="23" font-weight="650">已知可逆的下三角因子时，</text>
+      ${svgRich(1264, 796, 540, 43, '单条轨迹逐时点解三角方程需 $O(Ld^2)$。', '#334155', '23px', '650', 1.65, 'flex-start')}
     </svg>`
   };
 })();
