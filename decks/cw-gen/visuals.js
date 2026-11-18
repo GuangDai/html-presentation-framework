@@ -739,7 +739,10 @@
     "slide8.exp1": `<svg viewBox="0 0 1840 900" fill="none">
       ${drawModelMetricsTable(38, 'FlowTS')}
       ${drawModelMetricsTable(956, 'Diffusion-TS')}
-      <text class="cw-metrics-note" x="50" y="700" fill="#475569" font-size="23">Weather(修改版) 删除 1 条完全重复的记录，排除从历史起点到预测终点跨越时间缺口的窗口。</text>
+      <text class="cw-metrics-note" x="50" y="700" fill="#475569" font-size="23">
+        <tspan x="50">Weather(修改版) 删除 1 条重复记录。原数据缺 9 个采样点，修改版排除 359 个跨缺口的训练窗口。</tspan>
+        <tspan x="50" dy="36">按异常值删除的时间点为 0 个。两版训练数据各有 81 个 −9999 值参与标准化和训练。</tspan>
+      </text>
     </svg>`,
 
     "slide9.exp2": `<svg viewBox="0 0 1840 900" role="img" aria-label="ETTh1 和 ETTh2 的历史、真实值以及 CW 与 w/o CW 预测轨迹">
