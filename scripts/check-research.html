@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<title>研究组件回归检查</title>
+<script src="../research/load.js"></script>
+<script src="../research/catalog/registry.js"></script>
+<script src="../research/catalog/data.js"></script>
+<script src="../research/catalog/model.js"></script>
+<script src="../research/catalog/results.js"></script>
+<h1>研究组件回归检查</h1>
+<p id="result" role="status"></p>
+<ul id="failures"></ul>
+<script>
+  // 直接用浏览器打开此文件。检查与正式演示相同的渲染函数，免去构建和测试服务器。
+  const failures = [];
+  let count = 0;
+  function check(name, test) {
+    count += 1;
+    try { test(); }
+    catch (error) { failures.push(name + ' · ' + error.message); }
+  }
+  function assert(condition, message) {
+    if (!condition) throw Error(message);
+  }
+  function render(block) {
+    const node = document.createElement('div');
+    node.innerHTML = ResearchUI.renderSlide({ blocks: [block] });
+    return node;
+  }
+  for (const entry of ResearchCatalog.entries) {
+    check(entry.id, () => {
+      const body = render(entry.block);
+      assert(body.querySelector('figure h2')?.textContent === entry.block.title, '组件标题与配置不一致');
+      if (entry.block.type === 'chart') assert(body.querySelector('svg'), '图表未生成');
+    });
+  }
+  check('相对变化、零基线和缺测', () => {
+    const rows = [
+      { label: '下降', baseline: .320, value: .304 },
+      { label: '上升', baseline: .400, value: .414 },
+      { label: '持平', baseline: .320, value: .320 },
+      { label: '零基线', baseline: 0, value: .320 },
+      { label: '缺测', baseline: .320, value: null }
+    ];
+    const cells = [...render({type:'comparison', direction:'lower', rows}).querySelectorAll('tbody tr td:last-child')];
+    assert(cells.map(cell => cell.textContent).join('|') === '-5.00%|+3.50%|0.00%|—|—', '变化列显示有误');
+    const higher = render({type:'comparison', direction:'higher', rows});
+    assert(cells[0].querySelector('.rs-favorable') && higher.querySelector('tbody tr .rs-adverse'), '指标最优方向有误');
+  });
+  check('带缺口的折线', () => {
+    const data = [1, 2, null, 4, 3].map((y, x) => ({x, y}));
+    const line = render({type:'chart', mode:'line', data}).querySelector('g[aria-label="line"] path');
+    assert(line?.getAttribute('d').split('M').length === 3, '缺测位置需要断开折线');
+  });
+  check('分面按变量绘制', () => {
+    const spec = ResearchCatalog.entries.find(e => e.id === 'channels').block;
+    const lines = render(spec).querySelectorAll('g[aria-label="line"] path');
+    assert(lines.length === new Set(spec.data.map(d => d.channel)).size, '每个变量应对应一条独立曲线');
+  });
+  check('普通文本转义', () => {
+    const node = render({type:'code', lines:['if (a < b) print("<b>")']});
+    assert(node.querySelector('code').textContent.includes('"<b>"') && !node.querySelector('code b'), '代码文本被当成 HTML');
+  });
+  document.querySelector('#result').textContent = (count - failures.length) + ' / ' + count + ' 项通过';
+  for (const failure of failures) {
+    const item = document.createElement('li');
+    item.textContent = failure;
+    document.querySelector('#failures').append(item);
+  }
+</script>

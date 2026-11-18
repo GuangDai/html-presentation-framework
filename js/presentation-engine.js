@@ -157,6 +157,16 @@ class AuroraPresentationEngine {
         bodyHtml = this.buildBenchmarkSlide(slide);
       } else if (slide.layout === 'matrix-slide') {
         bodyHtml = this.buildMatrixSlide(slide);
+      } else if (slide.layout === 'research-slide') {
+        // An invalid research block should identify its page and leave navigation usable.
+        try {
+          bodyHtml = window.ResearchUI.renderSlide(slide, { resolveVisual: key => this.resolveVisual(key) });
+        } catch (error) {
+          const notice = document.createElement('p');
+          notice.setAttribute('role', 'alert');
+          notice.textContent = `组件配置有误（${slide.id}）：${error.message}`;
+          bodyHtml = notice.outerHTML;
+        }
       } else if (slide.layout === 'canvas-slide') {
         bodyHtml = this.buildCanvasSlide(slide);
       }

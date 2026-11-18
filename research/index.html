@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <title>研究组件库 · HTML Presentation Framework</title>
+    <link rel="stylesheet" href="catalog.css" />
+    <script src="load.js"></script>
+  </head>
+  <body>
+    <header class="app-header">
+      <a class="wordmark" href="./index.html"><span class="mark" aria-hidden="true">∿</span>研究组件库</a>
+      <nav aria-label="资源"><a href="../index.html">演示框架 ↗</a><a href="GUIDE.md">使用文档 ↗</a></nav>
+    </header>
+    <main>
+      <aside class="rail" aria-label="组件目录">
+        <div class="rail-head"><strong>组件目录</strong><span id="count"></span></div>
+        <label class="search"
+          ><span aria-hidden="true">⌕</span
+          ><input id="search" type="search" aria-label="搜索组件" placeholder="名称、用途或关键词"
+        /></label>
+        <nav id="catalog" aria-label="选择组件"></nav>
+      </aside>
+      <section class="work">
+        <div class="views" aria-label="工作区">
+          <button id="single" aria-pressed="true">组件预览</button>
+          <button id="assembly" aria-pressed="false">我的组合 <span id="size">0</span></button>
+        </div>
+        <div class="heading">
+          <div>
+            <p id="context"></p>
+            <h1 id="name"></h1>
+          </div>
+          <div class="actions">
+            <button id="copy">复制组件</button><button id="add" class="primary">加入组合</button>
+          </div>
+        </div>
+        <div class="canvas"><div id="preview"></div></div>
+        <div class="tuning">
+          <label
+            >密度<select id="density">
+              <option value="normal">标准</option>
+              <option value="compact">紧凑</option>
+              <option value="large">大字</option>
+            </select></label
+          >
+          <label
+            >强调色<select id="accent">
+              <option value="teal">青绿</option>
+              <option value="blue">靛蓝</option>
+              <option value="graphite">石墨</option>
+            </select></label
+          >
+          <label id="layout-label" hidden
+            >排列<select id="arrange">
+              <option value="columns">等宽双栏</option>
+              <option value="wide-left">左宽右窄</option>
+              <option value="wide-right">左窄右宽</option>
+              <option value="stack">单栏纵排</option>
+            </select></label
+          >
+        </div>
+        <div id="order"></div>
+        <div class="editor-title">
+          <label for="editor" id="edit-label">组件配置 · JSON</label><button id="reset">恢复此示例</button>
+        </div>
+        <textarea id="editor" spellcheck="false" wrap="off" aria-describedby="edit-hint"></textarea>
+        <p id="edit-hint"></p>
+        <p id="message" role="status" aria-live="polite"></p>
+      </section>
+    </main>
+    <script src="catalog/registry.js"></script>
+    <script src="catalog/data.js"></script>
+    <script src="catalog/model.js"></script>
+    <script src="catalog/results.js"></script>
+    <script src="workbench.js"></script>
+  </body>
+</html>

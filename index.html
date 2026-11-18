@@ -138,6 +138,13 @@
        6. MODULAR JAVASCRIPT ARCHITECTURE (Deck -> Components -> Layouts -> Engine)
        ====================================================================== -->
   <script src="decks/active.js"></script>
+  <script>
+    // Deck scripts have finished loading. Only decks using research blocks need the local renderers.
+    const researchDeck = window.PresentationContent || window.AuroraContent;
+    if (researchDeck?.slides?.some(slide => slide.layout === 'research-slide')) {
+      document.write('<script src="research/load.js"><\/script>');
+    }
+  </script>
   <script src="js/presentation-variants.js"></script>
   <script src="js/visual-components.js"></script>
   <script src="js/slide-layouts.js"></script>

@@ -1,0 +1,302 @@
+/* All slide tokens live on this root. Set --rs-* on a research sheet to tune
+   one deck without affecting the seven original layouts or their exports. */
+.rs-scope {
+  --rs-ink: #172c35;
+  --rs-muted: #526371;
+  --rs-line: #cdd9da;
+  --rs-paper: #fff;
+  --rs-soft: #edf4f3;
+  --rs-accent: #136b68;
+  --rs-good: #16655a;
+  --rs-bad: #9b401f;
+  --rs-mono: var(--font-mono, ui-monospace, Consolas, monospace);
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  color: var(--rs-ink);
+  background: var(--rs-paper);
+  font-family: var(--font-sans, system-ui, sans-serif);
+}
+.rs-scope *,
+.rs-scope {
+  box-sizing: border-box;
+}
+.rs-sheet {
+  --rs-size: clamp(16px, 1.58cqw, 32px);
+  --rs-space: 1em;
+  display: grid;
+  align-content: center;
+  align-items: start;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--rs-space) 1.6em;
+  flex: 1;
+  padding: var(--rs-pad, 1.4em);
+  font-size: var(--rs-size);
+  line-height: 1.48;
+  text-align: left;
+}
+.rs-sheet.rs-compact {
+  --rs-size: clamp(14px, 1.29cqw, 26px);
+  --rs-space: 0.65em;
+}
+.rs-sheet.rs-large {
+  --rs-size: clamp(18px, 1.8cqw, 36px);
+}
+.rs-sheet.rs-blue {
+  --rs-accent: #365598;
+  --rs-soft: #eef1f8;
+}
+.rs-sheet.rs-graphite {
+  --rs-accent: #37474e;
+  --rs-soft: #f0f2f3;
+}
+.rs-columns {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.rs-wide-left {
+  grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr);
+}
+.rs-wide-right {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.65fr);
+}
+.rs-block {
+  margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  border-top: 2px solid var(--rs-accent);
+  padding-top: 0.7em;
+}
+.rs-block:only-child {
+  grid-column: 1 / -1;
+}
+.rs-block h2 {
+  font-size: 1.15em;
+  font-weight: 650;
+  letter-spacing: -0.025em;
+  margin: 0 0 0.85em;
+  line-height: 1.35;
+}
+.rs-block figcaption,
+.rs-source {
+  color: var(--rs-muted);
+  line-height: 1.5;
+  font-size: 0.82em;
+}
+.rs-block figcaption {
+  margin-top: 0.8em;
+}
+.rs-source {
+  margin: 0 var(--rs-pad, 1.8em);
+  border-top: 1px solid var(--rs-line);
+  padding: 0.75em 0;
+  font-size: clamp(13px, 1.02cqw, 21px);
+}
+.rs-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-variant-numeric: tabular-nums;
+}
+.rs-table :is(th, td) {
+  overflow-wrap: anywhere;
+  border-bottom: 1px solid var(--rs-line);
+  padding: 0.52em 0.5em;
+  text-align: start;
+  vertical-align: middle;
+}
+.rs-table thead th {
+  color: var(--rs-muted);
+  font-size: 0.86em;
+  font-weight: 600;
+  background: var(--rs-soft);
+}
+.rs-table tbody th {
+  font-weight: 550;
+}
+.rs-table .rs-num {
+  text-align: right;
+}
+.rs-table .rs-favorable {
+  color: var(--rs-good);
+  font-weight: 650;
+}
+.rs-table .rs-adverse {
+  color: var(--rs-bad);
+  font-weight: 650;
+}
+.rs-legend {
+  display: flex;
+  gap: 0.4em 1.2em;
+  flex-wrap: wrap;
+  font-size: 0.84em;
+}
+.rs-diagram,
+.rs-b-chart {
+  min-width: 0;
+}
+.rs-diagram > svg,
+.rs-b-chart > svg,
+.rs-image,
+.rs-figure > svg {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  max-height: var(--rs-figure-height, 29cqw);
+}
+.rs-b-chart > svg {
+  margin: 0.2em auto;
+}
+.rs-code {
+  counter-reset: rs-line;
+  margin: 0;
+  padding: 0.6em 0;
+  color: #e5edf0;
+  background: #192c36;
+  border-radius: 4px;
+}
+.rs-code li {
+  display: grid;
+  grid-template-columns: 2.4em 1fr;
+  padding: 0.22em 0.65em;
+  border-left: 3px solid transparent;
+}
+.rs-code li::before {
+  counter-increment: rs-line;
+  content: counter(rs-line);
+  color: #adc2ca;
+  font: 0.85em/1.6 var(--rs-mono);
+}
+.rs-code code {
+  font: 0.9em/1.5 var(--rs-mono);
+  white-space: pre-wrap;
+}
+.rs-code .rs-focus {
+  border-color: #88cec5;
+  background: #294650;
+}
+.rs-defs,
+.rs-parts {
+  margin: 0;
+}
+.rs-defs > div {
+  display: grid;
+  grid-template-columns: minmax(4em, 1fr) minmax(0, 2.3fr);
+  gap: 1em;
+  border-bottom: 1px solid var(--rs-line);
+  padding: 0.6em 0.15em;
+}
+.rs-defs dt,
+.rs-parts dt {
+  font-weight: 650;
+  color: var(--rs-accent);
+}
+.rs-defs dd,
+.rs-parts dd {
+  margin: 0;
+}
+.rs-quote {
+  margin: 0;
+  padding: 0.85em 1em;
+  border-left: 3px solid var(--rs-accent);
+  background: var(--rs-soft);
+  line-height: 1.7;
+}
+.rs-equations {
+  display: grid;
+  gap: 0.7em;
+  padding: 0.9em 0.4em;
+  background: var(--rs-soft);
+}
+.rs-equations math {
+  font-size: 1.15em;
+  color: var(--rs-ink);
+  display: block math;
+}
+.rs-part-bar {
+  display: flex;
+  gap: 2px;
+  height: 1.2em;
+}
+.rs-part-bar i {
+  background: var(--rs-accent);
+}
+.rs-part-bar i:nth-child(3n + 2) {
+  background: #5473a3;
+}
+.rs-part-bar i:nth-child(3n) {
+  background: #ba814b;
+}
+.rs-parts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(6em, 100%), 1fr));
+  gap: 0.8em;
+  margin-top: 1em;
+}
+.rs-parts dd {
+  font-size: 0.9em;
+}
+@container (max-width: 650px) {
+  .rs-sheet {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .rs-diagram > svg,
+  .rs-b-chart > svg,
+  .rs-image,
+  .rs-figure > svg {
+    max-height: 65cqw;
+  }
+}
+
+.rs-image {
+  object-fit: contain;
+}
+
+/* A dimension keeps its label and tone when reordered in another stage. */
+.rs-tensors {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.rs-tensors li {
+  display: grid;
+  grid-template-columns: minmax(5.4em, 0.8fr) minmax(0, 3fr);
+  align-items: center;
+  gap: 0.6em;
+  padding: 0.5em 0;
+  border-bottom: 1px solid var(--rs-line);
+}
+.rs-shape {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.38em;
+}
+.rs-axis {
+  display: grid;
+  justify-items: center;
+  border-radius: 3px;
+  min-width: 3.2em;
+  padding: 0.15em 0.45em;
+  color: #223e49;
+}
+.rs-axis small {
+  font-size: 0.72em;
+}
+.rs-axis b {
+  font-family: var(--rs-mono);
+}
+.rs-axis-0 {
+  background: #e2eeec;
+}
+.rs-axis-1 {
+  background: #e2e9f2;
+}
+.rs-axis-2 {
+  background: #f3e8db;
+}
+.rs-axis-3 {
+  background: #eae5ef;
+}
