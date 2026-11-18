@@ -6,6 +6,7 @@
  *                Input X \in \mathbb{R}^{H \times d}, Future Y \in \mathbb{R}^{L \times d}
  *                Predicted Mean \widehat{\mu}(X) \in \mathbb{R}^{L \times d}
  *                Predicted Cov \widehat{\Sigma}(X) \in \mathbb{R}^{L \times d \times d}
+ *                Theoretical Cov \Sigma, Sliding-Window Target \widetilde{\Sigma}(Y)
  *              - Zero grey sub-captions / zero verbose AI-slop filler text
  *              - Strictly monochrome slate-and-blue palette matching Slides 1, 3, 8, 9
  *              - Theory split across 2 spacious slides (Slide 3 & Slide 4)
@@ -133,28 +134,30 @@
       <rect x="496" y="272" width="196" height="92" rx="12" fill="#FFFFFF" stroke="#93C5FD" stroke-width="2"/>
       ${svgTex(504, 290, 180, 56, '\\widehat{\\Sigma}(X)^{L \\times d \\times d}', '#1E3A8A', '21px', '', '', 1.85)}
 
-      <!-- Bottom Path: Y^{L \times d} -> Sliding Window Covariance -> [\mu(Y), \Sigma(Y)] -->
+      <!-- Observed Y supervises the mean directly and supplies the sliding-window covariance target. -->
       <rect x="36" y="492" width="148" height="224" rx="16" fill="#F8FAFC" stroke="#94A3B8" stroke-width="2.4"/>
       <text x="110" y="540" text-anchor="middle" fill="#0F172A" font-size="22" font-weight="900">未来序列</text>
       ${svgTex(44, 558, 132, 54, 'Y^{L \\times d}', '#0F172A', '23px', '', '', 1.95)}
       <path d="M 54 674 C 74 634, 92 686, 112 648 C 128 618, 146 662, 166 630" stroke="#2563EB" stroke-width="4.5" stroke-linecap="round" fill="none"/>
 
-      <line x1="184" y1="604" x2="226" y2="604" stroke="#64748B" stroke-width="4.2"/>
-      <polygon points="220,595 238,604 220,613" fill="#64748B"/>
+      <path d="M184 550 H208 V450 H450 V550 H462" stroke="#64748B" stroke-width="4.2" fill="none"/>
+      <polygon points="456,541 474,550 456,559" fill="#64748B"/>
+      <line x1="184" y1="658" x2="226" y2="658" stroke="#64748B" stroke-width="4.2"/>
+      <polygon points="220,649 238,658 220,667" fill="#64748B"/>
 
       <rect x="240" y="492" width="180" height="224" rx="16" fill="#F8FAFC" stroke="#94A3B8" stroke-width="2.4"/>
       <text x="330" y="588" text-anchor="middle" fill="#0F172A" font-size="21.5" font-weight="900">Sliding Window</text>
       <text x="330" y="628" text-anchor="middle" fill="#0F172A" font-size="21.5" font-weight="900">Covariance</text>
 
-      <line x1="420" y1="604" x2="462" y2="604" stroke="#64748B" stroke-width="4.2"/>
-      <polygon points="456,595 474,604 456,613" fill="#64748B"/>
+      <line x1="420" y1="658" x2="462" y2="658" stroke="#64748B" stroke-width="4.2"/>
+      <polygon points="456,649 474,658 456,667" fill="#64748B"/>
 
-      <!-- Target Moments Box -->
+      <!-- Training Targets -->
       <rect x="476" y="480" width="236" height="248" rx="18" fill="#F8FAFC" stroke="#94A3B8" stroke-width="2.6"/>
       <rect x="496" y="504" width="196" height="92" rx="12" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
-      ${svgTex(504, 522, 180, 56, '\\mu(Y)^{L \\times d}', '#0F172A', '21px', '', '', 1.85)}
+      ${svgTex(504, 522, 180, 56, 'Y^{L \\times d}', '#0F172A', '21px', '', '', 1.85)}
       <rect x="496" y="612" width="196" height="92" rx="12" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
-      ${svgTex(504, 630, 180, 56, '\\Sigma(Y)^{L \\times d \\times d}', '#0F172A', '21px', '', '', 1.85)}
+      ${svgTex(504, 630, 180, 56, '\\widetilde{\\Sigma}(Y)^{L \\times d \\times d}', '#0F172A', '21px', '', '', 1.85)}
 
       <!-- Convergence into Loss Box -->
       <path d="M 712 264 L 744 264 L 744 372" stroke="#1D4ED8" stroke-width="4.5" fill="none"/>
@@ -171,6 +174,7 @@
       <path d="M 808 386 L 808 96 L 330 96 L 330 138" stroke="#1D4ED8" stroke-width="4.2" fill="none"/>
       <polygon points="320,132 330,152 340,132" fill="#1D4ED8"/>
 
+      ${svgRich(36, 733, 848, 34, '$\\Sigma$ 为理论协方差 · $\\widetilde{\\Sigma}(Y)$ 为滑窗监督目标 · $\\widehat{\\Sigma}(X)$ 为模型估计', '#334155', '18px', '800', 1.35)}
       ${bottomFooter}
     </g>`;
   }
@@ -743,7 +747,7 @@
       <line x1="1040" y1="${178 + 5 * 42 + 6}" x2="1040" y2="${178 + 9 * 42 - 6}" stroke="#93C5FD" stroke-width="2.2"/>
 
       ${[
-        [0, '调用算法 2 预计算未来序列 $Y$ 的滑窗协方差真值 $\\widetilde{\\Sigma}_{1:L} \\in \\mathbb{R}^{L \\times d \\times d}$', ''],
+        [0, '调用算法 2 从 $Y$ 计算滑窗协方差目标 $\\widetilde{\\Sigma}_{1:L} \\in \\mathbb{R}^{L \\times d \\times d}$', ''],
         [0, '初始化非平稳 Transformer 网络参数 $\\theta$', ''],
         [0, 'while 网络未收敛 do', ''],
         [1, '$(\\widehat{\\mu},\\, \\widehat{L}_{1:L}) \\leftarrow \\mathrm{JMCE}_{\\theta}(X)$', '$\\triangleright\\;\\widehat{\\mu}\\in\\mathbb{R}^{L\\times d},\\;\\widehat{L}_t\\in\\mathbb{R}^{d\\times d}$ 下三角'],
@@ -824,7 +828,7 @@
       <line x1="952" y1="86" x2="1808" y2="86" stroke="#0F172A" stroke-width="3"/>
       <rect x="952" y="88" width="856" height="80" fill="#F8FAFC"/>
       ${svgRich(964, 92, 836, 36, '输入：未来真实序列 $Y = [y_1, \\ldots, y_L]^\\top \\in \\mathbb{R}^{L \\times d}$，奇数窗口长度 $W = 2r + 1$', '#0F172A', '19.5px', '800', 1.4, 'flex-start')}
-      ${svgRich(964, 128, 836, 36, '输出：滑窗协方差真值张量 $\\widetilde{\\Sigma}_{1:L} \\in \\mathbb{R}^{L \\times d \\times d}$', '#0F172A', '19.5px', '800', 1.4, 'flex-start')}
+      ${svgRich(964, 128, 836, 36, '输出：滑窗协方差监督目标 $\\widetilde{\\Sigma}_{1:L} \\in \\mathbb{R}^{L \\times d \\times d}$', '#0F172A', '19.5px', '800', 1.4, 'flex-start')}
       <!-- Middle Rule -->
       <line x1="952" y1="170" x2="1808" y2="170" stroke="#0F172A" stroke-width="1.8"/>
 
@@ -1191,11 +1195,9 @@
           ${svgTex(x + 26, 200, w - 52, 44, '\\displaystyle ' + col.formula, isWhiten ? '#1D4ED8' : '#0F172A', '20px', '', '', 1.7)}
 
           <!-- Upper Visual: 2D Distribution Shape -->
-          <text x="${x + 22}" y="274" fill="#475569" font-size="16.5" font-weight="800">上层视角：二维数据分布形态演进</text>
           ${drawDistributionPlot2D(cx, 392, col.mode)}
 
           <!-- Middle Visual: Channel Vectors -->
-          <text x="${x + 22}" y="524" fill="#475569" font-size="16.5" font-weight="800">下层视角：通道向量几何与夹角变化</text>
           ${drawVectorPlot2D(cx, 638, col.mode)}
 
           <!-- Bottom Summary Card -->
@@ -1239,8 +1241,6 @@
       <rect x="188" y="252" width="28" height="22" rx="5" fill="#1D4ED8"/>
       <text x="226" y="269" fill="#1D4ED8" font-size="17.5" font-weight="900">CW: 0.751</text>
 
-      ${svgRich(52, 298, 512, 42, '裸基线缺乏基本非平稳归一化，显著增益源于基线崩溃', '#1E3A8A', '18.5px', '800', 1.32, 'flex-start')}
-
       <!-- Bottom Analysis Card: Linear Transform Essence -->
       <rect x="32" y="374" width="552" height="396" rx="16" fill="#EFF6FF" stroke="#2563EB" stroke-width="2.4"/>
       <text x="52" y="414" fill="#1E3A8A" font-size="21" font-weight="900">本质剖析：白化只是外挂仿射线性变换</text>
@@ -1249,12 +1249,10 @@
       ${svgTex(64, 444, 488, 66, '\\displaystyle Y_0^{\\mathrm{CW}} = \\widehat{\\Sigma}(X)^{-0.5} \\circ \\big(Y - \\widehat{\\mu}(X)\\big)', '#0F172A', '21.5px', '', '', 1.85)}
 
       <rect x="52" y="540" width="512" height="100" rx="12" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.8"/>
-      <text x="70" y="576" fill="#0F172A" font-size="19" font-weight="850">• 仅消除一阶均值与二阶线性相关性</text>
-      <text x="70" y="614" fill="#334155" font-size="18" font-weight="700">无法处理高阶非线性时序耦合与非高斯重尾分布</text>
+      <text x="70" y="597" fill="#0F172A" font-size="19" font-weight="850">• 仅消除一阶均值与二阶线性相关性</text>
 
       <rect x="52" y="654" width="512" height="98" rx="12" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.8"/>
-      <text x="70" y="690" fill="#1E3A8A" font-size="19" font-weight="850">• 强基线模型可自发学习等价变换</text>
-      <text x="70" y="728" fill="#334155" font-size="18" font-weight="700">自带跨通道融合与归一化的强模型下，外挂 CW 增益大幅缩水</text>
+      <text x="70" y="710" fill="#1E3A8A" font-size="19" font-weight="850">• 强基线模型可自发学习等价变换</text>
 
 
       <!-- ==================== CARD 2: Positive-Definiteness & Invertibility Hazard ==================== -->
@@ -1281,11 +1279,10 @@
       ${svgTex(680, 486, 480, 48, '\\displaystyle \\big(\\min_{t,i}\\widehat{\\lambda}_{t,i}\\big)^{-1} = 2.2 \\times 10^{7} \\;\\xrightarrow{w_{\\mathrm{Eigen}}=50,\\;\\lambda_{\\min}=0.1}\\; 11.49', '#1D4ED8', '19.5px', '', '', 1.65)}
 
       <rect x="664" y="562" width="512" height="90" rx="12" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.8"/>
-      ${svgRich(680, 570, 480, 36, '• 靠 $\\lambda_{\\min}=0.1$ 惩罚强行撑起小特征值', '#0F172A', '19px', '850', 1.32, 'flex-start')}
-      <text x="680" y="634" fill="#334155" font-size="18" font-weight="700">本质是在协方差对角线上人为注入各向同性白噪声</text>
+      ${svgRich(680, 589, 480, 36, '• 靠 $\\lambda_{\\min}=0.1$ 惩罚强行撑起小特征值', '#0F172A', '19px', '850', 1.32, 'flex-start')}
 
       <rect x="664" y="666" width="512" height="86" rx="12" fill="#EFF6FF" stroke="#60A5FA" stroke-width="1.8"/>
-      ${svgRich(680, 674, 480, 36, '• 破坏高维低秩相关性（论文第 22 页表 10 自证）', '#1E3A8A', '18.5px', '850', 1.3, 'flex-start')}
+      ${svgRich(680, 674, 480, 36, '• 破坏高维低秩相关性', '#1E3A8A', '18.5px', '850', 1.3, 'flex-start')}
       ${svgRich(680, 712, 480, 34, '$\\lambda_{\\min}$ 增大时，协方差估计误差 $\\mathcal{L}_{\\mathrm{SVD}}$ 从 $0.484$ 恶化至 $0.528$', '#334155', '17.5px', '750', 1.25, 'flex-start')}
 
 
@@ -1300,8 +1297,7 @@
       <rect x="1276" y="148" width="512" height="86" rx="12" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
       ${svgTex(1288, 158, 488, 66, '\\displaystyle \\mathcal{T}_{\\mathrm{JMCE+CW}} = O\\big(L \\cdot d^3\\big) \\quad (\\mathrm{SVD} + \\mathrm{Eig} + \\widehat{\\Sigma}_t^{-0.5})', '#1E3A8A', '20px', '', '', 1.72)}
 
-      ${svgRich(1276, 248, 512, 42, '训练每步需对 $L=192$ 个 $d \\times d$ 矩阵做 SVD 与特征分解；', '#0F172A', '18.5px', '800', 1.32, 'flex-start')}
-      ${svgRich(1276, 292, 512, 42, '计算开销随通道数 $d$ 呈三次方增长，高维场景严重受限', '#1E3A8A', '18.5px', '800', 1.32, 'flex-start')}
+      ${svgRich(1276, 271, 512, 42, '计算开销随通道数 $d$ 呈三次方增长，高维场景严重受限', '#1E3A8A', '18.5px', '800', 1.32, 'flex-start')}
 
       <!-- Bottom Box: Solar Energy (d=137) Runtime Breakdown (Table 19) -->
       <rect x="1256" y="374" width="552" height="396" rx="16" fill="#EFF6FF" stroke="#1D4ED8" stroke-width="2.6"/>
