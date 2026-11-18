@@ -833,7 +833,7 @@
 
       ${[
         [0, '计算单侧窗口半径 $r \\leftarrow (W - 1) / 2$', ''],
-        [0, '对 $Y$ 首尾各反射延拓 $r$ 步，得扩展序列 $\\widetilde{Y} \\in \\mathbb{R}^{(L+2r)\\times d}$', ''],
+        [0, '将 $Y$ 两端内侧各 $r$ 个样本倒序复制到外侧，得 $\\widetilde{Y} \\in \\mathbb{R}^{(L+2r)\\times d}$', ''],
         [0, 'for $t = 1, \\ldots, L$ do', ''],
         [1, '截取以 $t$ 为中心的 $W$ 步局部窗口 $\\mathcal{W}_t = \\{y_{t-r}, \\ldots, y_{t+r}\\}$', ''],
         [1, '$\\widetilde{\\mu}_t \\leftarrow \\frac{1}{W} \\sum_{k=-r}^{r} y_{t+k}$', '$\\triangleright\\;$窗口内局部均值向量 $(\\mathbb{R}^d)$'],
@@ -857,13 +857,13 @@
       <!-- Bottom Rule of 3-Line Table -->
       <line x1="952" y1="604" x2="1808" y2="604" stroke="#0F172A" stroke-width="3"/>
 
-      <!-- Companion Visual Schematic below Table: Reflection Padding & Sliding Window W_t -->
+      <!-- Boundary samples copied in reverse order and sliding window W_t -->
       <rect x="952" y="626" width="856" height="244" rx="16" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2.2"/>
-      ${svgRich(972, 636, 816, 36, '反射延拓与局部滑窗截取示意图（默认 $W=95,\\; r=47$；ILI 数据集 $W=15,\\; r=7$）', '#0F172A', '19px', '900', 1.35, 'flex-start')}
+      ${svgRich(972, 636, 816, 36, '两端倒序复制与滑窗截取（默认 $W=95,\\; r=47$；ILI 数据集 $W=15,\\; r=7$）', '#0F172A', '19px', '900', 1.35, 'flex-start')}
 
-      <!-- 3 Sequence Segments: Left Reflection | True Future Y | Right Reflection -->
+      <!-- Copied left samples, observed sequence Y, copied right samples -->
       <rect x="974" y="688" width="186" height="74" rx="10" fill="#F1F5F9" stroke="#94A3B8" stroke-width="2" stroke-dasharray="5 3"/>
-      <text x="1067" y="716" text-anchor="middle" fill="#475569" font-size="17" font-weight="800">左反射延拓 r 步</text>
+      <text x="1067" y="716" text-anchor="middle" fill="#475569" font-size="17" font-weight="800">左端倒序复制 r 步</text>
       ${svgTex(982, 722, 170, 36, 'y_{r+1}, \\ldots, y_2', '#475569', '17px', '', '', 1.4)}
 
       <rect x="1168" y="688" width="424" height="74" rx="10" fill="#FFFFFF" stroke="#2563EB" stroke-width="2.4"/>
@@ -871,7 +871,7 @@
       ${svgTex(1184, 722, 392, 36, 'y_1, \\ldots, y_{t-r}, \\ldots, y_t, \\ldots, y_{t+r}, \\ldots, y_L', '#0F172A', '17px', '', '', 1.4)}
 
       <rect x="1600" y="688" width="186" height="74" rx="10" fill="#F1F5F9" stroke="#94A3B8" stroke-width="2" stroke-dasharray="5 3"/>
-      <text x="1693" y="716" text-anchor="middle" fill="#475569" font-size="17" font-weight="800">右反射延拓 r 步</text>
+      <text x="1693" y="716" text-anchor="middle" fill="#475569" font-size="17" font-weight="800">右端倒序复制 r 步</text>
       ${svgTex(1608, 722, 170, 36, 'y_{L-1}, \\ldots, y_{L-r}', '#475569', '17px', '', '', 1.4)}
 
       <!-- Sliding Window Highlight Overlay W_t -->
