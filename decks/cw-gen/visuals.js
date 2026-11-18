@@ -400,10 +400,10 @@
       <line x1="1380" y1="280" x2="1380" y2="316" stroke="#1D4ED8" stroke-width="4.2"/>
       <polygon points="1370,310 1380,328 1390,310" fill="#1D4ED8"/>
 
-      <!-- Step 2B: KL Pythagorean Identity (Lemma 1) -->
+      <!-- Step 2B: KL 投影恒等式（引理 1） -->
       <rect x="956" y="330" width="848" height="204" rx="18" fill="#EFF6FF" stroke="#1D4ED8" stroke-width="3"/>
       <rect x="980" y="352" width="292" height="46" rx="10" fill="#1D4ED8"/>
-      <text x="1126" y="382" text-anchor="middle" fill="#FFFFFF" font-size="20" font-weight="900">KL 投影恒等式 (Lemma 1)</text>
+      <text x="1126" y="382" text-anchor="middle" fill="#FFFFFF" font-size="20" font-weight="900">KL 投影恒等式（引理 1）</text>
       ${svgRich(1292, 356, 488, 38, '因 $D_{\\mathrm{KL}}(Q^*\\|Q) \\ge 0$，当 $Q = Q^*$ 时取得最小值', '#1E3A8A', '19.5px', '900', 1.4)}
       ${svgTex(976, 418, 808, 92, '\\displaystyle D_{\\mathrm{KL}}(P \\,\\|\\, Q) = D_{\\mathrm{KL}}(P \\,\\|\\, Q^*) + D_{\\mathrm{KL}}(Q^* \\,\\|\\, Q)', '#0F172A', '24px', '', '', 2.15)}
 
@@ -429,7 +429,7 @@
      * ======================================================================== */
     "slide4.theory2": `<svg viewBox="0 0 1840 900" fill="none">
       <rect x="12" y="8" width="896" height="884" rx="18" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
-      ${drawFloatingBadge(28, 22, 428, 48, '引理 1（Lemma 1）怎样接到定理 1？')}
+      ${drawFloatingBadge(28, 22, 428, 48, '引理 1 怎样接到定理 1？')}
 
       <rect x="36" y="92" width="848" height="292" rx="16" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2.2"/>
       <text x="460" y="144" text-anchor="middle" fill="#0F172A" font-size="26" font-weight="800">用引理 1 拆开两种参考分布的 KL</text>
