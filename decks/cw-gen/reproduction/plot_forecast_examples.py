@@ -1,4 +1,4 @@
-"""Render the four ETT trajectory examples used on slide 9."""
+"""Render the four ETT trajectory examples used on slide 11."""
 import argparse
 import csv
 import json

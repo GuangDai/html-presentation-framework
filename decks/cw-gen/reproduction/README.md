@@ -1,6 +1,6 @@
 # CW 与 w/o CW 的结果和轨迹
 
-演示第 8 页将 FlowTS 和 Diffusion-TS 分开，分别对照 CW 与 w/o CW 的 MSE、MAE。第 9 页用 `ETTh1_ETTh2_all_models_28channels.pdf` 对应的原始数组重绘四个轨迹示例。
+演示第 10 页将 FlowTS 和 Diffusion-TS 分开，分别对照 CW 与 w/o CW 的 MSE、MAE。第 11 页用 `ETTh1_ETTh2_all_models_28channels.pdf` 对应的原始数组重绘四个轨迹示例。
 
 ## 结果数据
 
@@ -21,7 +21,7 @@ Weather(修改版) 对应 `Weather_deduplicated_segmented`。2020-05-12 06:00 �
 
 `forecast_examples/index.json` 索引了 8 份首窗口数组。每份保存同一窗口的观测历史、真实未来及两种方法各 100 条轨迹。`Raw` 和 `Full` 的维度为 100 × 192 × 通道数。`history` 和 `truth` 分别对应 168 和 192 个时点。ETT 数组乘 `scaler_scale` 再加 `scaler_mean` 可恢复原始数据尺度，Weather 数组已还原。
 
-第 9 页从图册的四个数据集与骨干组合中各选一个误差下降明显的变量，绘制算术均值轨迹。图册的 ETT 样例来自早期配对测试，图中样例用于观察轨迹形态，第 8 页的均值来自正式测试。`forecast_examples/selected_window_metrics.csv` 保存四张图对应窗口的原始尺度误差，`forecast_comparison.svg` 是可单独打开的矢量图。
+第 11 页从图册的四个数据集与骨干组合中各选一个误差下降明显的变量，绘制算术均值轨迹。图册的 ETT 样例来自早期配对测试，图中样例用于观察轨迹形态，第 10 页的均值来自正式测试。`forecast_examples/selected_window_metrics.csv` 保存四张图对应窗口的原始尺度误差，`forecast_comparison.svg` 是可单独打开的矢量图。
 
 ## 更新方法
 
@@ -33,6 +33,6 @@ python recompute_point_metrics.py /path/to/cwgen_v4_user_resume_20261114 /path/t
 python build_slide_tables.py
 python build_slide_tables.py --check
 
-# 用 NumPy、Matplotlib 和中文字体重绘第 9 页
+# 用 NumPy、Matplotlib 和中文字体重绘第 11 页
 python plot_forecast_examples.py --font /path/to/NotoSansCJK-Regular.ttc
 ```

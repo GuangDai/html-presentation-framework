@@ -2,7 +2,7 @@
  * ============================================================================
  * @file decks/cw-gen/content.js
  * @description Content & Structure Configuration for CW-Gen (ICLR 2026)
- *              10-Slide Graphical Presentation (16:9 Widescreen).
+ *              12-Slide Graphical Presentation (16:9 Widescreen).
  *              Unified Notation: Input X \in R^{H \times d}, Target Y \in R^{L \times d}.
  * ============================================================================
  */
@@ -68,47 +68,65 @@ window.PresentationContent = {
     {
       id: 'slide-06',
       slideNumber: 6,
-      navTitle: 'CW-Diff',
+      navTitle: '滑窗协方差',
       layout: 'canvas-slide',
-      title: 'CW-Diff',
+      title: 'Sliding Window 算法',
       subtitle: '',
-      visualKey: 'slide6.cwdiff'
+      visualKey: 'jmce.slidingWindow'
     },
     {
       id: 'slide-07',
       slideNumber: 7,
-      navTitle: 'CW-Flow',
+      navTitle: 'JMCE 损失',
       layout: 'canvas-slide',
-      title: 'CW-Flow',
+      title: 'JMCE 训练流程与 Loss',
       subtitle: '',
-      visualKey: 'slide7.cwflow'
+      visualKey: 'jmce.trainingFlow'
     },
     {
       id: 'slide-08',
       slideNumber: 8,
-      navTitle: '误差对比',
+      navTitle: 'CW-Diff',
       layout: 'canvas-slide',
-      title: 'w/o CW 与 CW 的 MSE、MAE 对比',
+      title: 'CW-Diff',
       subtitle: '',
-      visualKey: 'slide8.exp1'
+      visualKey: 'slide8.cwdiff'
     },
     {
       id: 'slide-09',
       slideNumber: 9,
-      navTitle: '预测轨迹',
+      navTitle: 'CW-Flow',
       layout: 'canvas-slide',
-      title: 'ETTh1 与 ETTh2 的预测轨迹示例',
+      title: 'CW-Flow',
       subtitle: '',
-      visualKey: 'slide9.exp2'
+      visualKey: 'slide9.cwflow'
     },
     {
       id: 'slide-10',
       slideNumber: 10,
-      navTitle: '批判与分析',
+      navTitle: '误差对比',
       layout: 'canvas-slide',
-      title: '批判与个人分析',
+      title: 'w/o CW 与 CW 的 MSE、MAE 对比',
       subtitle: '',
-      visualKey: 'slide10.critique'
+      visualKey: 'slide10.exp1'
+    },
+    {
+      id: 'slide-11',
+      slideNumber: 11,
+      navTitle: '预测轨迹',
+      layout: 'canvas-slide',
+      title: 'ETTh1 与 ETTh2 的预测轨迹示例',
+      subtitle: '',
+      visualKey: 'slide11.exp2'
+    },
+    {
+      id: 'slide-12',
+      slideNumber: 12,
+      navTitle: '个人分析',
+      layout: 'canvas-slide',
+      title: '个人分析',
+      subtitle: '',
+      visualKey: 'personal.analysis'
     }
   ]
 };
