@@ -52,7 +52,7 @@ window.PresentationContent = {
       slideNumber: 4,
       navTitle: '理论分析 (二)',
       layout: 'canvas-slide',
-      title: '理论分析（二）：定理 1 充分条件与算例检验',
+      title: '理论分析（二）：替换标准高斯的充分条件',
       subtitle: '',
       visualKey: 'slide4.theory2'
     },

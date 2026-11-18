@@ -51,8 +51,8 @@
 .arrows-only .connector-pill { padding: 0; border: 0; background: transparent; box-shadow: none; }
 .arrows-only .connector-pill-arrow { width: auto; height: auto; background: transparent; color: #0D9488; font-size: 32px; line-height: 1; }
 .ms-band-header { border-bottom: 1px dashed #94A3B8; }
-/* 第四页 SVG 公式使用与图内文字相近的字号。 */
-[id="slide-04"] .svg-tex-cell .offline-tex-svg, [id^="slide-04-part-"] .svg-tex-cell .offline-tex-svg { zoom: 1.12; }
+/* Aurora 的二维周期图像页使用与图内文字相近的公式字号。 */
+[data-active-deck="aurora"] :is(#slide-04, [id^="slide-04-part-"]) .svg-tex-cell .offline-tex-svg { zoom: 1.12; }
 
 /* 架构页用一条中线组织上下两个区域，标签位于中线右端。 */
 .ms-arch-stage.divider-only { gap: 0; background: #fff; border: 1px solid #CBD5E1; border-radius: var(--radius-xl); padding: 4px 7px; }

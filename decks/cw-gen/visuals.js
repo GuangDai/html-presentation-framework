@@ -425,79 +425,62 @@
     </svg>`,
 
     /* ========================================================================
-     * SLIDE 4: THEORETICAL ANALYSIS PART 2 (Theorem 1 Sufficient Condition & Numerical Example)
-     * Spacious 2-Column Layout:
-     *   Left Panel: 4. 定理 1 充分条件推导与五项核心数学量含义
-     *   Right Panel: 5. 一维算例检验与引出 JMCE 损失
+     * SLIDE 4: THEOREM 1 (From the KL identity to the sufficient condition)
      * ======================================================================== */
     "slide4.theory2": `<svg viewBox="0 0 1840 900" fill="none">
-      <!-- ==================== LEFT PANEL: STEP 4 (Theorem 1 Sufficient Condition) ==================== -->
-      <rect x="12" y="8" width="908" height="884" rx="18" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
-      ${drawFloatingBadge(28, 22, 520, 48, '4. 定理 1：条件高斯更优的充分条件')}
+      <rect x="12" y="8" width="896" height="884" rx="18" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
+      ${drawFloatingBadge(28, 22, 428, 48, '引理 1（Lemma 1）怎样接到定理 1？')}
 
-      <!-- Target Inequality -->
-      <rect x="36" y="92" width="860" height="92" rx="14" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2.2"/>
-      <text x="216" y="146" text-anchor="middle" fill="#0F172A" font-size="21.5" font-weight="900">KL 散度判据目标</text>
-      <line x1="362" y1="108" x2="362" y2="168" stroke="#CBD5E1" stroke-width="2"/>
-      ${svgTex(380, 108, 496, 60, '\\displaystyle D_{\\mathrm{KL}}\\big(P \\,\\|\\, \\widehat{Q}_X\\big) \\le D_{\\mathrm{KL}}\\big(P \\,\\|\\, Q_0\\big)', '#1D4ED8', '23px', '', '', 2.0)}
+      <rect x="36" y="92" width="848" height="292" rx="16" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2.2"/>
+      <text x="460" y="144" text-anchor="middle" fill="#0F172A" font-size="26" font-weight="800">用引理 1 拆开两种参考分布的 KL</text>
+      ${svgTex(56, 164, 808, 58, '\\displaystyle D_{\\mathrm{KL}}(P\\|\\widehat{Q}_X) = D_{\\mathrm{KL}}(P\\|Q^*) + D_{\\mathrm{KL}}(Q^*\\|\\widehat{Q}_X)', '#0F172A', '24px', '', '', 2.2)}
+      ${svgTex(56, 231, 808, 58, '\\displaystyle D_{\\mathrm{KL}}(P\\|Q_0) = D_{\\mathrm{KL}}(P\\|Q^*) + D_{\\mathrm{KL}}(Q^*\\|Q_0)', '#0F172A', '24px', '', '', 2.2)}
+      ${svgRich(56, 311, 808, 46, '两式相减，共同项 $D_{\\mathrm{KL}}(P\\|Q^*)$ 抵消。', '#1D4ED8', '25px', '800', 2.0)}
 
-      <!-- Boxed Equation (3) -->
-      <rect x="36" y="204" width="860" height="156" rx="18" fill="#EFF6FF" stroke="#1D4ED8" stroke-width="3"/>
-      <rect x="56" y="246" width="144" height="72" rx="12" fill="#1D4ED8"/>
-      <text x="128" y="290" text-anchor="middle" fill="#FFFFFF" font-size="21.5" font-weight="900">定理 1 (式 3)</text>
-      ${svgTex(212, 220, 672, 124, '\\displaystyle \\frac{\\|\\mu-\\widehat{\\mu}\\|_2^2 + \\|\\Sigma-\\widehat{\\Sigma}\\|_*}{\\lambda_{\\min}(\\widehat{\\Sigma})} + \\sqrt{n}\\,\\|\\Sigma-\\widehat{\\Sigma}\\|_F \\le \\|\\mu\\|_2^2', '#0F172A', '23px', '', '', 2.05)}
+      <path d="M460 384 V411" stroke="#2563EB" stroke-width="3"/>
+      <polygon points="451,408 469,408 460,425" fill="#2563EB"/>
 
-      <!-- Clean 5-Row Symbol Table (n = L \cdot d) -->
-      <rect x="36" y="384" width="860" height="480" rx="16" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2.2"/>
-      <rect x="36" y="384" width="860" height="64" rx="16" fill="#F1F5F9"/>
-      <text x="196" y="424" text-anchor="middle" fill="#0F172A" font-size="21" font-weight="900">数学量</text>
-      ${svgRich(380, 396, 480, 40, '物理含义（维度 $n = L \\cdot d$）', '#0F172A', '21px', '900', 1.42, 'flex-start')}
-      <line x1="36" y1="448" x2="896" y2="448" stroke="#CBD5E1" stroke-width="2"/>
+      <rect x="36" y="427" width="848" height="181" rx="16" fill="#EFF6FF" stroke="#2563EB" stroke-width="2.6"/>
+      <text x="460" y="481" text-anchor="middle" fill="#1E3A8A" font-size="26" font-weight="800">剩下两个高斯 KL 的差</text>
+      ${svgTex(56, 504, 808, 72, '\\displaystyle D_{\\mathrm{KL}}(Q^*\\|\\widehat{Q}_X) - D_{\\mathrm{KL}}(Q^*\\|Q_0)', '#1D4ED8', '24px', '', '', 2.25)}
 
+      <rect x="36" y="638" width="848" height="226" rx="16" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2.2"/>
+      <text x="68" y="726" fill="#0F172A" font-size="26" font-weight="750">作者用均值和协方差的估计误差给这个差值求上界。</text>
+      ${svgRich(68, 754, 784, 58, '右栏式（3）要求上界 $\\le 0$，于是原来的 KL 差也 $\\le 0$。', '#1E3A8A', '26px', '800', 2.0, 'flex-start')}
+
+      <line x1="920" y1="28" x2="920" y2="872" stroke="#CBD5E1" stroke-width="2.5" stroke-dasharray="8 6"/>
+      <rect x="932" y="8" width="896" height="884" rx="18" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
+      ${drawFloatingBadge(948, 22, 518, 48, '4. 定理 1：替换标准高斯的充分条件')}
+
+      <rect x="956" y="92" width="848" height="187" rx="18" fill="#EFF6FF" stroke="#1D4ED8" stroke-width="3"/>
+      <text x="980" y="137" fill="#1E3A8A" font-size="24" font-weight="800">论文式（3）</text>
+      ${svgTex(978, 151, 804, 108, '\\displaystyle \\frac{\\|\\mu-\\widehat{\\mu}\\|_2^2 + \\|\\Sigma-\\widehat{\\Sigma}\\|_*}{\\lambda_{\\min}(\\widehat{\\Sigma})} + \\sqrt{n}\\,\\|\\Sigma-\\widehat{\\Sigma}\\|_F \\le \\|\\mu\\|_2^2', '#0F172A', '24px', '', '', 2.35)}
+
+      <rect x="956" y="299" width="848" height="132" rx="16" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2.2"/>
+      <text x="1380" y="345" text-anchor="middle" fill="#0F172A" font-size="24" font-weight="800">满足式（3）时，条件高斯更接近或同样接近真实分布</text>
+      ${svgTex(978, 356, 804, 57, '\\displaystyle D_{\\mathrm{KL}}\\big(P \\,\\|\\, \\widehat{Q}_X\\big) \\le D_{\\mathrm{KL}}\\big(P \\,\\|\\, Q_0\\big)', '#1D4ED8', '24px', '', '', 2.2)}
+
+      <rect x="956" y="451" width="848" height="413" rx="16" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2.2"/>
+      <path d="M972 451 H1788 Q1804 451 1804 467 V507 H956 V467 Q956 451 972 451Z" fill="#F1F5F9"/>
+      <text x="1100" y="488" text-anchor="middle" fill="#0F172A" font-size="23" font-weight="800">数学量</text>
+      <text x="1248" y="488" fill="#0F172A" font-size="23" font-weight="800">含义</text>
       ${[
-        ['\\|\\mu-\\widehat{\\mu}\\|_2^2', '条件均值预测误差'],
-        ['\\|\\Sigma-\\widehat{\\Sigma}\\|_*', '协方差预测误差的核范数（奇异值之和）'],
-        ['\\|\\Sigma-\\widehat{\\Sigma}\\|_F', '协方差预测误差的 Frobenius 范数'],
-        ['\\lambda_{\\min}(\\widehat{\\Sigma})', '预测协方差的最小特征值（分母项，不可过小）'],
-        ['\\|\\mu\\|_2^2', '真实未来条件均值距离原点的平方']
-      ].map((row, idx) => {
-        const top = 448 + idx * 82;
+        ['\\|\\mu-\\widehat{\\mu}\\|_2^2', '条件均值的平方估计误差'],
+        ['\\|\\Sigma-\\widehat{\\Sigma}\\|_*', '协方差误差的核范数（奇异值之和）'],
+        ['\\|\\Sigma-\\widehat{\\Sigma}\\|_F', '协方差误差的 Frobenius 范数'],
+        ['\\lambda_{\\min}(\\widehat{\\Sigma})', '估计协方差的最小特征值，越小越放大误差'],
+        ['\\|\\mu\\|_2^2', '真实条件均值到原点的平方距离']
+      ].map(([formula, meaning], index) => {
+        const top = 507 + index * 60;
         return `<g>
-          ${idx % 2 === 1 ? `<rect x="38" y="${top}" width="856" height="82" fill="#F8FAFC"/>` : ''}
-          ${svgTex(52, top + 14, 288, 54, row[0], '#1E3A8A', '21px', '', '', 1.82)}
-          <text x="380" y="${top + 49}" fill="#0F172A" font-size="21" font-weight="900">${row[1]}</text>
-          ${idx < 4 ? `<line x1="36" y1="${top + 82}" x2="896" y2="${top + 82}" stroke="#E2E8F0" stroke-width="1.5"/>` : ''}
+          ${index % 2 ? `<rect x="957" y="${top}" width="846" height="60" fill="#F8FAFC"/>` : ''}
+          <line x1="957" y1="${top}" x2="1803" y2="${top}" stroke="#E2E8F0" stroke-width="1.5"/>
+          ${svgTex(974, top + 5, 252, 50, formula, '#1E3A8A', '24px', '', '', 2.1)}
+          <text x="1248" y="${top + 38}" fill="#0F172A" font-size="23" font-weight="700">${meaning}</text>
         </g>`;
       }).join('')}
-
-
-      <!-- ==================== RIGHT PANEL: STEP 5 (Numerical Check & Bridge to JMCE) ==================== -->
-      <rect x="940" y="8" width="888" height="884" rx="18" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
-      ${drawFloatingBadge(956, 22, 488, 48, '5. 算例检验定理 1 与引出 JMCE')}
-
-      <!-- Example Setup Card -->
-      <rect x="964" y="92" width="840" height="124" rx="16" fill="#F8FAFC" stroke="#94A3B8" stroke-width="2.4"/>
-      ${svgRich(984, 110, 800, 42, '设真实未来分布 $P = \\mathcal{N}(10, 4)$，真实参数：$\\mu = 10,\\quad \\Sigma = 4$', '#0F172A', '21.5px', '900', 1.48)}
-      ${svgRich(984, 158, 800, 42, '模型估计参数：$\\widehat{\\mu} = 9,\\quad \\widehat{\\Sigma} = 4 \\qquad (n = 1)$', '#1E3A8A', '21.5px', '900', 1.48)}
-
-      <!-- Verification Box 1: Inequality Check -->
-      <rect x="964" y="240" width="840" height="186" rx="16" fill="#EFF6FF" stroke="#2563EB" stroke-width="2.6"/>
-      <text x="1384" y="282" text-anchor="middle" fill="#1E3A8A" font-size="22" font-weight="900">代入定理 1 公式 (3) 检验</text>
-      ${svgTex(984, 298, 800, 56, '\\displaystyle \\mathrm{LHS} = \\frac{(10-9)^2 + |4-4|}{4} + |4-4| = 0.25', '#0F172A', '21px', '', '', 1.85)}
-      ${svgTex(984, 358, 800, 54, '\\displaystyle \\mathrm{RHS} = 10^2 = 100 \\quad\\Longrightarrow\\quad 0.25 \\le 100', '#1D4ED8', '21.5px', '', '', 1.9)}
-
-      <!-- Verification Box 2: Direct KLD Calculation -->
-      <rect x="964" y="450" width="840" height="186" rx="16" fill="#F8FAFC" stroke="#2563EB" stroke-width="2.4"/>
-      <text x="1384" y="492" text-anchor="middle" fill="#0F172A" font-size="22" font-weight="900">直接计算两者的 KL 散度对比</text>
-      ${svgTex(984, 510, 800, 54, '\\displaystyle D_{\\mathrm{KL}}\\big(\\mathcal{N}(10, 4) \\,\\|\\, \\mathcal{N}(0, 1)\\big) \\approx 50.8069', '#334155', '21.5px', '', '', 1.88)}
-      ${svgTex(984, 568, 800, 54, '\\displaystyle D_{\\mathrm{KL}}\\big(\\mathcal{N}(10, 4) \\,\\|\\, \\mathcal{N}(9, 4)\\big) = 0.125', '#1D4ED8', '22px', '', '', 1.92)}
-
-      <!-- Bottom Bridge to JMCE -->
-      <rect x="964" y="660" width="840" height="204" rx="18" fill="#EFF6FF" stroke="#1D4ED8" stroke-width="3"/>
-      <rect x="988" y="680" width="280" height="46" rx="10" fill="#1D4ED8"/>
-      <text x="1128" y="710" text-anchor="middle" fill="#FFFFFF" font-size="20" font-weight="900">定理 1 如何引出 JMCE</text>
-      <text x="1536" y="710" text-anchor="middle" fill="#1E3A8A" font-size="20.5" font-weight="900">控制均值误差、核范数、F 范数与最小特征值</text>
-      ${svgTex(984, 744, 800, 96, '\\displaystyle \\mathcal{L}_{\\mathrm{JMCE}} = \\mathcal{L}_2 + \\mathcal{L}_{\\mathrm{SVD}} + \\lambda_{\\min}\\sqrt{L d}\\,\\mathcal{L}_F + w_{\\mathrm{Eigen}}\\sum_{t=1}^{L}\\mathcal{R}_{\\lambda_{\\min}}(\\widehat{\\Sigma}_t)', '#0F172A', '21.5px', '', '', 1.88)}
+      <line x1="957" y1="807" x2="1803" y2="807" stroke="#E2E8F0" stroke-width="1.5"/>
+      ${svgRich(980, 816, 800, 40, '$n$ 为随机向量的维度，估计协方差 $\\widehat{\\Sigma}$ 为正定矩阵。', '#334155', '22px', '700', 1.8, 'flex-start')}
     </svg>`,
 
     /* ========================================================================
