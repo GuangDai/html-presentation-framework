@@ -11,7 +11,7 @@
  *              - Theory split across 2 spacious slides (Slide 3 & Slide 4)
  *              - JMCE unified palette & non-redundant left/right panels (Slide 5)
  *              - CW-Diff (Slide 6) & CW-Flow (Slide 7): concise Left Train / Right Infer
- *              - Reproduction Experiments (Slide 8 & Slide 9) & Critique (Slide 10): blank reserved
+ *              - Reproduction Experiments (Slides 8–9) and reserved Critique (Slide 10)
  * ============================================================================
  */
 
@@ -105,6 +105,59 @@
       <text x="920" y="462" text-anchor="middle" fill="#1E3A8A" font-size="32" font-weight="900">${mainTitle}</text>
     </svg>`;
   }
+
+  // Begin generated reproduction tables.
+  const reproductionTables = {
+    main: [
+      ["ETTh1", "FlowTS", "0.872", "0.623", "-28.5%", "0.685", "0.551", "-19.6%"],
+      ["ETTh1", "Diffusion-TS", "1.125", "0.653", "-41.9%", "0.810", "0.558", "-31.0%"],
+      ["ETTh2", "FlowTS", "7.122", "0.698", "-90.2%", "2.265", "0.615", "-72.8%"],
+      ["ETTh2", "Diffusion-TS", "9.686", "0.751", "-92.3%", "2.691", "0.644", "-76.1%"],
+      ["Weather 原版", "FlowTS", "0.390", "0.312", "-20.0%", "0.409", "0.345", "-15.6%"],
+      ["Weather 原版", "Diffusion-TS", "0.489", "0.325", "-33.4%", "0.452", "0.367", "-18.8%"],
+      ["Weather 去重分段版", "FlowTS", "0.372", "0.323", "-13.3%", "0.399", "0.351", "-11.9%"],
+      ["Weather 去重分段版", "Diffusion-TS", "0.447", "0.316", "-29.5%", "0.420", "0.354", "-15.6%"],
+    ],
+    covariance: [
+      ["Weather 原版", "FlowTS", "0.328 → 0.312", "0.355 → 0.345"],
+      ["Weather 原版", "Diffusion-TS", "0.328 → 0.325", "0.359 → 0.367"],
+    ],
+    gaussian: [
+      ["ETTh1", "FlowTS", "0.668 → 0.623", "0.560 → 0.551"],
+      ["ETTh1", "Diffusion-TS", "0.668 → 0.653", "0.560 → 0.558"],
+      ["ETTh2", "FlowTS", "0.537 → 0.698", "0.486 → 0.615"],
+      ["ETTh2", "Diffusion-TS", "0.537 → 0.751", "0.486 → 0.644"],
+      ["Weather 原版", "FlowTS", "0.269 → 0.312", "0.314 → 0.345"],
+      ["Weather 原版", "Diffusion-TS", "0.269 → 0.325", "0.314 → 0.367"],
+    ],
+  };
+  // End generated reproduction tables.
+
+  function drawMetricTable(x, y, widths, headers, rows, rowHeight = 57) {
+    const width = widths.reduce((sum, col) => sum + col, 0);
+    const centers = widths.map((col, index) => x + col / 2
+      + widths.slice(0, index).reduce((sum, preceding) => sum + preceding, 0));
+    const headerHeight = 51;
+    const height = headerHeight + rows.length * rowHeight;
+    return `<g>
+      <rect x="${x}" y="${y}" width="${width}" height="${height}" rx="14" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
+      <path d="M${x + 14} ${y} H${x + width - 14} Q${x + width} ${y} ${x + width} ${y + 14} V${y + headerHeight} H${x} V${y + 14} Q${x} ${y} ${x + 14} ${y}Z" fill="#E2E8F0"/>
+      ${headers.map((label, index) => `<text x="${centers[index]}" y="${y + 33}" text-anchor="middle" fill="#0F172A" font-size="23" font-weight="800">${label}</text>`).join('')}
+      ${rows.map((row, index) => {
+        const top = y + headerHeight + index * rowHeight;
+        return `<g>
+          ${index % 2 === 0 ? `<rect x="${x + 1}" y="${top}" width="${width - 2}" height="${rowHeight}" fill="#F8FAFC"/>` : ''}
+          <line x1="${x + 1}" y1="${top}" x2="${x + width - 1}" y2="${top}" stroke="#E2E8F0"/>
+          ${row.map((cell, col) => {
+            const highlighted = cell.endsWith('%');
+            const color = highlighted ? (cell.startsWith('-') ? '#1D4ED8' : '#9A3412') : '#0F172A';
+            return `<text x="${centers[col]}" y="${top + rowHeight / 2 + 8}" text-anchor="middle" fill="${color}" font-size="24" font-weight="${highlighted ? 850 : 650}">${cell}</text>`;
+          }).join('')}
+        </g>`;
+      }).join('')}
+    </g>`;
+  }
+
 
   window.PresentationVisuals = window.AuroraVisuals = {
 
@@ -736,12 +789,54 @@
       ${svgTex(976, 738, 808, 96, '\\displaystyle \\widehat{Y} = \\overleftarrow{Y}_{\\tau_{\\min}}^{\\mathrm{CW}}', '#1D4ED8', '25px', '', '', 2.25)}
     </svg>`,
 
-    /* ========================================================================
-     * SLIDE 8, 9, 10: RESERVED BLANK SLIDES FOR EXPERIMENTS (2 PAGES) & CRITIQUE (1 PAGE)
-     * Per user instruction: "然后复现实验就只是写复现实验， 不要给表格，等我之后再拿AI 分析，你现在全空着。 这个也需要两页。"
-     * ======================================================================== */
-    "slide8.exp1": drawReservedSlide('复现实验（一）', '复现实验'),
-    "slide9.exp2": drawReservedSlide('复现实验（二）', '复现实验'),
+    "slide8.exp1": `<svg viewBox="0 0 1840 900" fill="none">
+      <rect x="12" y="8" width="1816" height="884" rx="18" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
+      ${drawFloatingBadge(28, 22, 336, 48, 'Raw 与 CW Full 配对对照')}
+      <text x="40" y="112" fill="#0F172A" font-size="25" font-weight="730">Raw 使用标准高斯先验，Full 接入 JMCE 的条件均值和完整协方差。</text>
+      <text x="40" y="154" fill="#475569" font-size="23" font-weight="700">历史 168 步，预测 192 步。每起点取 100 条轨迹的均值，每组 10 对种子。ETTh1、ETTh2 各 15 个测试起点，Weather 两版各 54 个。</text>
+
+      <rect x="529" y="188" width="630" height="48" rx="10" fill="#EFF6FF"/>
+      <rect x="1159" y="188" width="645" height="48" rx="10" fill="#EFF6FF"/>
+      <text x="844" y="219" text-anchor="middle" fill="#1E3A8A" font-size="23" font-weight="850">均方误差（MSE）</text>
+      <text x="1481" y="219" text-anchor="middle" fill="#1E3A8A" font-size="23" font-weight="850">平均绝对误差（MAE）</text>
+      ${drawMetricTable(36, 236, [248, 245, 190, 190, 250, 190, 190, 265],
+        ['数据版本', '生成骨干', 'Raw', 'Full', 'Full 相对变化', 'Raw', 'Full', 'Full 相对变化'],
+        reproductionTables.main, 56)}
+
+      <text x="40" y="779" fill="#1E3A8A" font-size="25" font-weight="850">八组 Full 的两项平均误差均低于 Raw。ETTh2 的 Raw 误差偏高，降幅需结合表中基线读。</text>
+      <text x="40" y="819" fill="#475569" font-size="22" font-weight="700">各版本沿用各自训练段标准化。相对变化为 Full 均值 / Raw 均值 − 1，数值越低越好。</text>
+      <text x="40" y="857" fill="#475569" font-size="22" font-weight="700">本地协议重建，测试集曾提前开放。以上结果按探索性比较解读。</text>
+    </svg>`,
+
+    "slide9.exp2": `<svg viewBox="0 0 1840 900" fill="none">
+      <rect x="12" y="8" width="668" height="696" rx="18" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
+      ${drawFloatingBadge(28, 22, 556, 48, 'A1｜对角协方差 → 完整协方差')}
+      <text x="36" y="115" fill="#334155" font-size="24" font-weight="700">Weather 原版，每个骨干 10 对种子</text>
+      ${drawMetricTable(36, 148, [176, 222, 222],
+        ['骨干', 'MSE  Diag → Full', 'MAE  Diag → Full'],
+        reproductionTables.covariance.map(([, backbone, ...scores]) => [backbone, ...scores]), 70)}
+      <rect x="36" y="376" width="620" height="296" rx="16" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+      <text x="56" y="429" fill="#1E3A8A" font-size="24" font-weight="850">FlowTS 的两项误差均下降</text>
+      <text x="56" y="477" fill="#0F172A" font-size="24" font-weight="740">Diffusion-TS 的 MSE 下降、MAE 上升</text>
+      <line x1="56" y1="511" x2="636" y2="511" stroke="#CBD5E1" stroke-width="2"/>
+      <text x="56" y="563" fill="#334155" font-size="23" font-weight="700">按预登记的空间变分分数与 CRPS</text>
+      <text x="56" y="605" fill="#334155" font-size="23" font-weight="700">联合判据，两组均未达到 Holm 0.05 阈值。</text>
+
+      <rect x="700" y="8" width="1128" height="696" rx="18" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
+      ${drawFloatingBadge(716, 22, 648, 48, 'A2｜直接条件高斯 → 加生成器')}
+      <text x="724" y="115" fill="#334155" font-size="24" font-weight="700">两种方法共享同一 JMCE 先验，每组 10 对种子</text>
+      ${drawMetricTable(724, 148, [244, 236, 300, 300],
+        ['数据', '骨干', 'MSE  Gaussian → Full', 'MAE  Gaussian → Full'],
+        reproductionTables.gaussian, 62)}
+      <text x="724" y="625" fill="#1E3A8A" font-size="24" font-weight="850">ETTh1 两组 Full 的点误差更低。其余四组直接高斯更低。</text>
+      <text x="724" y="662" fill="#334155" font-size="23" font-weight="700">按连续排序概率得分（CRPS），直接高斯在六组中有五组均值更低。</text>
+
+      <rect x="12" y="731" width="1816" height="151" rx="18" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+      <text x="40" y="781" fill="#0F172A" font-size="25" font-weight="850">Weather 数据边界</text>
+      <text x="40" y="830" fill="#334155" font-size="23" font-weight="700">去重分段版处理时间重复和缺口。两版训练数据各有 81 个 −9999 值参与了标准化和训练，影响仍待单独检验。</text>
+    </svg>`,
+
+
     "slide10.critique": drawReservedSlide('批判与个人分析', '批判与个人分析')
   };
 })();

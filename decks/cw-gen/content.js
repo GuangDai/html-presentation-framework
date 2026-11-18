@@ -88,7 +88,7 @@ window.PresentationContent = {
       slideNumber: 8,
       navTitle: '复现实验 (一)',
       layout: 'canvas-slide',
-      title: '复现实验（一）',
+      title: '复现实验（一）：条件先验的点预测误差',
       subtitle: '',
       visualKey: 'slide8.exp1'
     },
@@ -97,7 +97,7 @@ window.PresentationContent = {
       slideNumber: 9,
       navTitle: '复现实验 (二)',
       layout: 'canvas-slide',
-      title: '复现实验（二）',
+      title: '复现实验（二）：协方差与生成器消融',
       subtitle: '',
       visualKey: 'slide9.exp2'
     },
