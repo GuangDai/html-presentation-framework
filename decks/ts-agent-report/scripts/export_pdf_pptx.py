@@ -29,10 +29,11 @@ html = re.sub(r'<nav class="slide-agenda-rail"></nav>', _fill, html)
 html = html.replace("</head>", """
 <style>
   @page { size: 1920px 1080px; margin: 0; }
-  html, body { width: 1920px; height: auto; overflow: visible; background: #fff; }
-  .viewport-scaler, .presentation-stage { display: block; width: 1920px; height: auto; box-shadow: none; transform: none !important; }
-  .slide { position: relative !important; inset: auto !important; display: flex !important; width: 1920px; height: 1080px; page-break-after: always; }
-  .slide:last-child { page-break-after: auto; }
+  html, body { width: 1920px; height: auto; overflow: visible; background: #fff; margin: 0; padding: 0; }
+  .viewport-scaler { display: block; width: 1920px; height: auto; overflow: visible; }
+  .presentation-stage { width: 1920px; height: auto; border-radius: 0; box-shadow: none; overflow: visible; transform: none !important; }
+  .slide { position: relative !important; inset: auto !important; display: flex !important; width: 1920px; height: 1080px; break-after: page; animation: none !important; }
+  .slide:last-child { break-after: auto; }
 </style></head>""", 1)
 
 PDF_OUT.parent.mkdir(parents=True, exist_ok=True)
@@ -44,7 +45,7 @@ prs.slide_width, prs.slide_height = Inches(13.333333), Inches(7.5)
 with tempfile.TemporaryDirectory() as td:
     for i in range(len(doc)):
         p = Path(td) / f"s{i+1:02d}.png"
-        doc[i].render(scale=1.333333).to_pil().save(str(p))
+        doc[i].render(scale=1.333333).to_pil().save(str(p), optimize=True)
         prs.slides.add_slide(prs.slide_layouts[6]).shapes.add_picture(str(p), 0, 0, prs.slide_width, prs.slide_height)
 prs.save(str(PPTX_OUT))
 print("Exported:", PDF_OUT, PPTX_OUT)

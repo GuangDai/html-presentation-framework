@@ -4,13 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>时间序列 LLM Agent 专题报告</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" />
   <style>
     :root {
       --stage-w: 1920px;
       --stage-h: 1080px;
-      --font-sans: 'Inter', 'Noto Sans CJK SC', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', -apple-system, BlinkMacSystemFont, sans-serif;
-      --font-mono: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace;
+      --font-sans: Arial, 'Microsoft YaHei', 'PingFang SC', 'Noto Sans CJK SC', sans-serif;
+      --font-heading: Arial, SimHei, 'Microsoft YaHei', 'PingFang SC', 'Noto Sans CJK SC', sans-serif;
+      --font-math: 'Cambria Math', 'STIX Two Math', 'Times New Roman', serif;
       --bg-viewport: #E2E8F0;
       --ink: #0F172A;
     }
@@ -45,8 +45,8 @@
       padding-bottom: 14px; border-bottom: 1.5px solid #E2E8F0; flex-shrink: 0;
     }
     .header-left { display: flex; align-items: baseline; gap: 16px; min-width: 0; }
-    .slide-num { font-family: var(--font-mono); font-size: 22px; font-weight: 800; color: #2563EB; flex-shrink: 0; }
-    .slide-title { font-size: 34px; font-weight: 800; color: #0F172A; letter-spacing: -0.02em; white-space: nowrap; }
+    .slide-num { font-family: var(--font-sans); font-variant-numeric: tabular-nums; font-size: 22px; font-weight: 800; color: #2563EB; flex-shrink: 0; }
+    .slide-title { font-family: var(--font-heading); font-size: 34px; font-weight: 800; color: #0F172A; letter-spacing: -0.02em; white-space: nowrap; }
     .slide-agenda-rail { display: flex; align-items: center; gap: 2px; flex-shrink: 0; }
     .agenda-pill {
       appearance: none; border: none; background: transparent; color: #94A3B8;
@@ -60,16 +60,15 @@
       display: flex; align-items: center; justify-content: center; margin: 14px 0 4px 0;
     }
     .visual-stage svg {
-      font-family: 'Noto Sans CJK SC', 'Inter', sans-serif;
       width: 100%; height: 100%; display: block;
     }
-    /* Embedded offline-safe KaTeX core styling (works identically in browser & WeasyPrint PDF) */
+    /* KaTeX supplies the formula markup and spacing. Cambria Math supplies the glyphs. */
     .katex-overlay {
       position: absolute; z-index: 20; pointer-events: none; line-height: 1.2;
-      font-family: 'KaTeX_Main', 'Noto Serif CJK SC', 'Times New Roman', serif;
+      font-family: var(--font-math);
       white-space: nowrap;
     }
-    .katex { font: normal 1.05em 'KaTeX_Main', 'Noto Serif CJK SC', 'Times New Roman', serif; line-height: 1.2; text-indent: 0; display: inline-block; }
+    .katex { font: normal 1.05em var(--font-math); line-height: 1.2; text-indent: 0; display: inline-block; }
     .katex .katex-html { display: inline-block; }
     .katex .base { position: relative; display: inline-block; white-space: nowrap; }
     .katex .strut { display: inline-block; }
@@ -102,7 +101,7 @@
       border-radius: 999px; cursor: pointer;
     }
     .hud-btn:hover { background: rgba(255, 255, 255, 0.14); color: #FFFFFF; }
-    .hud-counter { color: #94A3B8; font-family: var(--font-mono); font-size: 12.5px; font-weight: 700; padding: 0 4px; }
+    .hud-counter { color: #94A3B8; font-family: var(--font-sans); font-variant-numeric: tabular-nums; font-size: 12.5px; font-weight: 700; padding: 0 4px; }
     .drawer-backdrop {
       position: fixed; inset: 0; background: rgba(15, 23, 42, 0.28);
       opacity: 0; pointer-events: none; transition: opacity 0.18s ease; z-index: 150;
@@ -124,7 +123,7 @@
     }
     .toc-item:hover { background: #F8FAFC; color: #0F172A; }
     .toc-item.active { background: #EFF6FF; color: #1D4ED8; font-weight: 800; }
-    .toc-num { font-family: var(--font-mono); font-size: 12px; color: #94A3B8; width: 22px; }
+    .toc-num { font-family: var(--font-sans); font-variant-numeric: tabular-nums; font-size: 12px; color: #94A3B8; width: 22px; }
     .toc-item.active .toc-num { color: #2563EB; }
   </style>
 </head>
@@ -142,7 +141,7 @@
           <nav class="slide-agenda-rail"></nav>
         </header>
         <div class="visual-stage">
-          <svg viewBox="0 0 1808 920" xmlns="http://www.w3.org/2000/svg">
+          <svg viewBox="0 0 1808 920" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Microsoft YaHei, PingFang SC, Noto Sans CJK SC, sans-serif">
             <defs>
               <marker id="m-blue-lg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="10" markerHeight="10" orient="auto">
                 <path d="M 0 1.2 L 9.5 5 L 0 8.8 L 2.2 5 z" fill="#1D4ED8"/>
@@ -240,7 +239,7 @@
           <nav class="slide-agenda-rail"></nav>
         </header>
         <div class="visual-stage">
-          <svg viewBox="0 0 1808 920" xmlns="http://www.w3.org/2000/svg">
+          <svg viewBox="0 0 1808 920" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Microsoft YaHei, PingFang SC, Noto Sans CJK SC, sans-serif">
             <defs>
               <marker id="m2-blue" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
                 <path d="M 0 1.2 L 9.5 5 L 0 8.8 L 2.2 5 z" fill="#2563EB"/>
@@ -381,7 +380,7 @@
           <nav class="slide-agenda-rail"></nav>
         </header>
         <div class="visual-stage">
-          <svg viewBox="0 0 1808 920" xmlns="http://www.w3.org/2000/svg">
+          <svg viewBox="0 0 1808 920" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Microsoft YaHei, PingFang SC, Noto Sans CJK SC, sans-serif">
             <defs>
               <marker id="m3-blue" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
                 <path d="M 0 1.2 L 9.5 5 L 0 8.8 L 2.2 5 z" fill="#2563EB"/>
@@ -484,7 +483,7 @@
           <nav class="slide-agenda-rail"></nav>
         </header>
         <div class="visual-stage">
-          <svg viewBox="0 0 1808 920" xmlns="http://www.w3.org/2000/svg">
+          <svg viewBox="0 0 1808 920" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Microsoft YaHei, PingFang SC, Noto Sans CJK SC, sans-serif">
             <defs>
               <marker id="m4-b" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
                 <path d="M 0 1.2 L 9.5 5 L 0 8.8 L 2.2 5 z" fill="#2563EB"/>
@@ -620,7 +619,7 @@
           <nav class="slide-agenda-rail"></nav>
         </header>
         <div class="visual-stage">
-          <svg viewBox="0 0 1808 920" xmlns="http://www.w3.org/2000/svg">
+          <svg viewBox="0 0 1808 920" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Microsoft YaHei, PingFang SC, Noto Sans CJK SC, sans-serif">
             <defs>
               <marker id="m5-b" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
                 <path d="M 0 1.2 L 9.5 5 L 0 8.8 L 2.2 5 z" fill="#2563EB"/>
@@ -755,7 +754,7 @@
           <nav class="slide-agenda-rail"></nav>
         </header>
         <div class="visual-stage">
-          <svg viewBox="0 0 1808 920" xmlns="http://www.w3.org/2000/svg">
+          <svg viewBox="0 0 1808 920" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Microsoft YaHei, PingFang SC, Noto Sans CJK SC, sans-serif">
             <defs>
               <marker id="m6-b" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
                 <path d="M 0 1.2 L 9.5 5 L 0 8.8 L 2.2 5 z" fill="#2563EB"/>
@@ -874,7 +873,7 @@
           <nav class="slide-agenda-rail"></nav>
         </header>
         <div class="visual-stage">
-          <svg viewBox="0 0 1808 920" xmlns="http://www.w3.org/2000/svg">
+          <svg viewBox="0 0 1808 920" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Microsoft YaHei, PingFang SC, Noto Sans CJK SC, sans-serif">
             <defs>
               <marker id="m7-b" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
                 <path d="M 0 1.2 L 9.5 5 L 0 8.8 L 2.2 5 z" fill="#2563EB"/>
@@ -991,7 +990,7 @@
           <nav class="slide-agenda-rail"></nav>
         </header>
         <div class="visual-stage">
-          <svg viewBox="0 0 1808 920" xmlns="http://www.w3.org/2000/svg">
+          <svg viewBox="0 0 1808 920" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Microsoft YaHei, PingFang SC, Noto Sans CJK SC, sans-serif">
             <defs>
               <marker id="m8-b" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="9" markerHeight="9" orient="auto">
                 <path d="M 0 1.2 L 9.5 5 L 0 8.8 L 2.2 5 z" fill="#2563EB"/>
@@ -1054,7 +1053,7 @@
           <nav class="slide-agenda-rail"></nav>
         </header>
         <div class="visual-stage">
-          <svg viewBox="0 0 1808 920" xmlns="http://www.w3.org/2000/svg">
+          <svg viewBox="0 0 1808 920" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Microsoft YaHei, PingFang SC, Noto Sans CJK SC, sans-serif">
             <defs>
               <marker id="m9-b" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8.5" markerHeight="8.5" orient="auto">
                 <path d="M 0 1.2 L 9.5 5 L 0 8.8 L 2.2 5 z" fill="#2563EB"/>
@@ -1170,7 +1169,7 @@
           <nav class="slide-agenda-rail"></nav>
         </header>
         <div class="visual-stage">
-          <svg viewBox="0 0 1808 920" xmlns="http://www.w3.org/2000/svg">
+          <svg viewBox="0 0 1808 920" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Microsoft YaHei, PingFang SC, Noto Sans CJK SC, sans-serif">
             <defs>
               <marker id="m10-b" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8.5" markerHeight="8.5" orient="auto">
                 <path d="M 0 1.2 L 9.5 5 L 0 8.8 L 2.2 5 z" fill="#2563EB"/>
@@ -1353,7 +1352,7 @@
           <nav class="slide-agenda-rail"></nav>
         </header>
         <div class="visual-stage">
-          <svg viewBox="0 0 1808 920" xmlns="http://www.w3.org/2000/svg">
+          <svg viewBox="0 0 1808 920" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Microsoft YaHei, PingFang SC, Noto Sans CJK SC, sans-serif">
             <defs>
               <marker id="m11-b" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
                 <path d="M 0 1.2 L 9.5 5 L 0 8.8 L 2.2 5 z" fill="#2563EB"/>

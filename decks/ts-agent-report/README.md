@@ -10,6 +10,8 @@
 - 11 页 16:9 PowerPoint 演示文稿。[仓库根目录的 PPTX](../../TS_Agent_Presentation_16x9.pptx)
 - `scripts/export_pdf_pptx.py` 从 `index.html` 重新导出 PDF 和 PPTX 到仓库根目录。
 
+中文标题用黑体（SimHei），正文和图中文字用微软雅黑，英文与数字用 Arial，公式用 Cambria Math。导出时使用 Arch Linux 主机上安装的字体。
+
 ## 页面大纲
 
 1. Agent 的本质：从静态函数映射走向有状态闭环决策体
