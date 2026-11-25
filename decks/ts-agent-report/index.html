@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>时间序列 LLM Agent 专题报告</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" />
   <style>
     :root {
       --stage-w: 1920px;
@@ -12,199 +13,103 @@
       --font-mono: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace;
       --bg-viewport: #E2E8F0;
       --ink: #0F172A;
-      --ink-2: #334155;
-      --ink-3: #64748B;
-      --blue: #2563EB;
-      --blue-dark: #1D4ED8;
-      --blue-soft: #EFF6FF;
-      --red: #BE123C;
-      --line: #CBD5E1;
-      --line-soft: #E2E8F0;
     }
-
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     html, body {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background: var(--bg-viewport);
-      font-family: var(--font-sans);
-      color: var(--ink);
+      width: 100%; height: 100%; overflow: hidden;
+      background: var(--bg-viewport); font-family: var(--font-sans); color: var(--ink);
       -webkit-font-smoothing: antialiased;
     }
-
     .viewport-scaler {
-      width: 100vw;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
+      width: 100vw; height: 100vh;
+      display: flex; align-items: center; justify-content: center; overflow: hidden;
     }
-
     .presentation-stage {
-      width: var(--stage-w);
-      height: var(--stage-h);
-      background: #FFFFFF;
-      border-radius: 8px;
+      width: var(--stage-w); height: var(--stage-h);
+      background: #FFFFFF; border-radius: 8px;
       box-shadow: 0 24px 64px rgba(15, 23, 42, 0.16);
-      position: relative;
-      overflow: hidden;
-      transform-origin: center center;
-      flex-shrink: 0;
+      position: relative; overflow: hidden; transform-origin: center center; flex-shrink: 0;
     }
-
     .slide {
-      position: absolute;
-      inset: 0;
-      padding: 28px 56px 24px 56px;
-      display: none;
-      flex-direction: column;
-      background: #FFFFFF;
+      position: absolute; inset: 0; padding: 28px 56px 24px 56px;
+      display: none; flex-direction: column; background: #FFFFFF;
     }
-
-    .slide.active {
-      display: flex;
-      animation: fadeIn 0.18s ease-out;
-    }
-
+    .slide.active { display: flex; animation: fadeIn 0.16s ease-out; }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
     .slide::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 4px;
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
       background: linear-gradient(90deg, #1D4ED8 0%, #3B82F6 55%, #E2E8F0 100%);
     }
-
-    /* Frameless Swiss Editorial Header — zero heavy box chrome */
     .slide-header {
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      gap: 24px;
-      padding-bottom: 14px;
-      border-bottom: 1.5px solid #E2E8F0;
-      flex-shrink: 0;
+      display: flex; align-items: flex-end; justify-content: space-between; gap: 20px;
+      padding-bottom: 14px; border-bottom: 1.5px solid #E2E8F0; flex-shrink: 0;
     }
-
-    .header-left {
-      display: flex;
-      align-items: baseline;
-      gap: 16px;
-      min-width: 0;
-    }
-
-    .slide-num {
-      font-family: var(--font-mono);
-      font-size: 16px;
-      font-weight: 800;
-      color: #2563EB;
-      letter-spacing: 0.04em;
-      flex-shrink: 0;
-    }
-
-    .slide-title {
-      font-size: 30px;
-      font-weight: 800;
-      color: #0F172A;
-      letter-spacing: -0.02em;
-      white-space: nowrap;
-    }
-
-    .slide-agenda-rail {
-      display: flex;
-      align-items: center;
-      gap: 2px;
-      flex-shrink: 0;
-    }
-
+    .header-left { display: flex; align-items: baseline; gap: 16px; min-width: 0; }
+    .slide-num { font-family: var(--font-mono); font-size: 22px; font-weight: 800; color: #2563EB; flex-shrink: 0; }
+    .slide-title { font-size: 34px; font-weight: 800; color: #0F172A; letter-spacing: -0.02em; white-space: nowrap; }
+    .slide-agenda-rail { display: flex; align-items: center; gap: 2px; flex-shrink: 0; }
     .agenda-pill {
-      appearance: none;
-      border: none;
-      background: transparent;
-      color: #94A3B8;
-      font-family: var(--font-sans);
-      font-size: 12px;
-      font-weight: 700;
-      padding: 4px 7px;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: all 0.14s ease;
+      appearance: none; border: none; background: transparent; color: #94A3B8;
+      font-family: var(--font-sans); font-size: 13px; font-weight: 700;
+      padding: 4px 8px; border-radius: 6px; cursor: pointer; white-space: nowrap;
+    }
+    .agenda-pill:hover { color: #1D4ED8; background: #F1F5F9; }
+    .agenda-pill.active { color: #1D4ED8; background: #EFF6FF; box-shadow: inset 0 -2px 0 #2563EB; }
+    .visual-stage {
+      position: relative; flex: 1; min-height: 0; width: 100%;
+      display: flex; align-items: center; justify-content: center; margin: 14px 0 4px 0;
+    }
+    .visual-stage svg {
+      font-family: 'Noto Sans CJK SC', 'Inter', sans-serif;
+      width: 100%; height: 100%; display: block;
+    }
+    /* Embedded offline-safe KaTeX core styling (works identically in browser & WeasyPrint PDF) */
+    .katex-overlay {
+      position: absolute; z-index: 20; pointer-events: none; line-height: 1.2;
+      font-family: 'KaTeX_Main', 'Noto Serif CJK SC', 'Times New Roman', serif;
       white-space: nowrap;
     }
+    .katex { font: normal 1.05em 'KaTeX_Main', 'Noto Serif CJK SC', 'Times New Roman', serif; line-height: 1.2; text-indent: 0; display: inline-block; }
+    .katex .katex-html { display: inline-block; }
+    .katex .base { position: relative; display: inline-block; white-space: nowrap; }
+    .katex .strut { display: inline-block; }
+    .katex .pstrut { display: inline-block; }
+    .katex .mathnormal { font-style: italic; }
+    .katex .mathrm { font-style: normal; }
+    .katex .msupsub { text-align: left; display: inline-block; position: relative; }
+    .katex .vlist-t { display: inline-table; table-layout: fixed; border-collapse: collapse; }
+    .katex .vlist-t2 { margin-right: -2px; }
+    .katex .vlist-r { display: table-row; }
+    .katex .vlist { display: table-cell; vertical-align: bottom; position: relative; }
+    .katex .vlist > span { display: block; height: 0; position: relative; }
+    .katex .vlist > span > span { display: inline-block; }
+    .katex .vlist-s { display: table-cell; vertical-align: bottom; font-size: 1px; width: 2px; min-width: 2px; }
+    .katex .sizing.reset-size6.size3, .katex .fontsize-ensurer.reset-size6.size3 { font-size: 0.7em; }
+    .katex .mrel, .katex .mbin { margin: 0 0.22em; }
+    .katex .mpunct { margin-right: 0.16em; }
+    .katex .accent { position: relative; display: inline-block; }
+    .katex .accent-body { position: absolute; left: 0; }
+    .katex .mspace { display: inline-block; }
 
-    .agenda-pill:hover { color: #1D4ED8; background: #F1F5F9; }
-    .agenda-pill.active {
-      color: #1D4ED8;
-      background: #EFF6FF;
-      box-shadow: inset 0 -2px 0 #2563EB;
-    }
-
-    /* Open-Canvas Visual Stage */
-    .visual-stage {
-      flex: 1;
-      min-height: 0;
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 14px 0 4px 0;
-    }
-
-    .visual-stage svg { font-family: "Noto Sans CJK SC", "Inter", sans-serif;
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-
-    
-
-    /* Presenter HUD */
     .presenter-hud {
-      position: fixed;
-      right: 18px;
-      bottom: 14px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(15, 23, 42, 0.84);
-      backdrop-filter: blur(8px);
-      padding: 5px 10px;
-      border-radius: 999px;
-      z-index: 100;
+      position: fixed; right: 18px; bottom: 14px; display: flex; align-items: center; gap: 6px;
+      background: rgba(15, 23, 42, 0.84); backdrop-filter: blur(8px); padding: 5px 10px;
+      border-radius: 999px; z-index: 100;
     }
-
     .hud-btn {
-      appearance: none;
-      border: none;
-      background: transparent;
-      color: #E2E8F0;
-      font-family: var(--font-sans);
-      font-size: 12.5px;
-      font-weight: 600;
-      padding: 4px 9px;
-      border-radius: 999px;
-      cursor: pointer;
+      appearance: none; border: none; background: transparent; color: #E2E8F0;
+      font-family: var(--font-sans); font-size: 13px; font-weight: 600; padding: 4px 9px;
+      border-radius: 999px; cursor: pointer;
     }
-
     .hud-btn:hover { background: rgba(255, 255, 255, 0.14); color: #FFFFFF; }
-    .hud-counter { color: #94A3B8; font-family: var(--font-mono); font-size: 12px; font-weight: 700; padding: 0 4px; }
-
-    /* TOC Drawer */
+    .hud-counter { color: #94A3B8; font-family: var(--font-mono); font-size: 12.5px; font-weight: 700; padding: 0 4px; }
     .drawer-backdrop {
-      position: fixed; inset: 0;
-      background: rgba(15, 23, 42, 0.28);
-      opacity: 0; pointer-events: none;
-      transition: opacity 0.18s ease; z-index: 150;
+      position: fixed; inset: 0; background: rgba(15, 23, 42, 0.28);
+      opacity: 0; pointer-events: none; transition: opacity 0.18s ease; z-index: 150;
     }
     .drawer-backdrop.open { opacity: 1; pointer-events: auto; }
-
     .toc-drawer {
-      position: fixed; top: 0; right: 0;
-      width: 340px; max-width: 90vw; height: 100vh;
+      position: fixed; top: 0; right: 0; width: 340px; max-width: 90vw; height: 100vh;
       background: #FFFFFF; border-left: 1px solid #E2E8F0;
       box-shadow: -12px 0 36px rgba(15, 23, 42, 0.14);
       transform: translateX(100%); transition: transform 0.2s ease;
@@ -214,9 +119,8 @@
     .toc-title { font-size: 16px; font-weight: 800; color: #0F172A; margin-bottom: 14px; }
     .toc-list { list-style: none; display: flex; flex-direction: column; gap: 4px; overflow-y: auto; }
     .toc-item {
-      display: flex; align-items: center; gap: 10px;
-      padding: 9px 12px; border-radius: 8px; cursor: pointer;
-      font-size: 14px; font-weight: 600; color: #334155;
+      display: flex; align-items: center; gap: 10px; padding: 9px 12px;
+      border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600; color: #334155;
     }
     .toc-item:hover { background: #F8FAFC; color: #0F172A; }
     .toc-item.active { background: #EFF6FF; color: #1D4ED8; font-weight: 800; }
@@ -228,8 +132,8 @@
   <div class="viewport-scaler">
     <div class="presentation-stage" id="stage">
 
-      <!-- ==================== SLIDE 1: AGENT 核心要素与共性抽象 ==================== -->
-      <section class="slide active" data-title="Agent 的本质定义与核心要素">
+      <!-- ==================== SLIDE 01 ==================== -->
+      <section class="slide active" data-title="Agent 的本质：从静态函数映射走向有状态闭环决策体">
         <header class="slide-header">
           <div class="header-left">
             <span class="slide-num">01</span>
@@ -237,18 +141,14 @@
           </div>
           <nav class="slide-agenda-rail"></nav>
         </header>
-
         <div class="visual-stage">
-          <svg viewBox="0 0 1824 890" xmlns="http://www.w3.org/2000/svg">
+          <svg viewBox="0 0 1808 920" xmlns="http://www.w3.org/2000/svg">
             <defs>
-              <marker id="m-blue" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563EB"/>
+              <marker id="m-blue-lg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="10" markerHeight="10" orient="auto">
+                <path d="M 0 1.2 L 9.5 5 L 0 8.8 L 2.2 5 z" fill="#1D4ED8"/>
               </marker>
-              <marker id="m-blue-lg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="9" markerHeight="9" orient="auto">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#1D4ED8"/>
-              </marker>
-              <marker id="m-slate" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#94A3B8"/>
+              <marker id="m-slate" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+                <path d="M 0 1.2 L 9.5 5 L 0 8.8 L 2.2 5 z" fill="#94A3B8"/>
               </marker>
               <radialGradient id="g-core" cx="50%" cy="45%" r="55%">
                 <stop offset="0%" stop-color="#2563EB"/>
@@ -256,921 +156,833 @@
               </radialGradient>
             </defs>
 
-            <!-- LEFT ZONE: Traditional Static Mapping (Muted, Compressed) -->
-            <rect x="0" y="34" width="520" height="822" rx="18" fill="#F8FAFC"/>
-            <text x="40" y="88" fill="#64748B" font-size="16" font-weight="800" letter-spacing="1.5">对照 · 传统静态模型</text>
-            <text x="40" y="132" fill="#0F172A" font-size="28" font-weight="800">单次前向映射</text>
-            <text x="40" y="172" fill="#64748B" font-size="18" font-family="JetBrains Mono, monospace">y = f<tspan dy="4" font-size="13">θ</tspan><tspan dy="-4">(x)</tspan></text>
+            <rect x="0" y="20" width="496" height="880" rx="20" fill="#F8FAFC"/>
+            <text x="40" y="82" fill="#64748B" font-size="22" font-weight="800" letter-spacing="1">对照 · 传统静态模型</text>
+            <text x="40" y="136" fill="#0F172A" font-size="34" font-weight="800">单次前向映射</text>
 
-            <!-- Open-loop dead-end vertical/stepped flow -->
-            <g transform="translate(0, 20)">
-              <rect x="76" y="218" width="368" height="72" rx="12" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.8"/>
-              <text x="260" y="261" text-anchor="middle" fill="#334155" font-size="20" font-weight="700">固定输入 x</text>
+            <rect x="52" y="196" width="392" height="88" rx="14" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
+            <text x="248" y="250" text-anchor="middle" fill="#334155" font-size="27" font-weight="800">固定输入</text>
+            <line x1="248" y1="284" x2="248" y2="360" stroke="#94A3B8" stroke-width="3" marker-end="url(#m-slate)"/>
 
-              <line x1="260" y1="290" x2="260" y2="352" stroke="#94A3B8" stroke-width="2.5" marker-end="url(#m-slate)"/>
+            <rect x="52" y="372" width="392" height="96" rx="14" fill="#E2E8F0"/>
+            <text x="248" y="430" text-anchor="middle" fill="#1E293B" font-size="28" font-weight="800">黑盒单次前向</text>
+            <line x1="248" y1="468" x2="248" y2="544" stroke="#94A3B8" stroke-width="3" marker-end="url(#m-slate)"/>
 
-              <rect x="76" y="362" width="368" height="84" rx="12" fill="#E2E8F0"/>
-              <text x="260" y="401" text-anchor="middle" fill="#334155" font-size="20" font-weight="800">黑盒单次前向</text>
-              <text x="260" y="428" text-anchor="middle" fill="#64748B" font-size="14.5">参数冻结 · 无中途决策分支</text>
+            <rect x="52" y="556" width="392" height="88" rx="14" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
+            <text x="248" y="610" text-anchor="middle" fill="#334155" font-size="27" font-weight="800">静态输出</text>
 
-              <line x1="260" y1="446" x2="260" y2="508" stroke="#94A3B8" stroke-width="2.5" marker-end="url(#m-slate)"/>
+            <line x1="248" y1="644" x2="248" y2="716" stroke="#BE123C" stroke-width="3" stroke-dasharray="6 6"/>
+            <line x1="186" y1="722" x2="310" y2="722" stroke="#BE123C" stroke-width="4.5" stroke-linecap="round"/>
+            <text x="248" y="766" text-anchor="middle" fill="#BE123C" font-size="23" font-weight="800">流程终止 · 无法自纠</text>
 
-              <rect x="76" y="518" width="368" height="72" rx="12" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.8"/>
-              <text x="260" y="561" text-anchor="middle" fill="#334155" font-size="20" font-weight="700">静态输出 y</text>
 
-              <!-- Dead-end red stop -->
-              <line x1="260" y1="590" x2="260" y2="646" stroke="#BE123C" stroke-width="2.5" stroke-dasharray="5 5"/>
-              <line x1="210" y1="652" x2="310" y2="652" stroke="#BE123C" stroke-width="3.5" stroke-linecap="round"/>
-              <text x="260" y="688" text-anchor="middle" fill="#BE123C" font-size="16" font-weight="800">流程终止 · 无法自纠</text>
+
+
+            <text x="600" y="74" fill="#2563EB" font-size="22" font-weight="800" letter-spacing="1">共性抽象 · 智能体定义</text>
+            <text x="600" y="128" fill="#0F172A" font-size="31" font-weight="800">以目标为导向，在动态环境中持续感知、决策、执行并演化状态的闭环系统</text>
+
+            <circle cx="1200" cy="526" r="204" fill="#F8FAFC" opacity="0.78"/>
+
+            <!-- Exact 90-degree perpendicular-entry clockwise closed loop (zero crooked arrowheads) -->
+            <path d="M 1432 245 C 1548 245, 1593 305, 1593 455" fill="none" stroke="#2563EB" stroke-width="4.2" stroke-linecap="round" marker-end="url(#m-blue-lg)"/>
+            <path d="M 1593 593 C 1593 742, 1548 807, 1454 807" fill="none" stroke="#2563EB" stroke-width="4.2" stroke-linecap="round" marker-end="url(#m-blue-lg)"/>
+            <path d="M 950 807 C 852 807, 807 742, 807 597" fill="none" stroke="#2563EB" stroke-width="4.2" stroke-linecap="round" marker-end="url(#m-blue-lg)"/>
+            <path d="M 807 459 C 807 305, 852 245, 964 245" fill="none" stroke="#2563EB" stroke-width="4.2" stroke-linecap="round" marker-end="url(#m-blue-lg)"/>
+
+            <circle cx="1200" cy="526" r="126" fill="#EFF6FF" stroke="#1D4ED8" stroke-width="3.2"/>
+            <circle cx="1200" cy="526" r="138" fill="none" stroke="#BFDBFE" stroke-width="1.8"/>
+            <text x="1200" y="492" text-anchor="middle" fill="#2563EB" font-size="22" font-weight="800">核心机制</text>
+            <text x="1200" y="538" text-anchor="middle" fill="#0F172A" font-size="34" font-weight="800">有状态闭环</text>
+            <text x="1200" y="578" text-anchor="middle" fill="#475569" font-size="22" font-weight="700">自主决定下一步</text>
+
+            <g transform="translate(972, 182)">
+              <rect x="0" y="0" width="456" height="126" rx="16" fill="#FFFFFF" stroke="#2563EB" stroke-width="2.5"/>
+              <circle cx="46" cy="63" r="24" fill="#EFF6FF"/>
+              <text x="46" y="71" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="800">01</text>
+              <text x="90" y="52" fill="#0F172A" font-size="28" font-weight="800">持续感知</text>
+              <text x="90" y="94" fill="#475569" font-size="22">接入动态环境观测与外部约束</text>
             </g>
 
-            <!-- Bottom 3 crisp limitations -->
-            <line x1="40" y1="744" x2="480" y2="744" stroke="#E2E8F0" stroke-width="1.5"/>
-            <text x="260" y="792" text-anchor="middle" fill="#64748B" font-size="16.5" font-weight="700">无持久状态  ·  无外部校验  ·  错即终结</text>
-
-            <!-- Transition Arrow -->
-            <path d="M 542 445 L 594 445" stroke="#2563EB" stroke-width="3.5" marker-end="url(#m-blue-lg)"/>
-
-            <!-- RIGHT ZONE: Unified Open-Canvas Closed-Loop Dynamical System -->
-            <text x="636" y="76" fill="#2563EB" font-size="16" font-weight="800" letter-spacing="1.5">共性抽象 · 智能体定义</text>
-            <text x="636" y="122" fill="#0F172A" font-size="28" font-weight="800">以目标为导向，在动态环境中持续感知、决策、执行并演化状态的闭环系统</text>
-
-            <!-- Subtle orbital guide ring -->
-            <circle cx="1220" cy="466" r="268" fill="none" stroke="#DBEAFE" stroke-width="2" stroke-dasharray="8 8"/>
-            <circle cx="1220" cy="466" r="192" fill="#F8FAFC" opacity="0.65"/>
-
-            <!-- Four directional orbital arcs (Clockwise: Top -> Right -> Bottom -> Left -> Top) -->
-            <!-- Top to Right -->
-            <path d="M 1358 228 A 268 268 0 0 1 1468 358" fill="none" stroke="#2563EB" stroke-width="4" marker-end="url(#m-blue-lg)"/>
-            <!-- Right to Bottom -->
-            <path d="M 1468 574 A 268 268 0 0 1 1358 704" fill="none" stroke="#2563EB" stroke-width="4" marker-end="url(#m-blue-lg)"/>
-            <!-- Bottom to Left -->
-            <path d="M 1082 704 A 268 268 0 0 1 972 574" fill="none" stroke="#2563EB" stroke-width="4" marker-end="url(#m-blue-lg)"/>
-            <!-- Left to Top -->
-            <path d="M 972 358 A 268 268 0 0 1 1082 228" fill="none" stroke="#2563EB" stroke-width="4" marker-end="url(#m-blue-lg)"/>
-
-            <!-- Central Hub: State & Goal-Driven Controller -->
-            <circle cx="1220" cy="466" r="108" fill="url(#g-core)"/>
-            <circle cx="1220" cy="466" r="118" fill="none" stroke="#93C5FD" stroke-width="1.8"/>
-            <text x="1220" y="444" text-anchor="middle" fill="#BFDBFE" font-size="14" font-weight="700" letter-spacing="1.5">核心机制</text>
-            <text x="1220" y="478" text-anchor="middle" fill="#FFFFFF" font-size="26" font-weight="800">有状态闭环</text>
-            <text x="1220" y="510" text-anchor="middle" fill="#DBEAFE" font-size="14.5" font-weight="600">自主决定下一步</text>
-
-            <!-- NODE 1 (TOP): 感知 -->
-            <g transform="translate(1055, 166)">
-              <rect x="0" y="0" width="330" height="106" rx="14" fill="#FFFFFF" stroke="#2563EB" stroke-width="2.2"/>
-              <circle cx="38" cy="53" r="18" fill="#EFF6FF"/>
-              <text x="38" y="59" text-anchor="middle" fill="#1D4ED8" font-size="15" font-weight="800">01</text>
-              <text x="72" y="45" fill="#0F172A" font-size="22" font-weight="800">持续感知</text>
-              <text x="72" y="75" fill="#475569" font-size="15">接入动态环境观测 o<tspan dy="3" font-size="11">t</tspan><tspan dy="-3"> 与外部约束</tspan></text>
+            <g transform="translate(1378, 463)">
+              <rect x="0" y="0" width="430" height="126" rx="16" fill="#FFFFFF" stroke="#2563EB" stroke-width="2.5"/>
+              <circle cx="44" cy="63" r="24" fill="#EFF6FF"/>
+              <text x="44" y="71" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="800">02</text>
+              <text x="86" y="52" fill="#0F172A" font-size="28" font-weight="800">推理与规划</text>
+              <text x="86" y="94" fill="#475569" font-size="22">拆解目标、编排动作、修正假设</text>
             </g>
 
-            <!-- NODE 2 (RIGHT): 推理规划 -->
-            <g transform="translate(1418, 412)">
-              <rect x="0" y="0" width="356" height="114" rx="14" fill="#FFFFFF" stroke="#2563EB" stroke-width="2.2"/>
-              <circle cx="38" cy="57" r="18" fill="#EFF6FF"/>
-              <text x="38" y="63" text-anchor="middle" fill="#1D4ED8" font-size="15" font-weight="800">02</text>
-              <text x="72" y="47" fill="#0F172A" font-size="22" font-weight="800">推理与规划</text>
-              <text x="72" y="77" fill="#475569" font-size="15">拆解目标、编排动作、修正假设</text>
+            <g transform="translate(954, 744)">
+              <rect x="0" y="0" width="492" height="126" rx="16" fill="#FFFFFF" stroke="#2563EB" stroke-width="2.5"/>
+              <circle cx="46" cy="63" r="24" fill="#EFF6FF"/>
+              <text x="46" y="71" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="800">03</text>
+              <text x="90" y="52" fill="#0F172A" font-size="28" font-weight="800">工具与动作执行</text>
+              <text x="90" y="94" fill="#475569" font-size="22">调用外部工具完成计算、检索与交互</text>
             </g>
 
-            <!-- NODE 3 (BOTTOM): 工具执行 -->
-            <g transform="translate(1055, 660)">
-              <rect x="0" y="0" width="330" height="106" rx="14" fill="#FFFFFF" stroke="#2563EB" stroke-width="2.2"/>
-              <circle cx="38" cy="53" r="18" fill="#EFF6FF"/>
-              <text x="38" y="59" text-anchor="middle" fill="#1D4ED8" font-size="15" font-weight="800">03</text>
-              <text x="72" y="45" fill="#0F172A" font-size="22" font-weight="800">工具与动作执行</text>
-              <text x="72" y="75" fill="#475569" font-size="15">外包精确计算、检索与环境交互</text>
+            <g transform="translate(592, 463)">
+              <rect x="0" y="0" width="430" height="126" rx="16" fill="#EFF6FF" stroke="#1D4ED8" stroke-width="2.8"/>
+              <circle cx="44" cy="63" r="24" fill="#DBEAFE"/>
+              <text x="44" y="71" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="800">04</text>
+              <text x="86" y="52" fill="#1D4ED8" font-size="28" font-weight="800">记忆与状态更新</text>
+              <text x="86" y="94" fill="#334155" font-size="22">吸收执行反馈，跨步演化状态</text>
             </g>
-
-            <!-- NODE 4 (LEFT): 记忆更新 -->
-            <g transform="translate(666, 412)">
-              <rect x="0" y="0" width="356" height="114" rx="14" fill="#EFF6FF" stroke="#1D4ED8" stroke-width="2.5"/>
-              <circle cx="38" cy="57" r="18" fill="#1D4ED8"/>
-              <text x="38" y="63" text-anchor="middle" fill="#FFFFFF" font-size="15" font-weight="800">04</text>
-              <text x="72" y="47" fill="#1D4ED8" font-size="22" font-weight="800">记忆与状态更新</text>
-              <text x="72" y="77" fill="#334155" font-size="15">吸收执行反馈，跨步演化内部状态</text>
-            </g>
-
-            <!-- Abstract Mathematical Formula Strip at Bottom Right -->
-            <rect x="636" y="798" width="1164" height="58" rx="10" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1.5"/>
-            <text x="668" y="833" fill="#1D4ED8" font-size="15.5" font-weight="800">抽象形式化</text>
-            <line x1="774" y1="812" x2="774" y2="842" stroke="#CBD5E1" stroke-width="1.5"/>
-            <text x="798" y="834" fill="#0F172A" font-size="17" font-family="JetBrains Mono, monospace" font-weight="700">s<tspan dy="4" font-size="12">t+1</tspan><tspan dy="-4"> = U( s</tspan><tspan dy="4" font-size="12">t</tspan><tspan dy="-4"> , o</tspan><tspan dy="4" font-size="12">t</tspan><tspan dy="-4"> , Exec( π(s</tspan><tspan dy="4" font-size="12">t</tspan><tspan dy="-4">, o</tspan><tspan dy="4" font-size="12">t</tspan><tspan dy="-4">, M</tspan><tspan dy="4" font-size="12">t</tspan><tspan dy="-4">) ) )</tspan></text>
-            <text x="1772" y="833" text-anchor="end" fill="#64748B" font-size="15">状态 · 观测 · 策略 · 工具执行 · 记忆</text>
           </svg>
         </div>
       </section>
 
-      <!-- ==================== SLIDE 2: 时序 + AGENT 定义与结合机制 ==================== -->
-      <section class="slide" data-title="时序与 Agent 的定义及结合机制">
+      <!-- ==================== SLIDE 02 ==================== -->
+      <section class="slide" data-title="时序 + Agent">
         <header class="slide-header">
           <div class="header-left">
             <span class="slide-num">02</span>
-            <h1 class="slide-title">时序 + Agent：以语义控制流驾驭数值计算流</h1>
+            <h1 class="slide-title">时序 + Agent</h1>
           </div>
           <nav class="slide-agenda-rail"></nav>
         </header>
-
         <div class="visual-stage">
-          <svg viewBox="0 0 1824 890" xmlns="http://www.w3.org/2000/svg">
+          <svg viewBox="0 0 1808 920" xmlns="http://www.w3.org/2000/svg">
             <defs>
-              <marker id="m2-blue" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563EB"/>
+              <marker id="m2-blue" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+                <path d="M 0 1.2 L 9.5 5 L 0 8.8 L 2.2 5 z" fill="#2563EB"/>
               </marker>
-              <marker id="m2-dark" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#334155"/>
+              <marker id="m2-dark" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+                <path d="M 0 1.2 L 9.5 5 L 0 8.8 L 2.2 5 z" fill="#334155"/>
               </marker>
-              <marker id="m2-red" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#BE123C"/>
+              <marker id="m2-red" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+                <path d="M 0 1.2 L 9.5 5 L 0 8.8 L 2.2 5 z" fill="#BE123C"/>
               </marker>
+                            <g id="ds-s2">
+                <circle cx="0" cy="0" r="17" fill="#EFF6FF" stroke="#2563EB" stroke-width="1.6"/>
+                <!-- DeepSeek signature blue whale silhouette -->
+                <path d="M -11 2 C -11 -5, -4 -9, 3 -7 C 7 -6, 9 -2, 10 2 C 11 0, 12.5 -3, 13.5 -5.5 C 12 -1, 13 3, 11.5 5.5 C 10.2 3.5, 9 4.5, 7.5 6 C 3.5 9.5, -5.5 9.5, -9.5 6.5 C -10.8 5.4, -11 3.8, -11 2 Z" fill="#2563EB"/>
+                <path d="M -9 5.5 C -5 7.2, 1 7.2, 4.5 5.2" fill="none" stroke="#DBEAFE" stroke-width="1.4" stroke-linecap="round"/>
+                <circle cx="-5.5" cy="0.5" r="1.4" fill="#FFFFFF"/>
+              </g>
+              <g id="gpt-s2">
+                <circle cx="0" cy="0" r="17" fill="#EFF6FF" stroke="#2563EB" stroke-width="1.6"/>
+                <g fill="none" stroke="#1D4ED8" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M 0 -5.2 L 4.5 -2.6 L 4.5 2.6 L 0 5.2 L -4.5 2.6 L -4.5 -2.6 Z"/>
+                  <path d="M 0 -5.2 C 0 -10.5, 6.2 -11.5, 8.6 -6.5 C 10.2 -3.2, 7.6 0.2, 4.5 2.6"/>
+                  <path d="M 4.5 -2.6 C 9.1 -5.2, 13.0 -0.2, 9.8 4.4 C 7.7 7.4, 3.6 6.8, 0 5.2"/>
+                  <path d="M 4.5 2.6 C 9.1 5.2, 6.8 11.2, 1.3 10.6 C -2.4 10.2, -4.1 6.5, -4.5 2.6"/>
+                  <path d="M 0 5.2 C 0 10.5, -6.2 11.5, -8.6 6.5 C -10.2 3.2, -7.6 -0.2, -4.5 -2.6"/>
+                  <path d="M -4.5 2.6 C -9.1 5.2, -13.0 0.2, -9.8 -4.4 C -7.7 -7.4, -3.6 -6.8, 0 -5.2"/>
+                  <path d="M -4.5 -2.6 C -9.1 -5.2, -6.8 -11.2, -1.3 -10.6 C 2.4 -10.2, 4.1 -6.5, 4.5 -2.6"/>
+                </g>
+              </g>
             </defs>
 
-            <!-- TOP ABSTRACT DEFINITION BAND -->
-            <rect x="0" y="20" width="1824" height="106" rx="14" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1.5"/>
-            <rect x="0" y="20" width="8" height="106" rx="4" fill="#1D4ED8"/>
-            <text x="34" y="60" fill="#1D4ED8" font-size="16" font-weight="800" letter-spacing="1">时序智能体的共性定义</text>
-            <text x="34" y="98" fill="#0F172A" font-size="22.5" font-weight="800">大模型不再仅作单次预测或事后解释，而是在多步时序工作流中至少做出一次改变执行路径的自主决策</text>
+            <!-- Top Abstract Definition -->
+            <rect x="0" y="10" width="1808" height="106" rx="14" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1.6"/>
+            <rect x="0" y="10" width="8" height="106" rx="4" fill="#1D4ED8"/>
+            <text x="34" y="48" fill="#1D4ED8" font-size="22" font-weight="800">时序智能体的共性定义</text>
+            <text x="34" y="92" fill="#0F172A" font-size="25" font-weight="800">大模型不再仅作单次预测或事后解释，而在多步时序工作流中至少做出一次改变执行路径的自主决策</text>
 
-            <!-- LEFT / MAIN (70%): DUAL-STREAM COUPLING ARCHITECTURE -->
-            <text x="6" y="172" fill="#64748B" font-size="16" font-weight="800" letter-spacing="1.2">结合机制 · 互补双流耦合架构</text>
+            <!-- UPPER TRACK: GPT -->
+            <rect x="0" y="156" width="1248" height="278" rx="16" fill="#F8FAFC" stroke="#BFDBFE" stroke-width="1.8"/>
+            <!-- GPT badge top-right -->
+            <use href="#gpt-s2" x="1142" y="196"/>
+            <use href="#ds-s2" x="1186" y="196"/>
 
-            <!-- Upper Track: Semantic Control Flow (Royal Blue) -->
-            <rect x="0" y="196" width="1264" height="232" rx="16" fill="#F8FAFC" stroke="#BFDBFE" stroke-width="1.8"/>
-            <rect x="24" y="218" width="196" height="34" rx="8" fill="#1D4ED8"/>
-            <text x="122" y="241" text-anchor="middle" fill="#FFFFFF" font-size="15.5" font-weight="800">上层 · 语义控制流</text>
-            <text x="238" y="241" fill="#475569" font-size="15.5" font-weight="600">擅长非结构化事件理解、约束推理与多步规划，弥补数值模型语义盲区</text>
+            <rect x="28" y="268" width="348" height="128" rx="12" fill="#FFFFFF" stroke="#2563EB" stroke-width="2.2"/>
+            <text x="202" y="320" text-anchor="middle" fill="#0F172A" font-size="25" font-weight="800">理解语境与约束</text>
+            <text x="202" y="366" text-anchor="middle" fill="#64748B" font-size="22">解析事件、规则与目标</text>
 
-            <!-- 3 Control Nodes -->
-            <rect x="34" y="282" width="320" height="112" rx="12" fill="#FFFFFF" stroke="#2563EB" stroke-width="2"/>
-            <text x="194" y="324" text-anchor="middle" fill="#0F172A" font-size="20" font-weight="800">理解语境与约束</text>
-            <text x="194" y="358" text-anchor="middle" fill="#64748B" font-size="15">解析突发事件、业务规则与目标</text>
+            <line x1="376" y1="332" x2="443" y2="332" stroke="#2563EB" stroke-width="3.2" marker-end="url(#m2-blue)"/>
 
-            <line x1="354" y1="338" x2="444" y2="338" stroke="#2563EB" stroke-width="3" marker-end="url(#m2-blue)"/>
+            <rect x="448" y="268" width="356" height="128" rx="12" fill="#EFF6FF" stroke="#1D4ED8" stroke-width="2.6"/>
+            <text x="626" y="320" text-anchor="middle" fill="#1D4ED8" font-size="25" font-weight="800">动态路由与调度</text>
+            <text x="626" y="366" text-anchor="middle" fill="#334155" font-size="22">选择模型、算子或求解器</text>
 
-            <rect x="454" y="282" width="346" height="112" rx="12" fill="#1D4ED8"/>
-            <text x="627" y="324" text-anchor="middle" fill="#FFFFFF" font-size="20" font-weight="800">动态路由与工具调度</text>
-            <text x="627" y="358" text-anchor="middle" fill="#DBEAFE" font-size="15">决定调哪个模型、算子或求解器</text>
+            <line x1="804" y1="332" x2="871" y2="332" stroke="#2563EB" stroke-width="3.2" marker-end="url(#m2-blue)"/>
 
-            <line x1="800" y1="338" x2="890" y2="338" stroke="#2563EB" stroke-width="3" marker-end="url(#m2-blue)"/>
+            <rect x="876" y="268" width="344" height="128" rx="12" fill="#FFFFFF" stroke="#2563EB" stroke-width="2.2"/>
+            <text x="1048" y="341" text-anchor="middle" fill="#0F172A" font-size="26" font-weight="800">误差反思与修正</text>
 
-            <rect x="900" y="282" width="330" height="112" rx="12" fill="#FFFFFF" stroke="#2563EB" stroke-width="2"/>
-            <text x="1065" y="324" text-anchor="middle" fill="#0F172A" font-size="20" font-weight="800">误差反思与假设修正</text>
-            <text x="1065" y="358" text-anchor="middle" fill="#64748B" font-size="15">审视残差、改写计划并更新记忆</text>
+            <path d="M 1048 268 L 1048 234 L 626 234 L 626 263" fill="none" stroke="#2563EB" stroke-width="2.6" stroke-dasharray="6 4" marker-end="url(#m2-blue)"/>
 
-            <!-- Feedback loop arc over top of upper track -->
-            <path d="M 1065 282 L 1065 262 L 627 262 L 627 274" fill="none" stroke="#2563EB" stroke-width="2.2" stroke-dasharray="5 4" marker-end="url(#m2-blue)"/>
+            <!-- Clean Bidirectional Vertical Coupling Arrows (No pill labels) -->
+            <line x1="548" y1="434" x2="548" y2="519" stroke="#1D4ED8" stroke-width="4" marker-end="url(#m2-blue)"/>
+            <line x1="704" y1="524" x2="704" y2="439" stroke="#334155" stroke-width="4" marker-end="url(#m2-dark)"/>
 
-            <!-- Bidirectional Coupling Bridges between Semantic & Numerical -->
-            <g>
-              <!-- Downward: Dispatch -->
-              <line x1="564" y1="428" x2="564" y2="518" stroke="#1D4ED8" stroke-width="3.5" marker-end="url(#m2-blue)"/>
-              <rect x="412" y="454" width="138" height="36" rx="8" fill="#EFF6FF"/>
-              <text x="481" y="478" text-anchor="middle" fill="#1D4ED8" font-size="14.5" font-weight="800">调度指令 / 约束</text>
+            <!-- LOWER TRACK: Tools -->
+            <rect x="0" y="524" width="1248" height="378" rx="16" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.8"/>
+            <!-- Tools badge top-right -->
+            <rect x="1104" y="544" width="116" height="40" rx="8" fill="#334155"/>
+            <text x="1162" y="572" text-anchor="middle" fill="#FFFFFF" font-size="22" font-weight="800">Tools</text>
 
-              <!-- Upward: Verified Feedback -->
-              <line x1="690" y1="528" x2="690" y2="438" stroke="#334155" stroke-width="3.5" marker-end="url(#m2-dark)"/>
-              <rect x="704" y="454" width="166" height="36" rx="8" fill="#F1F5F9"/>
-              <text x="787" y="478" text-anchor="middle" fill="#334155" font-size="14.5" font-weight="800">数值结果 / 统计残差</text>
+            <rect x="28" y="608" width="348" height="264" rx="12" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.6"/>
+            <text x="48" y="648" fill="#334155" font-size="22" font-weight="800">连续时序观测</text>
+            <line x1="48" y1="812" x2="352" y2="812" stroke="#CBD5E1" stroke-width="1.6"/>
+            <path d="M 52 778 Q 94 716, 136 752 T 218 722 T 286 760 T 348 688" fill="none" stroke="#334155" stroke-width="3.6" stroke-linecap="round"/>
+            <line x1="286" y1="680" x2="286" y2="812" stroke="#BE123C" stroke-width="2.2" stroke-dasharray="5 4"/>
+            <circle cx="286" cy="758" r="6" fill="#BE123C"/>
+            <text x="202" y="852" text-anchor="middle" fill="#BE123C" font-size="22" font-weight="700">结构突变 / 外部冲击</text>
+
+            <line x1="376" y1="740" x2="443" y2="740" stroke="#334155" stroke-width="3.2" marker-end="url(#m2-dark)"/>
+
+            <rect x="448" y="608" width="356" height="264" rx="12" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.6"/>
+            <text x="626" y="650" text-anchor="middle" fill="#0F172A" font-size="24" font-weight="800">外部专业工具箱</text>
+            <rect x="472" y="676" width="308" height="50" rx="8" fill="#F1F5F9"/>
+            <text x="626" y="709" text-anchor="middle" fill="#334155" font-size="22" font-weight="700">统计检验与特征分解</text>
+            <rect x="472" y="740" width="308" height="50" rx="8" fill="#EFF6FF"/>
+            <text x="626" y="773" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="700">时序基座与统计模型</text>
+            <rect x="472" y="804" width="308" height="50" rx="8" fill="#F1F5F9"/>
+            <text x="626" y="837" text-anchor="middle" fill="#334155" font-size="22" font-weight="700">仿真器与约束求解器</text>
+
+            <line x1="804" y1="740" x2="871" y2="740" stroke="#334155" stroke-width="3.2" marker-end="url(#m2-dark)"/>
+
+            <rect x="876" y="608" width="344" height="264" rx="12" fill="#FFFFFF" stroke="#2563EB" stroke-width="2.2"/>
+            <text x="898" y="648" fill="#1D4ED8" font-size="22" font-weight="800">闭环校准轨迹</text>
+            <line x1="898" y1="828" x2="1196" y2="828" stroke="#CBD5E1" stroke-width="1.6"/>
+            <path d="M 1030 756 L 1192 688 L 1192 772 Z" fill="#DBEAFE" opacity="0.8"/>
+            <path d="M 902 790 Q 944 746, 984 772 T 1030 756" fill="none" stroke="#64748B" stroke-width="3.4"/>
+            <path d="M 1030 756 Q 1110 720, 1192 724" fill="none" stroke="#1D4ED8" stroke-width="4.4" stroke-linecap="round"/>
+            <path d="M 1030 756 Q 1110 778, 1192 800" fill="none" stroke="#94A3B8" stroke-width="2.6" stroke-dasharray="6 4"/>
+            <text x="1116" y="704" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="800">闭环修正</text>
+
+            <!-- RIGHT RAIL: Only 2 Clean Exclusions (静态编码拼接 deleted, subtitles deleted) -->
+            <text x="1284" y="182" fill="#BE123C" font-size="23" font-weight="800">边界划定 · 非时序智能体</text>
+            <rect x="1284" y="206" width="524" height="696" rx="16" fill="#FFF8F8" stroke="#FECDD3" stroke-width="1.8"/>
+
+            <g transform="translate(1312, 292)">
+              <text x="0" y="30" fill="#BE123C" font-size="26" font-weight="800">×  单次提示输出</text>
+              <rect x="0" y="62" width="468" height="106" rx="12" fill="#FFFFFF" stroke="#FECDD3" stroke-width="1.6"/>
+              <rect x="18" y="92" width="106" height="46" rx="8" fill="#F1F5F9"/><text x="71" y="123" text-anchor="middle" fill="#475569" font-size="22" font-weight="700">输入</text>
+              <line x1="124" y1="115" x2="162" y2="115" stroke="#94A3B8" stroke-width="2.4" marker-end="url(#m2-dark)"/>
+              <rect x="172" y="92" width="128" height="46" rx="8" fill="#E2E8F0"/><text x="236" y="123" text-anchor="middle" fill="#334155" font-size="22" font-weight="700">单次问答</text>
+              <line x1="300" y1="115" x2="338" y2="115" stroke="#BE123C" stroke-width="2.4" marker-end="url(#m2-red)"/>
+              <text x="404" y="123" text-anchor="middle" fill="#BE123C" font-size="22" font-weight="800">无校验</text>
             </g>
 
-            <!-- Lower Track: Numerical Computation Flow (Slate + Real Waveform) -->
-            <rect x="0" y="528" width="1264" height="330" rx="16" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.8"/>
-            <rect x="24" y="550" width="196" height="34" rx="8" fill="#334155"/>
-            <text x="122" y="573" text-anchor="middle" fill="#FFFFFF" font-size="15.5" font-weight="800">下层 · 数值计算流</text>
-            <text x="238" y="573" fill="#475569" font-size="15.5" font-weight="600">擅长高频连续信号建模与精确统计校准，弥补大模型数值幻觉</text>
+            <line x1="1312" y1="548" x2="1780" y2="548" stroke="#FECDD3" stroke-width="1.5"/>
 
-            <!-- Left Mini Real Waveform Panel -->
-            <rect x="34" y="612" width="320" height="214" rx="12" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
-            <text x="54" y="644" fill="#334155" font-size="15" font-weight="800">连续时序观测 X<tspan dy="3" font-size="11">1:t</tspan></text>
-            <line x1="54" y1="786" x2="332" y2="786" stroke="#CBD5E1" stroke-width="1.5"/>
-            <path d="M 56 756 Q 92 706, 128 738 T 200 712 T 264 748 T 328 676" fill="none" stroke="#334155" stroke-width="3.2" stroke-linecap="round"/>
-            <line x1="274" y1="664" x2="274" y2="786" stroke="#BE123C" stroke-width="2" stroke-dasharray="4 3"/>
-            <circle cx="274" cy="722" r="5.5" fill="#BE123C"/>
-            <text x="274" y="808" text-anchor="middle" fill="#BE123C" font-size="13" font-weight="700">结构突变 / 外部冲击</text>
-
-            <line x1="354" y1="719" x2="444" y2="719" stroke="#334155" stroke-width="3" marker-end="url(#m2-dark)"/>
-
-            <!-- Middle Tool Execution Bank -->
-            <rect x="454" y="612" width="346" height="214" rx="12" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
-            <text x="627" y="646" text-anchor="middle" fill="#0F172A" font-size="18" font-weight="800">专业工具箱</text>
-            <rect x="478" y="666" width="298" height="38" rx="8" fill="#F1F5F9"/>
-            <text x="627" y="690" text-anchor="middle" fill="#334155" font-size="15" font-weight="700">统计检验 · 清洗与特征分解</text>
-            <rect x="478" y="716" width="298" height="38" rx="8" fill="#EFF6FF"/>
-            <text x="627" y="740" text-anchor="middle" fill="#1D4ED8" font-size="15" font-weight="700">时序基座模型 · 经典预测器</text>
-            <rect x="478" y="766" width="298" height="38" rx="8" fill="#F1F5F9"/>
-            <text x="627" y="790" text-anchor="middle" fill="#334155" font-size="15" font-weight="700">仿真器 · 约束优化求解器</text>
-
-            <line x1="800" y1="719" x2="890" y2="719" stroke="#334155" stroke-width="3" marker-end="url(#m2-dark)"/>
-
-            <!-- Right Calibrated Output Waveform -->
-            <rect x="900" y="612" width="330" height="214" rx="12" fill="#FFFFFF" stroke="#2563EB" stroke-width="2"/>
-            <text x="920" y="644" fill="#1D4ED8" font-size="15" font-weight="800">校准输出与跨步记忆</text>
-            <line x1="920" y1="786" x2="1208" y2="786" stroke="#CBD5E1" stroke-width="1.5"/>
-            <!-- Uncertainty fan -->
-            <path d="M 1054 726 L 1202 664 L 1202 740 Z" fill="#DBEAFE" opacity="0.8"/>
-            <path d="M 924 756 Q 960 718, 996 742 T 1054 726" fill="none" stroke="#64748B" stroke-width="3"/>
-            <path d="M 1054 726 Q 1126 694, 1202 698" fill="none" stroke="#1D4ED8" stroke-width="4" stroke-linecap="round"/>
-            <path d="M 1054 726 Q 1126 744, 1202 764" fill="none" stroke="#94A3B8" stroke-width="2.2" stroke-dasharray="5 4"/>
-            <text x="1136" y="676" text-anchor="middle" fill="#1D4ED8" font-size="13" font-weight="800">闭环修正轨迹</text>
-            <text x="1136" y="778" text-anchor="middle" fill="#94A3B8" font-size="12.5">纯数值外推</text>
-
-            <!-- RIGHT ZONE (28%): BOUNDARY / EXCLUSION CONTRAST -->
-            <text x="1312" y="172" fill="#BE123C" font-size="16" font-weight="800" letter-spacing="1.2">边界划定 · 非时序智能体</text>
-            <rect x="1312" y="196" width="512" height="662" rx="16" fill="#FFF8F8" stroke="#FECDD3" stroke-width="1.8"/>
-
-            <!-- Exclusion 1 -->
-            <g transform="translate(1344, 232)">
-              <text x="0" y="24" fill="#BE123C" font-size="19" font-weight="800">×  单次提示直接输出</text>
-              <rect x="0" y="42" width="448" height="84" rx="10" fill="#FFFFFF" stroke="#FECDD3" stroke-width="1.5"/>
-              <rect x="24" y="66" width="96" height="36" rx="6" fill="#F1F5F9"/><text x="72" y="89" text-anchor="middle" fill="#475569" font-size="13.5" font-weight="700">时序文本</text>
-              <line x1="120" y1="84" x2="174" y2="84" stroke="#94A3B8" stroke-width="2" marker-end="url(#m2-dark)"/>
-              <rect x="182" y="66" width="96" height="36" rx="6" fill="#E2E8F0"/><text x="230" y="89" text-anchor="middle" fill="#334155" font-size="13.5" font-weight="700">单次问答</text>
-              <line x1="278" y1="84" x2="332" y2="84" stroke="#BE123C" stroke-width="2" marker-end="url(#m2-red)"/>
-              <text x="386" y="89" text-anchor="middle" fill="#BE123C" font-size="13.5" font-weight="800">无校验终止</text>
-              <text x="0" y="152" fill="#64748B" font-size="14.5">没有多步路径选择，本质仍是静态提示</text>
-            </g>
-
-            <line x1="1344" y1="414" x2="1792" y2="414" stroke="#FECDD3" stroke-width="1.2"/>
-
-            <!-- Exclusion 2 -->
-            <g transform="translate(1344, 444)">
-              <text x="0" y="24" fill="#BE123C" font-size="19" font-weight="800">×  静态编码器拼接</text>
-              <rect x="0" y="42" width="448" height="84" rx="10" fill="#FFFFFF" stroke="#FECDD3" stroke-width="1.5"/>
-              <rect x="24" y="66" width="108" height="36" rx="6" fill="#F1F5F9"/><text x="78" y="89" text-anchor="middle" fill="#475569" font-size="13.5" font-weight="700">时序编码器</text>
-              <line x1="132" y1="84" x2="174" y2="84" stroke="#94A3B8" stroke-width="2"/>
-              <rect x="174" y="66" width="110" height="36" rx="6" fill="#E2E8F0"/><text x="229" y="89" text-anchor="middle" fill="#334155" font-size="13.5" font-weight="700">固定骨干网</text>
-              <line x1="284" y1="84" x2="332" y2="84" stroke="#BE123C" stroke-width="2" marker-end="url(#m2-red)"/>
-              <text x="386" y="89" text-anchor="middle" fill="#BE123C" font-size="13.5" font-weight="800">无动态分支</text>
-              <text x="0" y="152" fill="#64748B" font-size="14.5">计算图完全固定，缺乏自主策略干预</text>
-            </g>
-
-            <line x1="1344" y1="626" x2="1792" y2="626" stroke="#FECDD3" stroke-width="1.2"/>
-
-            <!-- Exclusion 3 -->
-            <g transform="translate(1344, 656)">
-              <text x="0" y="24" fill="#BE123C" font-size="19" font-weight="800">×  纯事后文字解释</text>
-              <rect x="0" y="42" width="448" height="84" rx="10" fill="#FFFFFF" stroke="#FECDD3" stroke-width="1.5"/>
-              <rect x="24" y="66" width="112" height="36" rx="6" fill="#F1F5F9"/><text x="80" y="89" text-anchor="middle" fill="#475569" font-size="13.5" font-weight="700">预测已固定</text>
-              <line x1="136" y1="84" x2="184" y2="84" stroke="#94A3B8" stroke-width="2" marker-end="url(#m2-dark)"/>
-              <rect x="192" y="66" width="108" height="36" rx="6" fill="#E2E8F0"/><text x="246" y="89" text-anchor="middle" fill="#334155" font-size="13.5" font-weight="700">事后写报告</text>
-              <text x="376" y="89" text-anchor="middle" fill="#BE123C" font-size="13.5" font-weight="800">不回流修正</text>
-              <text x="0" y="152" fill="#64748B" font-size="14.5">不改变上游数值流程，仅作旁白包装</text>
+            <g transform="translate(1312, 622)">
+              <text x="0" y="30" fill="#BE123C" font-size="26" font-weight="800">×  事后文字解释</text>
+              <rect x="0" y="62" width="468" height="106" rx="12" fill="#FFFFFF" stroke="#FECDD3" stroke-width="1.6"/>
+              <rect x="18" y="92" width="106" height="46" rx="8" fill="#F1F5F9"/><text x="71" y="123" text-anchor="middle" fill="#475569" font-size="22" font-weight="700">结果</text>
+              <line x1="124" y1="115" x2="162" y2="115" stroke="#94A3B8" stroke-width="2.4" marker-end="url(#m2-dark)"/>
+              <rect x="172" y="92" width="128" height="46" rx="8" fill="#E2E8F0"/><text x="236" y="123" text-anchor="middle" fill="#334155" font-size="22" font-weight="700">写报告</text>
+              <line x1="300" y1="115" x2="338" y2="115" stroke="#BE123C" stroke-width="2.4" marker-end="url(#m2-red)"/>
+              <text x="404" y="123" text-anchor="middle" fill="#BE123C" font-size="22" font-weight="800">不回流</text>
             </g>
           </svg>
+          <div class="katex-overlay" style="left: 10.4%; top: 67.6%; font-size: 22px; color: #1D4ED8; font-weight: 700;"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07847em;">X</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0785em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span><span class="mrel mtight">:</span><span class="mord mathnormal mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></div>
         </div>
       </section>
 
-      <!-- ==================== SLIDE 3: 综述四大任务分类总览 ==================== -->
+      <!-- ==================== SLIDE 03 ==================== -->
       <section class="slide" data-title="问题驱动的四大任务分类">
         <header class="slide-header">
           <div class="header-left">
             <span class="slide-num">03</span>
-            <h1 class="slide-title">问题驱动的四大任务分类：沿时序信号生命周期展开</h1>
+            <h1 class="slide-title">问题驱动的四大任务分类</h1>
           </div>
           <nav class="slide-agenda-rail"></nav>
         </header>
-
         <div class="visual-stage">
-          <svg viewBox="0 0 1824 890" xmlns="http://www.w3.org/2000/svg">
+          <svg viewBox="0 0 1808 920" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <marker id="m3-blue" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563EB"/>
+                <path d="M 0 1.2 L 9.5 5 L 0 8.8 L 2.2 5 z" fill="#2563EB"/>
               </marker>
             </defs>
 
-            <!-- Top Lead Caption -->
-            <text x="0" y="42" fill="#64748B" font-size="17" font-weight="700">综述按「待解决的时序核心问题」划分四大方向，而非按模型技巧堆砌 —— 四类任务分别作用在时序演化的不同阶段</text>
+            
+            <!-- Unified 4-Task Horizon (Strict Order: 预测与推理 -> 增强与合成 -> 异常检测与诊断 -> 决策支持) -->
+            <rect x="0" y="62" width="1808" height="560" rx="18" fill="#FAFBFD" stroke="#E2E8F0" stroke-width="1.6"/>
+            <line x1="452" y1="88" x2="452" y2="596" stroke="#E2E8F0" stroke-width="1.5" stroke-dasharray="6 6"/>
+            <line x1="904" y1="88" x2="904" y2="596" stroke="#E2E8F0" stroke-width="1.5" stroke-dasharray="6 6"/>
+            <line x1="1356" y1="88" x2="1356" y2="596" stroke="#E2E8F0" stroke-width="1.5" stroke-dasharray="6 6"/>
 
-            <!-- UNIFIED TIME-SERIES LIFECYCLE HORIZON BAND -->
-            <rect x="0" y="72" width="1824" height="536" rx="18" fill="#FAFBFD" stroke="#E2E8F0" stroke-width="1.5"/>
+                                                
+            <line x1="36" y1="368" x2="1760" y2="368" stroke="#CBD5E1" stroke-width="1.8"/>
+            <line x1="1736" y1="368" x2="1772" y2="368" stroke="#2563EB" stroke-width="2.8" marker-end="url(#m3-blue)"/>
 
-            <!-- 4 Subtle Vertical Phase Dividers -->
-            <line x1="456" y1="96" x2="456" y2="584" stroke="#E2E8F0" stroke-width="1.5" stroke-dasharray="6 6"/>
-            <line x1="912" y1="96" x2="912" y2="584" stroke="#E2E8F0" stroke-width="1.5" stroke-dasharray="6 6"/>
-            <line x1="1368" y1="96" x2="1368" y2="584" stroke="#E2E8F0" stroke-width="1.5" stroke-dasharray="6 6"/>
+            <!-- Col 1: 预测与推理 -->
+            <path d="M 46 310 Q 94 282, 146 298 T 208 274" fill="none" stroke="#334155" stroke-width="3.6"/>
+            <line x1="208" y1="192" x2="208" y2="368" stroke="#2563EB" stroke-width="2.2" stroke-dasharray="5 4"/>
+            <path d="M 208 274 L 414 202 L 414 322 Z" fill="#DBEAFE" opacity="0.75"/>
+            <path d="M 208 274 Q 310 234, 414 252" fill="none" stroke="#1D4ED8" stroke-width="4.4" stroke-linecap="round"/>
+            <text x="316" y="186" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="800">约束外推与推理</text>
 
-            <!-- Phase Axis Labels at Top of Canvas -->
-            <text x="228" y="114" text-anchor="middle" fill="#64748B" font-size="14" font-weight="800" letter-spacing="1.2">阶段一 · 历史数据稀缺与失衡</text>
-            <text x="684" y="114" text-anchor="middle" fill="#64748B" font-size="14" font-weight="800" letter-spacing="1.2">阶段二 · 实时监测与故障突发</text>
-            <text x="1140" y="114" text-anchor="middle" fill="#1D4ED8" font-size="14" font-weight="800" letter-spacing="1.2">阶段三 · 未知未来与隐含因果</text>
-            <text x="1596" y="114" text-anchor="middle" fill="#1D4ED8" font-size="14" font-weight="800" letter-spacing="1.2">阶段四 · 实时环境交互控制</text>
+            <!-- Col 2: 增强与合成 -->
+            <path d="M 502 330 Q 558 256, 614 312 T 726 272 T 842 302" fill="none" stroke="#93C5FD" stroke-width="3" stroke-dasharray="6 5"/>
+            <path d="M 502 344 Q 558 280, 614 326 T 726 290 T 842 316" fill="none" stroke="#2563EB" stroke-width="3.6"/>
+            <circle cx="534" cy="314" r="6" fill="#1D4ED8"/>
+            <circle cx="642" cy="304" r="6" fill="#1D4ED8"/>
+            <circle cx="770" cy="296" r="6" fill="#1D4ED8"/>
+            <text x="678" y="206" text-anchor="middle" fill="#2563EB" font-size="22" font-weight="800">条件补全与合成</text>
 
-            <!-- Continuous Horizontal Baseline -->
-            <line x1="44" y1="358" x2="1776" y2="358" stroke="#CBD5E1" stroke-width="1.8"/>
-            <line x1="1750" y1="358" x2="1786" y2="358" stroke="#2563EB" stroke-width="2.5" marker-end="url(#m3-blue)"/>
+            <!-- Col 3: 异常检测与诊断 -->
+            <path d="M 936 316 Q 984 294, 1032 312 L 1076 310 L 1098 198 L 1120 320 Q 1184 302, 1312 306" fill="none" stroke="#334155" stroke-width="3.6"/>
+            <circle cx="1098" cy="198" r="11" fill="#FFF1F2" stroke="#BE123C" stroke-width="3"/>
+            <circle cx="1098" cy="198" r="4.5" fill="#BE123C"/>
+            <line x1="1098" y1="209" x2="1098" y2="368" stroke="#BE123C" stroke-width="2" stroke-dasharray="4 3"/>
+            <text x="1224" y="210" text-anchor="middle" fill="#BE123C" font-size="22" font-weight="800">尖峰与根因</text>
 
-            <!-- PHASE 1 VISUAL: Augmentation & Synthesis (Sparse dots -> Generated dashed family) -->
-            <g>
-              <path d="M 56 322 Q 112 248, 168 304 T 280 264 T 396 294" fill="none" stroke="#93C5FD" stroke-width="2.8" stroke-dasharray="6 5"/>
-              <path d="M 56 336 Q 112 272, 168 318 T 280 282 T 396 308" fill="none" stroke="#2563EB" stroke-width="3.2"/>
-              <circle cx="88" cy="306" r="5" fill="#1D4ED8"/>
-              <circle cx="196" cy="296" r="5" fill="#1D4ED8"/>
-              <circle cx="324" cy="288" r="5" fill="#1D4ED8"/>
-              <text x="228" y="210" text-anchor="middle" fill="#2563EB" font-size="14" font-weight="700">条件补全与可控合成族</text>
+            <!-- Col 4: 决策支持 (Crisp orthogonal straight-up feedback arrow, zero baseline touch) -->
+            <path d="M 1388 272 Q 1426 244, 1468 258" fill="none" stroke="#334155" stroke-width="3.6"/>
+            <rect x="1480" y="210" width="130" height="60" rx="10" fill="#EFF6FF" stroke="#1D4ED8" stroke-width="2.4"/>
+            <text x="1545" y="249" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="800">执行策略</text>
+            <path d="M 1610 240 L 1672 240" stroke="#2563EB" stroke-width="3.2" marker-end="url(#m3-blue)"/>
+            <circle cx="1720" cy="240" r="40" fill="#EFF6FF" stroke="#2563EB" stroke-width="2.4"/>
+            <text x="1720" y="249" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="800">环境</text>
+            <path d="M 1720 280 L 1720 314 Q 1720 322, 1712 322 L 1553 322 Q 1545 322, 1545 314 L 1545 276" fill="none" stroke="#2563EB" stroke-width="2.8" stroke-dasharray="5 4" marker-end="url(#m3-blue)"/>
+            <text x="1632" y="354" text-anchor="middle" fill="#2563EB" font-size="22" font-weight="700">仿真反馈回写</text>
+
+            <!-- 4 Definitions Strictly in Order -->
+            <g transform="translate(32, 412)">
+              <text x="0" y="38" fill="#0F172A" font-size="29" font-weight="800">预测与推理</text>
+              <text x="0" y="92" fill="#475569" font-size="22">结合外部信息与约束调用工具，</text>
+              <text x="0" y="130" fill="#475569" font-size="22">推断未来走势与潜在因果</text>
             </g>
 
-            <!-- PHASE 2 VISUAL: Anomaly Detection & Diagnosis (Streaming spike + root cause marker) -->
-            <g>
-              <path d="M 488 308 Q 536 286, 584 304 L 642 302 L 664 188 L 686 312 Q 748 294, 868 298" fill="none" stroke="#334155" stroke-width="3.2"/>
-              <circle cx="664" cy="188" r="10" fill="#FFF1F2" stroke="#BE123C" stroke-width="2.8"/>
-              <circle cx="664" cy="188" r="4" fill="#BE123C"/>
-              <line x1="664" y1="198" x2="664" y2="358" stroke="#BE123C" stroke-width="1.8" stroke-dasharray="4 3"/>
-              <text x="748" y="202" fill="#BE123C" font-size="14" font-weight="800">异常尖峰 + 根因定位</text>
+            <g transform="translate(484, 412)">
+              <text x="0" y="38" fill="#0F172A" font-size="29" font-weight="800">增强与合成</text>
+              <text x="0" y="92" fill="#475569" font-size="22">受控生成或改写保真时序样本，</text>
+              <text x="0" y="130" fill="#475569" font-size="22">缓解稀缺失衡并防语义漂移</text>
             </g>
 
-            <!-- PHASE 3 VISUAL: Forecasting & Reasoning (Current cutoff -> uncertainty fan & conditioned trajectory) -->
-            <g>
-              <path d="M 944 298 Q 992 272, 1044 288 T 1106 266" fill="none" stroke="#334155" stroke-width="3.2"/>
-              <line x1="1106" y1="186" x2="1106" y2="358" stroke="#2563EB" stroke-width="2" stroke-dasharray="5 4"/>
-              <path d="M 1106 266 L 1326 196 L 1326 316 Z" fill="#DBEAFE" opacity="0.75"/>
-              <path d="M 1106 266 Q 1216 226, 1326 244" fill="none" stroke="#1D4ED8" stroke-width="4" stroke-linecap="round"/>
-              <text x="1220" y="196" text-anchor="middle" fill="#1D4ED8" font-size="14" font-weight="800">事件约束外推与机理推理</text>
+            <g transform="translate(936, 412)">
+              <text x="0" y="38" fill="#0F172A" font-size="29" font-weight="800">异常检测与诊断</text>
+              <text x="0" y="92" fill="#475569" font-size="22">核验多维监测证据、防退化，</text>
+              <text x="0" y="130" fill="#475569" font-size="22">串联线索完成故障根因定位</text>
             </g>
 
-            <!-- PHASE 4 VISUAL: Decision Support (State -> Action -> Environment Feedback Loop) -->
-            <g>
-              <path d="M 1400 288 Q 1446 254, 1492 272" fill="none" stroke="#334155" stroke-width="3.2"/>
-              <rect x="1508" y="228" width="120" height="58" rx="10" fill="#1D4ED8"/>
-              <text x="1568" y="263" text-anchor="middle" fill="#FFFFFF" font-size="16" font-weight="800">执行策略</text>
-              <path d="M 1628 257 L 1692 257" stroke="#2563EB" stroke-width="3" marker-end="url(#m3-blue)"/>
-              <circle cx="1736" cy="257" r="34" fill="#EFF6FF" stroke="#2563EB" stroke-width="2.2"/>
-              <text x="1736" y="263" text-anchor="middle" fill="#1D4ED8" font-size="15" font-weight="800">环境</text>
-              <path d="M 1736 291 C 1736 336, 1568 336, 1568 294" fill="none" stroke="#2563EB" stroke-width="2.4" stroke-dasharray="5 4" marker-end="url(#m3-blue)"/>
-              <text x="1652" y="346" text-anchor="middle" fill="#2563EB" font-size="13.5" font-weight="700">仿真与收益回写</text>
+            <g transform="translate(1388, 412)">
+              <text x="0" y="38" fill="#0F172A" font-size="29" font-weight="800">决策支持</text>
+              <text x="0" y="92" fill="#475569" font-size="22">将实时时序状态耦合求解器，</text>
+              <text x="0" y="130" fill="#475569" font-size="22">直接转化为可执行策略动作</text>
             </g>
 
-            <!-- 4 Crisp Typographic Definitions Anchored Below Each Phase -->
-            <!-- Cat 2 (Data Phase) -->
-            <g transform="translate(36, 404)">
-              <text x="0" y="26" fill="#2563EB" font-size="15" font-weight="800">分类二</text>
-              <text x="0" y="64" fill="#0F172A" font-size="25" font-weight="800">增强与合成</text>
-              <text x="0" y="106" fill="#475569" font-size="16">受控生成或改写保真时序样本，</text>
-              <text x="0" y="132" fill="#475569" font-size="16">缓解稀缺与失衡并抑制语义漂移</text>
-            </g>
+            <!-- Bottom Shared Dimensions -->
+            <text x="0" y="672" fill="#64748B" font-size="22" font-weight="800">时序 Agent 的三个要素</text>
 
-            <!-- Cat 3 (Monitoring Phase) -->
-            <g transform="translate(492, 404)">
-              <text x="0" y="26" fill="#2563EB" font-size="15" font-weight="800">分类三</text>
-              <text x="0" y="64" fill="#0F172A" font-size="25" font-weight="800">异常检测与诊断</text>
-              <text x="0" y="106" fill="#475569" font-size="16">筛选多维监测证据、防误报退化，</text>
-              <text x="0" y="132" fill="#475569" font-size="16">并串联线索完成故障根因溯源</text>
-            </g>
-
-            <!-- Cat 1 (Future Phase) -->
-            <g transform="translate(948, 404)">
-              <text x="0" y="26" fill="#1D4ED8" font-size="15" font-weight="800">分类一</text>
-              <text x="0" y="64" fill="#0F172A" font-size="25" font-weight="800">预测与推理</text>
-              <text x="0" y="106" fill="#475569" font-size="16">结合外部信息与约束调用工具，</text>
-              <text x="0" y="132" fill="#475569" font-size="16">推断未来演化轨迹与潜在因果</text>
-            </g>
-
-            <!-- Cat 4 (Control Phase) -->
-            <g transform="translate(1404, 404)">
-              <text x="0" y="26" fill="#1D4ED8" font-size="15" font-weight="800">分类四</text>
-              <text x="0" y="64" fill="#0F172A" font-size="25" font-weight="800">决策支持</text>
-              <text x="0" y="106" fill="#475569" font-size="16">将实时时序状态耦合求解器，</text>
-              <text x="0" y="132" fill="#475569" font-size="16">直接转化为可执行的策略动作</text>
-            </g>
-
-            <!-- BOTTOM UNIFIED DESIGN DIMENSIONS BAR (3 Shared Building Blocks) -->
-            <text x="0" y="656" fill="#64748B" font-size="15.5" font-weight="800" letter-spacing="1.2">共性支撑底座 · 贯穿四类任务的三维设计要素</text>
-
-            <rect x="0" y="678" width="584" height="174" rx="14" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.5"/>
-            <text x="32" y="720" fill="#1D4ED8" font-size="19" font-weight="800">一 · 协作架构</text>
-            <text x="32" y="762" fill="#334155" font-size="16.5" font-weight="600">单智能体闭环  /  多智能体协作  /  辩论博弈</text>
-            <text x="32" y="806" fill="#64748B" font-size="15">决定复杂时序任务如何拆解角色与交叉审校</text>
-
-            <rect x="620" y="678" width="584" height="174" rx="14" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.5"/>
-            <text x="652" y="720" fill="#1D4ED8" font-size="19" font-weight="800">二 · 外部工具</text>
-            <text x="652" y="762" fill="#334155" font-size="16.5" font-weight="600">数据库检索  ·  数据处理  ·  统计与时序模型  ·  仿真求解器</text>
-            <text x="652" y="806" fill="#64748B" font-size="15">提供可验证的精确数值计算与物理约束反馈</text>
-
-            <rect x="1240" y="678" width="584" height="174" rx="14" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.5"/>
-            <text x="1272" y="720" fill="#1D4ED8" font-size="19" font-weight="800">三 · 记忆机制</text>
-            <text x="1272" y="762" fill="#334155" font-size="16.5" font-weight="600">证据日志  ·  历史模式库  ·  复用分析策略</text>
-            <text x="1272" y="806" fill="#64748B" font-size="15">支撑跨时间步一致性与长期经验沉淀</text>
-          </svg>
+            <rect x="0" y="696" width="582" height="158" rx="14" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.6"/>
+            <text x="30" y="754" fill="#1D4ED8" font-size="26" font-weight="800">协作架构</text>
+            <text x="30" y="814" fill="#334155" font-size="22" font-weight="700">单智能体 / 多智能体协作与博弈</text>
+            
+            <rect x="613" y="696" width="582" height="158" rx="14" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.6"/>
+            <text x="643" y="754" fill="#1D4ED8" font-size="26" font-weight="800">外部工具</text>
+            <text x="643" y="814" fill="#334155" font-size="22" font-weight="700">检索 · 数据处理 · 时序模型 · 求解器</text>
+            
+            <rect x="1226" y="696" width="582" height="158" rx="14" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.6"/>
+            <text x="1256" y="754" fill="#1D4ED8" font-size="26" font-weight="800">记忆机制</text>
+            <text x="1256" y="814" fill="#334155" font-size="22" font-weight="700">证据日志 · 模式库 · 复用分析策略</text>
+                      </svg>
         </div>
       </section>
 
-      <!-- ==================== SLIDE 4: 分类一 · 预测与推理 ==================== -->
-      <section class="slide" data-title="分类一：预测与推理">
+      <!-- ==================== SLIDE 04 ==================== -->
+      <section class="slide" data-title="预测与推理">
         <header class="slide-header">
           <div class="header-left">
             <span class="slide-num">04</span>
-            <h1 class="slide-title">分类一：预测与推理</h1>
+            <h1 class="slide-title">预测与推理</h1>
           </div>
           <nav class="slide-agenda-rail"></nav>
         </header>
-
         <div class="visual-stage">
-          <svg viewBox="0 0 1824 890" xmlns="http://www.w3.org/2000/svg">
+          <svg viewBox="0 0 1808 920" xmlns="http://www.w3.org/2000/svg">
             <defs>
-              <marker id="m4-b" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563EB"/>
+              <marker id="m4-b" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+                <path d="M 0 1.2 L 9.5 5 L 0 8.8 L 2.2 5 z" fill="#2563EB"/>
               </marker>
-              <marker id="m4-s" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#64748B"/>
+              <marker id="m4-s" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+                <path d="M 0 1.2 L 9.5 5 L 0 8.8 L 2.2 5 z" fill="#64748B"/>
               </marker>
+                            <g id="ds-s4">
+                <circle cx="0" cy="0" r="17" fill="#EFF6FF" stroke="#2563EB" stroke-width="1.6"/>
+                <!-- DeepSeek signature blue whale silhouette -->
+                <path d="M -11 2 C -11 -5, -4 -9, 3 -7 C 7 -6, 9 -2, 10 2 C 11 0, 12.5 -3, 13.5 -5.5 C 12 -1, 13 3, 11.5 5.5 C 10.2 3.5, 9 4.5, 7.5 6 C 3.5 9.5, -5.5 9.5, -9.5 6.5 C -10.8 5.4, -11 3.8, -11 2 Z" fill="#2563EB"/>
+                <path d="M -9 5.5 C -5 7.2, 1 7.2, 4.5 5.2" fill="none" stroke="#DBEAFE" stroke-width="1.4" stroke-linecap="round"/>
+                <circle cx="-5.5" cy="0.5" r="1.4" fill="#FFFFFF"/>
+              </g>
+              <g id="gpt-s4">
+                <circle cx="0" cy="0" r="17" fill="#EFF6FF" stroke="#2563EB" stroke-width="1.6"/>
+                <g fill="none" stroke="#1D4ED8" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M 0 -5.2 L 4.5 -2.6 L 4.5 2.6 L 0 5.2 L -4.5 2.6 L -4.5 -2.6 Z"/>
+                  <path d="M 0 -5.2 C 0 -10.5, 6.2 -11.5, 8.6 -6.5 C 10.2 -3.2, 7.6 0.2, 4.5 2.6"/>
+                  <path d="M 4.5 -2.6 C 9.1 -5.2, 13.0 -0.2, 9.8 4.4 C 7.7 7.4, 3.6 6.8, 0 5.2"/>
+                  <path d="M 4.5 2.6 C 9.1 5.2, 6.8 11.2, 1.3 10.6 C -2.4 10.2, -4.1 6.5, -4.5 2.6"/>
+                  <path d="M 0 5.2 C 0 10.5, -6.2 11.5, -8.6 6.5 C -10.2 3.2, -7.6 -0.2, -4.5 -2.6"/>
+                  <path d="M -4.5 2.6 C -9.1 5.2, -13.0 0.2, -9.8 -4.4 C -7.7 -7.4, -3.6 -6.8, 0 -5.2"/>
+                  <path d="M -4.5 -2.6 C -9.1 -5.2, -6.8 -11.2, -1.3 -10.6 C 2.4 -10.2, 4.1 -6.5, 4.5 -2.6"/>
+                </g>
+              </g>
             </defs>
 
-            <!-- Top Abstract Definition -->
-            <rect x="0" y="16" width="1824" height="92" rx="12" fill="#EFF6FF"/>
-            <rect x="0" y="16" width="7" height="92" rx="3" fill="#1D4ED8"/>
-            <text x="30" y="50" fill="#1D4ED8" font-size="15" font-weight="800">共性定义</text>
-            <text x="30" y="86" fill="#0F172A" font-size="21.5" font-weight="800">在多源上下文、外部约束与不确定性下，由智能体自主规划分析流程、调度预测与统计工具并迭代修正，完成未来预测或机理推理</text>
+            <rect x="0" y="10" width="1808" height="106" rx="14" fill="#EFF6FF"/>
+            <rect x="0" y="10" width="8" height="106" rx="4" fill="#1D4ED8"/>
+            <text x="32" y="48" fill="#1D4ED8" font-size="22" font-weight="800">共性定义</text>
+            <text x="32" y="92" fill="#0F172A" font-size="24" font-weight="800">在多源上下文与外部约束下，由智能体自主规划流程、调度预测与统计工具并迭代修正，完成未来预测或机理推理</text>
 
-            <!-- Center Mechanism Diagram (Open Canvas) -->
-            <text x="0" y="152" fill="#64748B" font-size="15.5" font-weight="800" letter-spacing="1.2">核心工作机理 · 智能体如何介入预测与推理</text>
+            
+            <!-- Inputs -->
+            <rect x="0" y="186" width="276" height="164" rx="14" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.6"/>
+            <text x="24" y="230" fill="#334155" font-size="23" font-weight="800">历史数值序列</text>
+            <path d="M 28 318 Q 76 266, 124 300 T 222 262 L 250 278" fill="none" stroke="#334155" stroke-width="3.6"/>
 
-            <!-- Left Input Group -->
-            <rect x="0" y="176" width="280" height="148" rx="14" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.6"/>
-            <text x="24" y="212" fill="#334155" font-size="17" font-weight="800">历史数值序列</text>
-            <path d="M 28 294 Q 76 244, 124 278 T 224 242 L 254 256" fill="none" stroke="#334155" stroke-width="3"/>
+            <rect x="0" y="370" width="276" height="164" rx="14" fill="#EFF6FF" stroke="#93C5FD" stroke-width="1.6"/>
+            <text x="24" y="416" fill="#1D4ED8" font-size="23" font-weight="800">语义事件与约束</text>
+            <text x="24" y="464" fill="#334155" font-size="22">突发政策 · 极端天气</text>
+            <text x="24" y="502" fill="#334155" font-size="22">物理守恒 · 因果假设</text>
 
-            <rect x="0" y="346" width="280" height="148" rx="14" fill="#EFF6FF" stroke="#93C5FD" stroke-width="1.6"/>
-            <text x="24" y="384" fill="#1D4ED8" font-size="17" font-weight="800">语义事件与约束</text>
-            <text x="24" y="422" fill="#334155" font-size="15">突发政策 · 极端天气</text>
-            <text x="24" y="452" fill="#334155" font-size="15">物理守恒 · 因果假设</text>
+            <line x1="276" y1="268" x2="340" y2="268" stroke="#64748B" stroke-width="3.2" marker-end="url(#m4-s)"/>
+            <line x1="276" y1="452" x2="340" y2="452" stroke="#2563EB" stroke-width="3.2" marker-end="url(#m4-b)"/>
 
-            <!-- Arrows to Agent Planner -->
-            <path d="M 280 250 L 368 308" stroke="#64748B" stroke-width="2.5" marker-end="url(#m4-s)"/>
-            <path d="M 280 420 L 368 362" stroke="#2563EB" stroke-width="2.5" marker-end="url(#m4-b)"/>
+            <!-- Center Loop -->
+            <rect x="346" y="186" width="820" height="348" rx="18" fill="#FAFBFD" stroke="#2563EB" stroke-width="2.2"/>
+            <text x="376" y="232" fill="#1D4ED8" font-size="23" font-weight="800">智能体多步决策闭环</text>
 
-            <!-- Center Agent Planning & Tool Loop -->
-            <rect x="378" y="176" width="760" height="318" rx="18" fill="#FAFBFD" stroke="#2563EB" stroke-width="2.2"/>
-            <text x="410" y="216" fill="#1D4ED8" font-size="16" font-weight="800">智能体多步决策闭环</text>
+            <rect x="376" y="264" width="228" height="142" rx="12" fill="#EFF6FF" stroke="#1D4ED8" stroke-width="2.6"/>
+            <use href="#gpt-s4" x="466" y="308"/>
+            <use href="#ds-s4" x="514" y="308"/>
+            <text x="490" y="370" text-anchor="middle" fill="#1D4ED8" font-size="26" font-weight="800">特征诊断</text>
 
-            <rect x="410" y="244" width="196" height="126" rx="12" fill="#1D4ED8"/>
-            <text x="508" y="294" text-anchor="middle" fill="#FFFFFF" font-size="19" font-weight="800">特征诊断与分解</text>
-            <text x="508" y="328" text-anchor="middle" fill="#DBEAFE" font-size="14">识别周期、突变与瓶颈</text>
+            <line x1="604" y1="335" x2="646" y2="335" stroke="#2563EB" stroke-width="3.2" marker-end="url(#m4-b)"/>
 
-            <line x1="606" y1="307" x2="658" y2="307" stroke="#2563EB" stroke-width="3" marker-end="url(#m4-b)"/>
+            <rect x="656" y="264" width="236" height="142" rx="12" fill="#FFFFFF" stroke="#2563EB" stroke-width="2.2"/>
+            <text x="774" y="344" text-anchor="middle" fill="#0F172A" font-size="26" font-weight="800">工具选型</text>
 
-            <rect x="668" y="244" width="206" height="126" rx="12" fill="#FFFFFF" stroke="#2563EB" stroke-width="2"/>
-            <text x="771" y="294" text-anchor="middle" fill="#0F172A" font-size="19" font-weight="800">工具选型与组合</text>
-            <text x="771" y="328" text-anchor="middle" fill="#475569" font-size="14">选基座模型 / 算子 / 集成</text>
+            <line x1="892" y1="335" x2="934" y2="335" stroke="#2563EB" stroke-width="3.2" marker-end="url(#m4-b)"/>
 
-            <line x1="874" y1="307" x2="926" y2="307" stroke="#2563EB" stroke-width="3" marker-end="url(#m4-b)"/>
+            <rect x="944" y="264" width="196" height="142" rx="12" fill="#EFF6FF" stroke="#60A5FA" stroke-width="2.2"/>
+            <text x="1042" y="344" text-anchor="middle" fill="#1D4ED8" font-size="26" font-weight="800">回测校准</text>
 
-            <rect x="936" y="244" width="174" height="126" rx="12" fill="#EFF6FF" stroke="#60A5FA" stroke-width="2"/>
-            <text x="1023" y="294" text-anchor="middle" fill="#1D4ED8" font-size="19" font-weight="800">回测与校准</text>
-            <text x="1023" y="328" text-anchor="middle" fill="#334155" font-size="14">校验残差与约束</text>
+            <path d="M 1042 406 L 1042 482 L 490 482 L 490 412" fill="none" stroke="#2563EB" stroke-width="2.8" stroke-dasharray="6 4" marker-end="url(#m4-b)"/>
+            <rect x="628" y="458" width="280" height="44" rx="8" fill="#EFF6FF"/>
+            <text x="768" y="488" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="800">残差反馈 → 修正策略</text>
 
-            <!-- Feedback loop -->
-            <path d="M 1023 370 L 1023 442 L 508 442 L 508 380" fill="none" stroke="#2563EB" stroke-width="2.6" stroke-dasharray="6 4" marker-end="url(#m4-b)"/>
-            <rect x="676" y="424" width="190" height="34" rx="8" fill="#EFF6FF"/>
-            <text x="771" y="446" text-anchor="middle" fill="#1D4ED8" font-size="14.5" font-weight="800">残差反馈 → 修正策略</text>
+            <line x1="1166" y1="360" x2="1220" y2="360" stroke="#2563EB" stroke-width="3.6" marker-end="url(#m4-b)"/>
 
-            <!-- Arrow to Right Outcome Graph -->
-            <line x1="1138" y1="335" x2="1216" y2="335" stroke="#2563EB" stroke-width="3.5" marker-end="url(#m4-b)"/>
+            <!-- Right Comparison Graph -->
+            <rect x="1230" y="186" width="578" height="348" rx="16" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.8"/>
+            <text x="1260" y="232" fill="#0F172A" font-size="24" font-weight="800">轨迹修正与机理输出</text>
+            <line x1="1260" y1="470" x2="1776" y2="470" stroke="#CBD5E1" stroke-width="1.6"/>
+            <line x1="1474" y1="264" x2="1474" y2="470" stroke="#2563EB" stroke-width="2.2" stroke-dasharray="5 4"/>
+            <path d="M 1266 416 Q 1320 364, 1370 394 T 1474 366" fill="none" stroke="#334155" stroke-width="3.8"/>
+            <path d="M 1474 366 Q 1612 384, 1764 410" fill="none" stroke="#94A3B8" stroke-width="3" stroke-dasharray="7 5"/>
+            <path d="M 1474 366 L 1764 268 L 1764 366 Z" fill="#DBEAFE" opacity="0.72"/>
+            <path d="M 1474 366 Q 1608 314, 1764 306" fill="none" stroke="#1D4ED8" stroke-width="4.4" stroke-linecap="round"/>
+            <text x="1674" y="286" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="800">智能体修正预测</text>
+            <text x="1674" y="446" text-anchor="middle" fill="#64748B" font-size="22">纯数值盲推</text>
+            <text x="1474" y="510" text-anchor="middle" fill="#2563EB" font-size="22" font-weight="700">当前时刻</text>
 
-            <!-- Right Geometric Comparison Graph -->
-            <rect x="1226" y="176" width="598" height="318" rx="16" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.8"/>
-            <text x="1256" y="216" fill="#0F172A" font-size="18" font-weight="800">轨迹修正与机理输出</text>
-            <line x1="1260" y1="444" x2="1790" y2="444" stroke="#CBD5E1" stroke-width="1.6"/>
-            <line x1="1478" y1="244" x2="1478" y2="444" stroke="#2563EB" stroke-width="2" stroke-dasharray="5 4"/>
-            <!-- History -->
-            <path d="M 1266 392 Q 1320 342, 1372 372 T 1478 344" fill="none" stroke="#334155" stroke-width="3.5"/>
-            <!-- Naive extrapolation -->
-            <path d="M 1478 344 Q 1620 356, 1776 382" fill="none" stroke="#94A3B8" stroke-width="2.8" stroke-dasharray="7 5"/>
-            <!-- Uncertainty band -->
-            <path d="M 1478 344 L 1776 250 L 1776 346 Z" fill="#DBEAFE" opacity="0.72"/>
-            <!-- Agent conditioned forecast -->
-            <path d="M 1478 344 Q 1614 294, 1776 286" fill="none" stroke="#1D4ED8" stroke-width="4.2" stroke-linecap="round"/>
-            <text x="1690" y="266" text-anchor="middle" fill="#1D4ED8" font-size="14.5" font-weight="800">智能体修正预测</text>
-            <text x="1690" y="406" text-anchor="middle" fill="#64748B" font-size="14">纯数值盲推</text>
-            <text x="1478" y="468" text-anchor="middle" fill="#2563EB" font-size="13.5" font-weight="700">当前时刻 t</text>
+            <!-- Bottom 4 Papers -->
+            <line x1="0" y1="576" x2="1808" y2="576" stroke="#CBD5E1" stroke-width="1.8"/>
+            <text x="0" y="620" fill="#1D4ED8" font-size="22" font-weight="800">代表工作</text>
 
-            <!-- BOTTOM REPRESENTATIVE PAPERS STRIP (Clean editorial columns, NO boxy cards) -->
-            <line x1="0" y1="548" x2="1824" y2="548" stroke="#CBD5E1" stroke-width="1.8"/>
-            <text x="0" y="590" fill="#1D4ED8" font-size="16" font-weight="800" letter-spacing="1.2">代表工作</text>
-
-            <!-- Paper 1 -->
-            <g transform="translate(0, 622)">
-              <text x="0" y="28" fill="#0F172A" font-size="22" font-weight="800">TimeSeriesScientist</text>
-              <text x="0" y="58" fill="#2563EB" font-size="14.5" font-weight="700">2025 · 多智能体协同预测</text>
-              <text x="0" y="102" fill="#475569" font-size="16">拆分诊断、选模、集成与归因角色，</text>
-              <text x="0" y="130" fill="#475569" font-size="16">以验证集反馈自动迭代预测管线</text>
+            <g transform="translate(0, 650)">
+              <text x="0" y="30" fill="#0F172A" font-size="26" font-weight="800">TS-Agent</text>
+              <text x="0" y="70" fill="#2563EB" font-size="22" font-weight="700">2025 · 工具驱动推理</text>
+              <text x="0" y="122" fill="#475569" font-size="22">结合知识库与多步工具箱，</text>
+              <text x="0" y="160" fill="#475569" font-size="22">打通问答、因果与预测任务</text>
             </g>
-            <line x1="440" y1="628" x2="440" y2="830" stroke="#E2E8F0" stroke-width="1.5"/>
+            <line x1="436" y1="654" x2="436" y2="880" stroke="#E2E8F0" stroke-width="1.5"/>
 
-            <!-- Paper 2 -->
-            <g transform="translate(472, 622)">
-              <text x="0" y="28" fill="#0F172A" font-size="22" font-weight="800">TS-Reasoner</text>
-              <text x="0" y="58" fill="#2563EB" font-size="14.5" font-weight="700">TMLR 2026 · 算子编译推理</text>
-              <text x="0" y="102" fill="#475569" font-size="16">将复杂推理与约束预测拆解为程序，</text>
-              <text x="0" y="130" fill="#475569" font-size="16">调用专用算子并结合报错反馈自修</text>
-              <text x="0" y="168" fill="#94A3B8" font-size="14" font-weight="700">→ 第 9 页专题展开</text>
+            <g transform="translate(464, 650)">
+              <text x="0" y="30" fill="#0F172A" font-size="26" font-weight="800">TimeSeriesScientist</text>
+              <text x="0" y="70" fill="#2563EB" font-size="22" font-weight="700">2025 · 多智能体协同</text>
+              <text x="0" y="122" fill="#475569" font-size="22">拆分诊断、选模与集成角色，</text>
+              <text x="0" y="160" fill="#475569" font-size="22">依验证反馈迭代预测管线</text>
             </g>
-            <line x1="904" y1="628" x2="904" y2="830" stroke="#E2E8F0" stroke-width="1.5"/>
+            <line x1="896" y1="654" x2="896" y2="880" stroke="#E2E8F0" stroke-width="1.5"/>
 
-            <!-- Paper 3 -->
-            <g transform="translate(936, 622)">
-              <text x="0" y="28" fill="#0F172A" font-size="22" font-weight="800">NEXUS</text>
-              <text x="0" y="58" fill="#2563EB" font-size="14.5" font-weight="700">2026 · 贝叶斯多流融合</text>
-              <text x="0" y="102" fill="#475569" font-size="16">无泄漏因果回测校准语义事件视角，</text>
-              <text x="0" y="130" fill="#475569" font-size="16">按经验误差协方差与基座模型融合</text>
-              <text x="0" y="168" fill="#94A3B8" font-size="14" font-weight="700">→ 第 10 页专题展开</text>
+            <g transform="translate(924, 650)">
+              <text x="0" y="30" fill="#0F172A" font-size="26" font-weight="800">TS-Reasoner</text>
+              <text x="0" y="70" fill="#2563EB" font-size="22" font-weight="700">TMLR 2026 · 算子编译</text>
+              <text x="0" y="122" fill="#475569" font-size="22">将约束推理拆解为算子程序，</text>
+              <text x="0" y="160" fill="#475569" font-size="22">借报错与伪留出反馈自修</text>
+              <text x="0" y="212" fill="#94A3B8" font-size="22" font-weight="700">→ 第 9 页专题展开</text>
             </g>
-            <line x1="1368" y1="628" x2="1368" y2="830" stroke="#E2E8F0" stroke-width="1.5"/>
+            <line x1="1356" y1="654" x2="1356" y2="880" stroke="#E2E8F0" stroke-width="1.5"/>
 
-            <!-- Paper 4 -->
-            <g transform="translate(1400, 622)">
-              <text x="0" y="28" fill="#0F172A" font-size="22" font-weight="800">TS-Agent</text>
-              <text x="0" y="58" fill="#2563EB" font-size="14.5" font-weight="700">2025 · 推理驱动工具选择</text>
-              <text x="0" y="102" fill="#475569" font-size="16">结合领域知识库与多步推理工具箱，</text>
-              <text x="0" y="130" fill="#475569" font-size="16">打通时序问答、因果分析与预测任务</text>
+            <g transform="translate(1384, 650)">
+              <text x="0" y="30" fill="#0F172A" font-size="26" font-weight="800">NEXUS</text>
+              <text x="0" y="70" fill="#2563EB" font-size="22" font-weight="700">2026 · 贝叶斯融合</text>
+              <text x="0" y="122" fill="#475569" font-size="22">无泄漏因果回测校准语义流，</text>
+              <text x="0" y="160" fill="#475569" font-size="22">按误差协方差融合基座模型</text>
+              <text x="0" y="212" fill="#94A3B8" font-size="22" font-weight="700">→ 第 10 页专题展开</text>
             </g>
           </svg>
         </div>
       </section>
 
-      <!-- ==================== SLIDE 5: 分类二 · 增强与合成 ==================== -->
-      <section class="slide" data-title="分类二：增强与合成">
+      <!-- ==================== SLIDE 05 ==================== -->
+      <section class="slide" data-title="增强与合成">
         <header class="slide-header">
           <div class="header-left">
             <span class="slide-num">05</span>
-            <h1 class="slide-title">分类二：增强与合成</h1>
+            <h1 class="slide-title">增强与合成</h1>
           </div>
           <nav class="slide-agenda-rail"></nav>
         </header>
-
         <div class="visual-stage">
-          <svg viewBox="0 0 1824 890" xmlns="http://www.w3.org/2000/svg">
+          <svg viewBox="0 0 1808 920" xmlns="http://www.w3.org/2000/svg">
             <defs>
-              <marker id="m5-b" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563EB"/>
+              <marker id="m5-b" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+                <path d="M 0 1.2 L 9.5 5 L 0 8.8 L 2.2 5 z" fill="#2563EB"/>
               </marker>
-              <marker id="m5-r" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#BE123C"/>
+              <marker id="m5-r" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+                <path d="M 0 1.2 L 9.5 5 L 0 8.8 L 2.2 5 z" fill="#BE123C"/>
               </marker>
+                            <g id="ds-s5">
+                <circle cx="0" cy="0" r="17" fill="#EFF6FF" stroke="#2563EB" stroke-width="1.6"/>
+                <!-- DeepSeek signature blue whale silhouette -->
+                <path d="M -11 2 C -11 -5, -4 -9, 3 -7 C 7 -6, 9 -2, 10 2 C 11 0, 12.5 -3, 13.5 -5.5 C 12 -1, 13 3, 11.5 5.5 C 10.2 3.5, 9 4.5, 7.5 6 C 3.5 9.5, -5.5 9.5, -9.5 6.5 C -10.8 5.4, -11 3.8, -11 2 Z" fill="#2563EB"/>
+                <path d="M -9 5.5 C -5 7.2, 1 7.2, 4.5 5.2" fill="none" stroke="#DBEAFE" stroke-width="1.4" stroke-linecap="round"/>
+                <circle cx="-5.5" cy="0.5" r="1.4" fill="#FFFFFF"/>
+              </g>
+              <g id="gpt-s5">
+                <circle cx="0" cy="0" r="17" fill="#EFF6FF" stroke="#2563EB" stroke-width="1.6"/>
+                <g fill="none" stroke="#1D4ED8" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M 0 -5.2 L 4.5 -2.6 L 4.5 2.6 L 0 5.2 L -4.5 2.6 L -4.5 -2.6 Z"/>
+                  <path d="M 0 -5.2 C 0 -10.5, 6.2 -11.5, 8.6 -6.5 C 10.2 -3.2, 7.6 0.2, 4.5 2.6"/>
+                  <path d="M 4.5 -2.6 C 9.1 -5.2, 13.0 -0.2, 9.8 4.4 C 7.7 7.4, 3.6 6.8, 0 5.2"/>
+                  <path d="M 4.5 2.6 C 9.1 5.2, 6.8 11.2, 1.3 10.6 C -2.4 10.2, -4.1 6.5, -4.5 2.6"/>
+                  <path d="M 0 5.2 C 0 10.5, -6.2 11.5, -8.6 6.5 C -10.2 3.2, -7.6 -0.2, -4.5 -2.6"/>
+                  <path d="M -4.5 2.6 C -9.1 5.2, -13.0 0.2, -9.8 -4.4 C -7.7 -7.4, -3.6 -6.8, 0 -5.2"/>
+                  <path d="M -4.5 -2.6 C -9.1 -5.2, -6.8 -11.2, -1.3 -10.6 C 2.4 -10.2, 4.1 -6.5, 4.5 -2.6"/>
+                </g>
+              </g>
             </defs>
 
-            <!-- Top Abstract Definition -->
-            <rect x="0" y="16" width="1824" height="92" rx="12" fill="#EFF6FF"/>
-            <rect x="0" y="16" width="7" height="92" rx="3" fill="#1D4ED8"/>
-            <text x="30" y="50" fill="#1D4ED8" font-size="15" font-weight="800">共性定义</text>
-            <text x="30" y="86" fill="#0F172A" font-size="21.5" font-weight="800">面对小样本、长尾场景与分布偏移，由智能体解析语义与统计条件，驱动生成或编辑工具构造保真时序并严控语义漂移</text>
+            <rect x="0" y="10" width="1808" height="106" rx="14" fill="#EFF6FF"/>
+            <rect x="0" y="10" width="8" height="106" rx="4" fill="#1D4ED8"/>
+            <text x="32" y="48" fill="#1D4ED8" font-size="22" font-weight="800">共性定义</text>
+            <text x="32" y="92" fill="#0F172A" font-size="24" font-weight="800">面对小样本与分布偏移，由智能体解析语义与统计条件，驱动生成或编辑工具构造保真时序并严控语义漂移</text>
 
-            <!-- Center Mechanism Diagram -->
-            <text x="0" y="152" fill="#64748B" font-size="15.5" font-weight="800" letter-spacing="1.2">核心工作机理 · 受控生成与保真度门控闭环</text>
+            
+            <!-- Step 1 -->
+            <rect x="0" y="186" width="336" height="332" rx="16" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.6"/>
+            <text x="26" y="232" fill="#334155" font-size="24" font-weight="800">稀疏样本 + 语义条件</text>
+            <line x1="28" y1="364" x2="308" y2="364" stroke="#CBD5E1" stroke-width="1.6"/>
+            <circle cx="58" cy="322" r="6.5" fill="#64748B"/>
+            <circle cx="114" cy="282" r="6.5" fill="#64748B"/>
+            <circle cx="196" cy="328" r="6.5" fill="#64748B"/>
+            <circle cx="274" cy="270" r="6.5" fill="#64748B"/>
+            <path d="M 58 322 L 114 282 M 196 328 L 274 270" stroke="#94A3B8" stroke-width="2.4" stroke-dasharray="5 4"/>
+            <rect x="26" y="402" width="284" height="76" rx="10" fill="#EFF6FF"/>
+            <text x="168" y="449" text-anchor="middle" fill="#1D4ED8" font-size="24" font-weight="800">目标分布与约束</text>
 
-            <!-- Step 1: Sparse Input -->
-            <rect x="0" y="178" width="320" height="316" rx="16" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.6"/>
-            <text x="26" y="218" fill="#334155" font-size="18" font-weight="800">稀疏样本 + 语义条件</text>
-            <line x1="28" y1="358" x2="292" y2="358" stroke="#CBD5E1" stroke-width="1.5"/>
-            <circle cx="56" cy="316" r="6" fill="#64748B"/>
-            <circle cx="104" cy="276" r="6" fill="#64748B"/>
-            <circle cx="186" cy="322" r="6" fill="#64748B"/>
-            <circle cx="258" cy="264" r="6" fill="#64748B"/>
-            <path d="M 56 316 L 104 276 M 186 322 L 258 264" stroke="#94A3B8" stroke-width="2" stroke-dasharray="4 4"/>
-            <rect x="26" y="388" width="268" height="76" rx="10" fill="#EFF6FF"/>
-            <text x="160" y="422" text-anchor="middle" fill="#1D4ED8" font-size="15" font-weight="800">目标分布 / 场景描述</text>
-            <text x="160" y="448" text-anchor="middle" fill="#475569" font-size="13.5">趋势、周期与边界约束</text>
+            <line x1="336" y1="352" x2="393" y2="352" stroke="#2563EB" stroke-width="3.2" marker-end="url(#m5-b)"/>
 
-            <line x1="320" y1="336" x2="392" y2="336" stroke="#2563EB" stroke-width="3" marker-end="url(#m5-b)"/>
+            <!-- Step 2 -->
+            <rect x="398" y="186" width="440" height="332" rx="16" fill="#FAFBFD" stroke="#2563EB" stroke-width="2.2"/>
+            <text x="426" y="232" fill="#1D4ED8" font-size="24" font-weight="800">条件拆解与工具合成</text>
+            <rect x="426" y="258" width="384" height="100" rx="12" fill="#EFF6FF" stroke="#1D4ED8" stroke-width="2.6"/>
+            <use href="#gpt-s5" x="478" y="308"/>
+            <use href="#ds-s5" x="522" y="308"/>
+            <text x="652" y="317" text-anchor="middle" fill="#1D4ED8" font-size="26" font-weight="800">时序语义理解</text>
 
-            <!-- Step 2: Agent Condition Planner + Generator -->
-            <rect x="402" y="178" width="440" height="316" rx="16" fill="#FAFBFD" stroke="#2563EB" stroke-width="2.2"/>
-            <text x="430" y="218" fill="#1D4ED8" font-size="18" font-weight="800">条件拆解与工具合成</text>
-            <rect x="430" y="246" width="384" height="90" rx="12" fill="#1D4ED8"/>
-            <text x="622" y="286" text-anchor="middle" fill="#FFFFFF" font-size="19" font-weight="800">智能体条件编排</text>
-            <text x="622" y="316" text-anchor="middle" fill="#DBEAFE" font-size="14.5">将语义意图翻译为可执行的统计与形态指令</text>
+            <line x1="618" y1="358" x2="618" y2="392" stroke="#2563EB" stroke-width="3" marker-end="url(#m5-b)"/>
 
-            <line x1="622" y1="336" x2="622" y2="372" stroke="#2563EB" stroke-width="2.8" marker-end="url(#m5-b)"/>
+            <rect x="426" y="402" width="384" height="92" rx="12" fill="#FFFFFF" stroke="#2563EB" stroke-width="2"/>
+            <text x="618" y="457" text-anchor="middle" fill="#0F172A" font-size="25" font-weight="800">生成 / 编辑工具执行</text>
 
-            <rect x="430" y="382" width="384" height="84" rx="12" fill="#FFFFFF" stroke="#2563EB" stroke-width="2"/>
-            <text x="622" y="418" text-anchor="middle" fill="#0F172A" font-size="18.5" font-weight="800">生成 / 编辑工具执行</text>
-            <text x="622" y="446" text-anchor="middle" fill="#64748B" font-size="14.5">扩散、流匹配、分解重组或局部编辑</text>
+            <line x1="838" y1="352" x2="895" y2="352" stroke="#2563EB" stroke-width="3.2" marker-end="url(#m5-b)"/>
 
-            <line x1="842" y1="336" x2="914" y2="336" stroke="#2563EB" stroke-width="3" marker-end="url(#m5-b)"/>
+            <!-- Step 3 -->
+            <rect x="900" y="186" width="368" height="332" rx="16" fill="#FFFFFF" stroke="#1D4ED8" stroke-width="2.2"/>
+            <text x="1084" y="232" text-anchor="middle" fill="#1D4ED8" font-size="24" font-weight="800">保真度与漂移门控</text>
+            <path d="M 946 364 Q 1016 254, 1084 364" fill="#DBEAFE" opacity="0.72" stroke="#2563EB" stroke-width="2.8"/>
+            <path d="M 1012 364 Q 1088 266, 1178 364" fill="none" stroke="#334155" stroke-width="2.8" stroke-dasharray="6 4"/>
+            <line x1="934" y1="364" x2="1234" y2="364" stroke="#CBD5E1" stroke-width="1.6"/>
+            <text x="1084" y="410" text-anchor="middle" fill="#334155" font-size="22" font-weight="700">统计一致 + 语义对齐</text>
+            <rect x="936" y="438" width="296" height="52" rx="10" fill="#FFF1F2" stroke="#FECDD3" stroke-width="1.6"/>
+            <text x="1084" y="472" text-anchor="middle" fill="#BE123C" font-size="22" font-weight="800">语义漂移 → 打回重写</text>
 
-            <!-- Step 3: Semantic Drift Gatekeeper -->
-            <rect x="924" y="178" width="320" height="316" rx="16" fill="#FFFFFF" stroke="#1D4ED8" stroke-width="2.2"/>
-            <text x="1084" y="220" text-anchor="middle" fill="#1D4ED8" font-size="18" font-weight="800">保真度与漂移门控</text>
-            <!-- Overlapping distribution curves -->
-            <path d="M 960 356 Q 1020 248, 1084 356" fill="#DBEAFE" opacity="0.7" stroke="#2563EB" stroke-width="2.5"/>
-            <path d="M 1016 356 Q 1088 260, 1170 356" fill="none" stroke="#334155" stroke-width="2.5" stroke-dasharray="5 4"/>
-            <line x1="950" y1="356" x2="1216" y2="356" stroke="#CBD5E1" stroke-width="1.5"/>
-            <text x="1084" y="392" text-anchor="middle" fill="#334155" font-size="15" font-weight="700">统计一致性 + 语义对齐校验</text>
-            <rect x="962" y="416" width="244" height="44" rx="8" fill="#FFF1F2" stroke="#FECDD3" stroke-width="1.4"/>
-            <text x="1084" y="444" text-anchor="middle" fill="#BE123C" font-size="14.5" font-weight="800">若出现语义漂移 → 打回重写</text>
+            <path d="M 1084 518 L 1084 548 L 618 548 L 618 499" fill="none" stroke="#BE123C" stroke-width="2.6" stroke-dasharray="6 4" marker-end="url(#m5-r)"/>
 
-            <!-- Rejection feedback arc -->
-            <path d="M 1084 494 L 1084 522 L 622 522 L 622 476" fill="none" stroke="#BE123C" stroke-width="2.4" stroke-dasharray="6 4" marker-end="url(#m5-r)"/>
+            <line x1="1268" y1="352" x2="1325" y2="352" stroke="#2563EB" stroke-width="3.6" marker-end="url(#m5-b)"/>
 
-            <line x1="1244" y1="336" x2="1316" y2="336" stroke="#2563EB" stroke-width="3.5" marker-end="url(#m5-b)"/>
+            <!-- Step 4 -->
+            <rect x="1330" y="186" width="478" height="332" rx="16" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.8"/>
+            <text x="1360" y="232" fill="#0F172A" font-size="24" font-weight="800">高保真增强样本族</text>
+            <line x1="1360" y1="444" x2="1776" y2="444" stroke="#CBD5E1" stroke-width="1.6"/>
+            <path d="M 1368 374 Q 1430 282, 1492 348 T 1620 304 T 1768 324" fill="none" stroke="#93C5FD" stroke-width="2.8"/>
+            <path d="M 1368 398 Q 1430 310, 1492 374 T 1620 332 T 1768 352" fill="none" stroke="#60A5FA" stroke-width="2.8"/>
+            <path d="M 1368 386 Q 1430 296, 1492 360 T 1620 318 T 1768 338" fill="none" stroke="#1D4ED8" stroke-width="4.2"/>
+            <text x="1569" y="490" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="800">保真结构 · 覆盖长尾场景</text>
 
-            <!-- Step 4: High-Fidelity Synthetic Family -->
-            <rect x="1326" y="178" width="498" height="316" rx="16" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.8"/>
-            <text x="1356" y="218" fill="#0F172A" font-size="18" font-weight="800">高保真增强样本族</text>
-            <line x1="1356" y1="436" x2="1792" y2="436" stroke="#CBD5E1" stroke-width="1.6"/>
-            <path d="M 1364 366 Q 1430 272, 1496 340 T 1630 296 T 1784 316" fill="none" stroke="#93C5FD" stroke-width="2.4"/>
-            <path d="M 1364 388 Q 1430 300, 1496 364 T 1630 322 T 1784 342" fill="none" stroke="#60A5FA" stroke-width="2.4"/>
-            <path d="M 1364 378 Q 1430 286, 1496 352 T 1630 308 T 1784 328" fill="none" stroke="#1D4ED8" stroke-width="4"/>
-            <text x="1575" y="468" text-anchor="middle" fill="#1D4ED8" font-size="14.5" font-weight="800">保留真实统计结构 · 覆盖稀缺长尾场景</text>
+            <!-- Bottom 4 Papers -->
+            <line x1="0" y1="576" x2="1808" y2="576" stroke="#CBD5E1" stroke-width="1.8"/>
+            <text x="0" y="620" fill="#1D4ED8" font-size="22" font-weight="800">代表工作</text>
 
-            <!-- BOTTOM REPRESENTATIVE PAPERS STRIP -->
-            <line x1="0" y1="556" x2="1824" y2="556" stroke="#CBD5E1" stroke-width="1.8"/>
-            <text x="0" y="596" fill="#1D4ED8" font-size="16" font-weight="800" letter-spacing="1.2">代表工作</text>
-
-            <g transform="translate(0, 628)">
-              <text x="0" y="28" fill="#0F172A" font-size="22" font-weight="800">TESSA</text>
-              <text x="0" y="58" fill="#2563EB" font-size="14.5" font-weight="700">EACL 2026 · 语义引导增强</text>
-              <text x="0" y="102" fill="#475569" font-size="16">针对小样本场景解析任务语义，</text>
-              <text x="0" y="130" fill="#475569" font-size="16">定向扩充分布一致的训练样本</text>
+            <g transform="translate(0, 650)">
+              <text x="0" y="30" fill="#0F172A" font-size="26" font-weight="800">BRIDGE</text>
+              <text x="0" y="70" fill="#2563EB" font-size="22" font-weight="700">ICML 2025 · 文本桥接</text>
+              <text x="0" y="122" fill="#475569" font-size="22">打通文本描述与连续生成，</text>
+              <text x="0" y="160" fill="#475569" font-size="22">支持跨领域零样本合成</text>
             </g>
-            <line x1="440" y1="634" x2="440" y2="830" stroke="#E2E8F0" stroke-width="1.5"/>
+            <line x1="436" y1="654" x2="436" y2="880" stroke="#E2E8F0" stroke-width="1.5"/>
 
-            <g transform="translate(472, 628)">
-              <text x="0" y="28" fill="#0F172A" font-size="22" font-weight="800">DCATS</text>
-              <text x="0" y="58" fill="#2563EB" font-size="14.5" font-weight="700">2025 · 解耦可控合成</text>
-              <text x="0" y="102" fill="#475569" font-size="16">将语义约束与统计属性解耦编排，</text>
-              <text x="0" y="130" fill="#475569" font-size="16">实现细粒度可控的时序样本构造</text>
+            <g transform="translate(464, 650)">
+              <text x="0" y="30" fill="#0F172A" font-size="26" font-weight="800">MERIT</text>
+              <text x="0" y="70" fill="#2563EB" font-size="22" font-weight="700">ACL 2025 · 反思校验</text>
+              <text x="0" y="122" fill="#475569" font-size="22">引入多步审校与反馈重写，</text>
+              <text x="0" y="160" fill="#475569" font-size="22">防止标签与分布污染</text>
             </g>
-            <line x1="904" y1="634" x2="904" y2="830" stroke="#E2E8F0" stroke-width="1.5"/>
+            <line x1="896" y1="654" x2="896" y2="880" stroke="#E2E8F0" stroke-width="1.5"/>
 
-            <g transform="translate(936, 628)">
-              <text x="0" y="28" fill="#0F172A" font-size="22" font-weight="800">MERIT</text>
-              <text x="0" y="58" fill="#2563EB" font-size="14.5" font-weight="700">ACL 2025 · 反思校验增强</text>
-              <text x="0" y="102" fill="#475569" font-size="16">引入多步质量审校与反馈重写，</text>
-              <text x="0" y="130" fill="#475569" font-size="16">避免合成样本引入标签与分布污染</text>
+            <g transform="translate(924, 650)">
+              <text x="0" y="30" fill="#0F172A" font-size="26" font-weight="800">DCATS</text>
+              <text x="0" y="70" fill="#2563EB" font-size="22" font-weight="700">2025 · 解耦可控合成</text>
+              <text x="0" y="122" fill="#475569" font-size="22">解耦语义约束与统计属性，</text>
+              <text x="0" y="160" fill="#475569" font-size="22">实现细粒度可控时序合成</text>
             </g>
-            <line x1="1368" y1="634" x2="1368" y2="830" stroke="#E2E8F0" stroke-width="1.5"/>
+            <line x1="1356" y1="654" x2="1356" y2="880" stroke="#E2E8F0" stroke-width="1.5"/>
 
-            <g transform="translate(1400, 628)">
-              <text x="0" y="28" fill="#0F172A" font-size="22" font-weight="800">BRIDGE</text>
-              <text x="0" y="58" fill="#2563EB" font-size="14.5" font-weight="700">ICML 2025 · 文本到时序桥接</text>
-              <text x="0" y="102" fill="#475569" font-size="16">打通自然语言场景描述与连续生成，</text>
-              <text x="0" y="130" fill="#475569" font-size="16">支持跨领域零样本时序合成</text>
+            <g transform="translate(1384, 650)">
+              <text x="0" y="30" fill="#0F172A" font-size="26" font-weight="800">TESSA</text>
+              <text x="0" y="70" fill="#2563EB" font-size="22" font-weight="700">EACL 2026 · 语义增强</text>
+              <text x="0" y="122" fill="#475569" font-size="22">解析小样本任务语义，</text>
+              <text x="0" y="160" fill="#475569" font-size="22">定向扩充分布一致样本</text>
             </g>
           </svg>
         </div>
       </section>
 
-      <!-- ==================== SLIDE 6: 分类三 · 异常检测与诊断 ==================== -->
-      <section class="slide" data-title="分类三：异常检测与诊断">
+      <!-- ==================== SLIDE 06 ==================== -->
+      <section class="slide" data-title="异常检测与诊断">
         <header class="slide-header">
           <div class="header-left">
             <span class="slide-num">06</span>
-            <h1 class="slide-title">分类三：异常检测与诊断</h1>
+            <h1 class="slide-title">异常检测与诊断</h1>
           </div>
           <nav class="slide-agenda-rail"></nav>
         </header>
-
         <div class="visual-stage">
-          <svg viewBox="0 0 1824 890" xmlns="http://www.w3.org/2000/svg">
+          <svg viewBox="0 0 1808 920" xmlns="http://www.w3.org/2000/svg">
             <defs>
-              <marker id="m6-b" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563EB"/>
+              <marker id="m6-b" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+                <path d="M 0 1.2 L 9.5 5 L 0 8.8 L 2.2 5 z" fill="#2563EB"/>
               </marker>
-              <marker id="m6-r" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#BE123C"/>
+              <marker id="m6-r" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+                <path d="M 0 1.2 L 9.5 5 L 0 8.8 L 2.2 5 z" fill="#BE123C"/>
               </marker>
             </defs>
 
-            <!-- Top Abstract Definition -->
-            <rect x="0" y="16" width="1824" height="92" rx="12" fill="#EFF6FF"/>
-            <rect x="0" y="16" width="7" height="92" rx="3" fill="#1D4ED8"/>
-            <text x="30" y="50" fill="#1D4ED8" font-size="15" font-weight="800">共性定义</text>
-            <text x="30" y="86" fill="#0F172A" font-size="21.5" font-weight="800">面向连续监测流与系统故障，由智能体协同基础检测器与分析工具核验证据、避免误报退化，并串联跨指标线索定位根因</text>
+            <rect x="0" y="10" width="1808" height="106" rx="14" fill="#EFF6FF"/>
+            <rect x="0" y="10" width="8" height="106" rx="4" fill="#1D4ED8"/>
+            <text x="32" y="48" fill="#1D4ED8" font-size="22" font-weight="800">共性定义</text>
+            <text x="32" y="92" fill="#0F172A" font-size="24" font-weight="800">面向连续监测流与系统故障，由智能体协同检测器与分析工具核验证据、防误报退化，并串联线索定位根因</text>
 
-            <!-- Center Mechanism: Three-Stage Progressive Funnel -->
-            <text x="0" y="152" fill="#64748B" font-size="15.5" font-weight="800" letter-spacing="1.2">核心工作机理 · 检测初筛 → 证据核验 → 根因溯源</text>
+            
+            <!-- Stage 1 -->
+            <rect x="0" y="186" width="516" height="348" rx="16" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.6"/>
+            <text x="26" y="232" fill="#0F172A" font-size="24" font-weight="800">一 · 流式监测与初筛</text>
 
-            <!-- Stage 1: Multi-channel streaming signal -->
-            <rect x="0" y="178" width="460" height="320" rx="16" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.6"/>
-            <text x="28" y="218" fill="#0F172A" font-size="18.5" font-weight="800">一 · 多通道流式监测与初筛</text>
-            <!-- Channel A with real spike -->
-            <text x="28" y="266" fill="#64748B" font-size="13.5" font-weight="700">通道 A</text>
-            <path d="M 88 266 L 176 266 L 194 214 L 212 272 L 424 266" fill="none" stroke="#334155" stroke-width="2.6"/>
-            <circle cx="194" cy="214" r="6" fill="#BE123C"/>
-            <text x="242" y="226" fill="#BE123C" font-size="13" font-weight="800">真异常尖峰</text>
-            <!-- Channel B with benign noise -->
-            <text x="28" y="346" fill="#64748B" font-size="13.5" font-weight="700">通道 B</text>
-            <path d="M 88 346 Q 160 338, 220 346 L 288 346 L 302 316 L 316 350 L 424 346" fill="none" stroke="#64748B" stroke-width="2.4"/>
-            <circle cx="302" cy="316" r="5" fill="#94A3B8"/>
-            <text x="358" y="318" fill="#64748B" font-size="13" font-weight="700">瞬时伪噪点</text>
-            <!-- Channel C -->
-            <text x="28" y="422" fill="#64748B" font-size="13.5" font-weight="700">通道 C</text>
-            <path d="M 88 422 Q 140 408, 194 426 T 310 416 T 424 422" fill="none" stroke="#64748B" stroke-width="2.4"/>
-            <text x="230" y="472" text-anchor="middle" fill="#475569" font-size="14.5">基础检测器给出候选告警集合</text>
+            <text x="26" y="318" fill="#64748B" font-size="22" font-weight="700">通道 A</text>
+            <path d="M 114 318 L 196 318 L 216 268 L 236 324 L 484 318" fill="none" stroke="#334155" stroke-width="3"/>
+            <circle cx="216" cy="268" r="6.5" fill="#BE123C"/>
+            <text x="348" y="290" fill="#BE123C" font-size="22" font-weight="800">真异常尖峰</text>
 
-            <line x1="460" y1="338" x2="532" y2="338" stroke="#2563EB" stroke-width="3.5" marker-end="url(#m6-b)"/>
+            <text x="26" y="406" fill="#64748B" font-size="22" font-weight="700">通道 B</text>
+            <path d="M 114 406 Q 186 396, 240 406 L 296 406 L 310 376 L 324 410 L 484 406" fill="none" stroke="#64748B" stroke-width="2.8"/>
+            <circle cx="310" cy="376" r="5.5" fill="#94A3B8"/>
+            <text x="364" y="380" fill="#64748B" font-size="22" font-weight="700">瞬时噪点</text>
 
-            <!-- Stage 2: Evidence Verification & Non-Degradation -->
-            <rect x="542" y="178" width="600" height="320" rx="16" fill="#EFF6FF" stroke="#2563EB" stroke-width="2.2"/>
-            <text x="572" y="218" fill="#1D4ED8" font-size="18.5" font-weight="800">二 · 智能体证据交叉核验</text>
+            
+            <line x1="516" y1="360" x2="564" y2="360" stroke="#2563EB" stroke-width="3.6" marker-end="url(#m6-b)"/>
 
-            <rect x="572" y="246" width="254" height="106" rx="12" fill="#FFFFFF" stroke="#60A5FA" stroke-width="1.6"/>
-            <text x="699" y="286" text-anchor="middle" fill="#0F172A" font-size="17.5" font-weight="800">调用信号处理工具</text>
-            <text x="699" y="318" text-anchor="middle" fill="#64748B" font-size="14">频谱、局部放大与周期对齐</text>
+            <!-- Stage 2 -->
+            <rect x="574" y="186" width="632" height="348" rx="16" fill="#EFF6FF" stroke="#2563EB" stroke-width="2.2"/>
+            <text x="602" y="232" fill="#1D4ED8" font-size="24" font-weight="800">二 · 智能体证据交叉核验</text>
 
-            <rect x="858" y="246" width="254" height="106" rx="12" fill="#FFFFFF" stroke="#60A5FA" stroke-width="1.6"/>
-            <text x="985" y="286" text-anchor="middle" fill="#0F172A" font-size="17.5" font-weight="800">对照历史证据日志</text>
-            <text x="985" y="318" text-anchor="middle" fill="#64748B" font-size="14">区分真实故障与正常运维波动</text>
+            <rect x="602" y="264" width="276" height="104" rx="12" fill="#FFFFFF" stroke="#60A5FA" stroke-width="1.8"/>
+            <text x="740" y="325" text-anchor="middle" fill="#0F172A" font-size="25" font-weight="800">调用工具</text>
 
-            <rect x="572" y="382" width="540" height="86" rx="12" fill="#1D4ED8"/>
-            <text x="842" y="418" text-anchor="middle" fill="#FFFFFF" font-size="18" font-weight="800">核心原则：防退化与抗流式污染</text>
-            <text x="842" y="446" text-anchor="middle" fill="#DBEAFE" font-size="14.5">滤除假阳性告警，同时确保不弱于底层强检测器</text>
+            <rect x="902" y="264" width="276" height="104" rx="12" fill="#FFFFFF" stroke="#60A5FA" stroke-width="1.8"/>
+            <text x="1040" y="325" text-anchor="middle" fill="#0F172A" font-size="25" font-weight="800">对照证据日志</text>
 
-            <line x1="1142" y1="338" x2="1214" y2="338" stroke="#2563EB" stroke-width="3.5" marker-end="url(#m6-b)"/>
+            <rect x="602" y="396" width="576" height="104" rx="12" fill="#FFFFFF" stroke="#1D4ED8" stroke-width="2.6"/>
+            <text x="890" y="457" text-anchor="middle" fill="#1D4ED8" font-size="25" font-weight="800">核心原则：防退化与抗流式污染</text>
 
-            <!-- Stage 3: Root-Cause Topology Tree -->
-            <rect x="1224" y="178" width="600" height="320" rx="16" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.8"/>
-            <text x="1254" y="218" fill="#0F172A" font-size="18.5" font-weight="800">三 · 跨指标根因拓扑溯源</text>
+            <line x1="1206" y1="360" x2="1254" y2="360" stroke="#2563EB" stroke-width="3.6" marker-end="url(#m6-b)"/>
 
-            <!-- Causal Topology Graph -->
-            <circle cx="1524" cy="282" r="28" fill="#FFF1F2" stroke="#BE123C" stroke-width="3"/>
-            <text x="1524" y="288" text-anchor="middle" fill="#BE123C" font-size="15" font-weight="800">根因</text>
+            <!-- Stage 3 -->
+            <rect x="1264" y="186" width="544" height="348" rx="16" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.8"/>
+            <text x="1292" y="232" fill="#0F172A" font-size="24" font-weight="800">三 · 跨指标根因溯源</text>
 
-            <line x1="1500" y1="304" x2="1396" y2="372" stroke="#BE123C" stroke-width="2.5" marker-end="url(#m6-r)"/>
-            <line x1="1524" y1="310" x2="1524" y2="372" stroke="#2563EB" stroke-width="2.5" marker-end="url(#m6-b)"/>
-            <line x1="1548" y1="304" x2="1652" y2="372" stroke="#94A3B8" stroke-width="2"/>
+            <circle cx="1536" cy="296" r="36" fill="#FFF1F2" stroke="#BE123C" stroke-width="3.2"/>
+            <text x="1536" y="304" text-anchor="middle" fill="#BE123C" font-size="22" font-weight="800">根因</text>
 
-            <rect x="1312" y="382" width="156" height="52" rx="10" fill="#EFF6FF" stroke="#2563EB" stroke-width="1.8"/>
-            <text x="1390" y="414" text-anchor="middle" fill="#1D4ED8" font-size="15.5" font-weight="800">主告警通道 A</text>
+            <line x1="1536" y1="332" x2="1536" y2="360" stroke="#334155" stroke-width="2.6"/>
+            <line x1="1372" y1="360" x2="1700" y2="360" stroke="#94A3B8" stroke-width="2.4"/>
+            <line x1="1372" y1="360" x2="1372" y2="393" stroke="#BE123C" stroke-width="2.8" marker-end="url(#m6-r)"/>
+            <line x1="1536" y1="360" x2="1536" y2="393" stroke="#2563EB" stroke-width="2.8" marker-end="url(#m6-b)"/>
+            <line x1="1700" y1="360" x2="1700" y2="393" stroke="#94A3B8" stroke-width="2.4"/>
 
-            <rect x="1484" y="382" width="132" height="52" rx="10" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.5"/>
-            <text x="1550" y="414" text-anchor="middle" fill="#334155" font-size="15" font-weight="700">级联指标</text>
+            <rect x="1296" y="398" width="152" height="54" rx="10" fill="#EFF6FF" stroke="#2563EB" stroke-width="2"/>
+            <text x="1372" y="434" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="800">主告警 A</text>
 
-            <rect x="1632" y="382" width="144" height="52" rx="10" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.5"/>
-            <text x="1704" y="414" text-anchor="middle" fill="#64748B" font-size="15" font-weight="700">已过滤噪点</text>
+            <rect x="1464" y="398" width="144" height="54" rx="10" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.6"/>
+            <text x="1536" y="434" text-anchor="middle" fill="#334155" font-size="22" font-weight="700">级联指标</text>
 
-            <text x="1524" y="472" text-anchor="middle" fill="#475569" font-size="14.5">输出带证据链的故障归因与处置建议</text>
+            <rect x="1624" y="398" width="152" height="54" rx="10" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.6"/>
+            <text x="1700" y="434" text-anchor="middle" fill="#64748B" font-size="22" font-weight="700">过滤噪点</text>
 
-            <!-- BOTTOM REPRESENTATIVE PAPERS STRIP -->
-            <line x1="0" y1="556" x2="1824" y2="556" stroke="#CBD5E1" stroke-width="1.8"/>
-            <text x="0" y="596" fill="#1D4ED8" font-size="16" font-weight="800" letter-spacing="1.2">代表工作</text>
+            
+            <!-- Bottom 4 Papers -->
+            <line x1="0" y1="576" x2="1808" y2="576" stroke="#CBD5E1" stroke-width="1.8"/>
+            <text x="0" y="620" fill="#1D4ED8" font-size="22" font-weight="800">代表工作</text>
 
-            <g transform="translate(0, 628)">
-              <text x="0" y="28" fill="#0F172A" font-size="22" font-weight="800">ARGOS</text>
-              <text x="0" y="58" fill="#2563EB" font-size="14.5" font-weight="700">2025 · 多智能体证据核验</text>
-              <text x="0" y="102" fill="#475569" font-size="16">协同规则生成与多视角交叉验证，</text>
-              <text x="0" y="130" fill="#475569" font-size="16">稳定提升基础异常检测器的精准度</text>
+            <g transform="translate(0, 650)">
+              <text x="0" y="30" fill="#0F172A" font-size="26" font-weight="800">AgentFM</text>
+              <text x="0" y="70" fill="#2563EB" font-size="22" font-weight="700">FSE 2025 · 运维排障</text>
+              <text x="0" y="122" fill="#475569" font-size="22">联合多维时序与运维日志，</text>
+              <text x="0" y="160" fill="#475569" font-size="22">打通告警到根因定位闭环</text>
             </g>
-            <line x1="440" y1="634" x2="440" y2="830" stroke="#E2E8F0" stroke-width="1.5"/>
+            <line x1="436" y1="654" x2="436" y2="880" stroke="#E2E8F0" stroke-width="1.5"/>
 
-            <g transform="translate(472, 628)">
-              <text x="0" y="28" fill="#0F172A" font-size="22" font-weight="800">CALM</text>
-              <text x="0" y="58" fill="#2563EB" font-size="14.5" font-weight="700">2025 · 流式自适应校准</text>
-              <text x="0" y="102" fill="#475569" font-size="16">在连续数据流中动态维护上下文，</text>
-              <text x="0" y="130" fill="#475569" font-size="16">抑制概念漂移引发的误报累积</text>
+            <g transform="translate(464, 650)">
+              <text x="0" y="30" fill="#0F172A" font-size="26" font-weight="800">ARGOS</text>
+              <text x="0" y="70" fill="#2563EB" font-size="22" font-weight="700">2025 · 多智能体核验</text>
+              <text x="0" y="122" fill="#475569" font-size="22">协同规则生成与交叉验证，</text>
+              <text x="0" y="160" fill="#475569" font-size="22">稳定超越底层单检测器</text>
             </g>
-            <line x1="904" y1="634" x2="904" y2="830" stroke="#E2E8F0" stroke-width="1.5"/>
+            <line x1="896" y1="654" x2="896" y2="880" stroke="#E2E8F0" stroke-width="1.5"/>
 
-            <g transform="translate(936, 628)">
-              <text x="0" y="28" fill="#0F172A" font-size="22" font-weight="800">SAGE</text>
-              <text x="0" y="58" fill="#2563EB" font-size="14.5" font-weight="700">2026 · 证据驱动根因诊断</text>
-              <text x="0" y="102" fill="#475569" font-size="16">串联信号处理工具与历史故障记忆，</text>
-              <text x="0" y="130" fill="#475569" font-size="16">输出可追溯的结构化故障诊断链</text>
+            <g transform="translate(924, 650)">
+              <text x="0" y="30" fill="#0F172A" font-size="26" font-weight="800">CALM</text>
+              <text x="0" y="70" fill="#2563EB" font-size="22" font-weight="700">2025 · 流式自适应</text>
+              <text x="0" y="122" fill="#475569" font-size="22">在数据流中动态校准上下文，</text>
+              <text x="0" y="160" fill="#475569" font-size="22">抑制概念漂移引发误报</text>
             </g>
-            <line x1="1368" y1="634" x2="1368" y2="830" stroke="#E2E8F0" stroke-width="1.5"/>
+            <line x1="1356" y1="654" x2="1356" y2="880" stroke="#E2E8F0" stroke-width="1.5"/>
 
-            <g transform="translate(1400, 628)">
-              <text x="0" y="28" fill="#0F172A" font-size="22" font-weight="800">AgentFM</text>
-              <text x="0" y="58" fill="#2563EB" font-size="14.5" font-weight="700">FSE 2025 · 运维排障智能体</text>
-              <text x="0" y="102" fill="#475569" font-size="16">联合多维监控时序与运维日志，</text>
-              <text x="0" y="130" fill="#475569" font-size="16">实现从异常告警到根因定位闭环</text>
+            <g transform="translate(1384, 650)">
+              <text x="0" y="30" fill="#0F172A" font-size="26" font-weight="800">SAGE</text>
+              <text x="0" y="70" fill="#2563EB" font-size="22" font-weight="700">2026 · 证据驱动诊断</text>
+              <text x="0" y="122" fill="#475569" font-size="22">串联信号工具与故障记忆，</text>
+              <text x="0" y="160" fill="#475569" font-size="22">输出可追溯根因诊断链</text>
             </g>
           </svg>
         </div>
       </section>
 
-      <!-- ==================== SLIDE 7: 分类四 · 决策支持 ==================== -->
-      <section class="slide" data-title="分类四：决策支持">
+      <!-- ==================== SLIDE 07 ==================== -->
+      <section class="slide" data-title="决策支持">
         <header class="slide-header">
           <div class="header-left">
             <span class="slide-num">07</span>
-            <h1 class="slide-title">分类四：决策支持</h1>
+            <h1 class="slide-title">决策支持</h1>
           </div>
           <nav class="slide-agenda-rail"></nav>
         </header>
-
         <div class="visual-stage">
-          <svg viewBox="0 0 1824 890" xmlns="http://www.w3.org/2000/svg">
+          <svg viewBox="0 0 1808 920" xmlns="http://www.w3.org/2000/svg">
             <defs>
-              <marker id="m7-b" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563EB"/>
-              </marker>
-              <marker id="m7-s" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#475569"/>
+              <marker id="m7-b" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+                <path d="M 0 1.2 L 9.5 5 L 0 8.8 L 2.2 5 z" fill="#2563EB"/>
               </marker>
             </defs>
 
-            <!-- Top Abstract Definition -->
-            <rect x="0" y="16" width="1824" height="92" rx="12" fill="#EFF6FF"/>
-            <rect x="0" y="16" width="7" height="92" rx="3" fill="#1D4ED8"/>
-            <text x="30" y="50" fill="#1D4ED8" font-size="15" font-weight="800">共性定义</text>
-            <text x="30" y="86" fill="#0F172A" font-size="21.5" font-weight="800">在金融、交通、电网等真实动态环境中，由智能体将实时时序状态与仿真求解器耦合，直接生成可执行策略并在交互中演进</text>
+            <rect x="0" y="10" width="1808" height="106" rx="14" fill="#EFF6FF"/>
+            <rect x="0" y="10" width="8" height="106" rx="4" fill="#1D4ED8"/>
+            <text x="32" y="48" fill="#1D4ED8" font-size="22" font-weight="800">共性定义</text>
+            <text x="32" y="92" fill="#0F172A" font-size="24" font-weight="800">在金融、交通与电网等动态环境中，将实时时序状态与仿真求解器耦合，直接生成可执行策略并在交互中演进</text>
 
-            <!-- Center Closed-Loop Control Architecture -->
-            <text x="0" y="152" fill="#64748B" font-size="15.5" font-weight="800" letter-spacing="1.2">核心工作机理 · 状态感知 → 策略推演 → 仿真校核 → 环境闭环</text>
+            
+            <!-- Left State -->
+            <rect x="0" y="186" width="320" height="332" rx="16" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.6"/>
+            <text x="26" y="232" fill="#0F172A" font-size="24" font-weight="800">实时环境状态</text>
+            <path d="M 28 320 L 82 294 L 132 310 L 194 260 L 246 282 L 292 246" fill="none" stroke="#2563EB" stroke-width="3.6"/>
+            <line x1="28" y1="348" x2="292" y2="348" stroke="#CBD5E1" stroke-width="1.6"/>
+            <text x="26" y="394" fill="#334155" font-size="22" font-weight="700">· 行情 / 车流 / 负荷</text>
+            <text x="26" y="438" fill="#334155" font-size="22" font-weight="700">· 新闻舆情与规则</text>
+            <text x="26" y="482" fill="#334155" font-size="22" font-weight="700">· 安全边界与约束</text>
 
-            <!-- Left: Multi-modal Real-time State -->
-            <rect x="0" y="178" width="320" height="316" rx="16" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.6"/>
-            <text x="26" y="218" fill="#0F172A" font-size="18" font-weight="800">实时环境状态</text>
-            <path d="M 28 310 L 82 288 L 132 302 L 194 252 L 246 274 L 292 238" fill="none" stroke="#2563EB" stroke-width="3.2"/>
-            <line x1="28" y1="336" x2="292" y2="336" stroke="#CBD5E1" stroke-width="1.5"/>
-            <text x="26" y="376" fill="#334155" font-size="15.5" font-weight="700">· 实时行情 / 车流 / 负荷</text>
-            <text x="26" y="410" fill="#334155" font-size="15.5" font-weight="700">· 新闻舆情与突发规则</text>
-            <text x="26" y="444" fill="#334155" font-size="15.5" font-weight="700">· 安全边界与风险约束</text>
+            <line x1="320" y1="352" x2="368" y2="352" stroke="#2563EB" stroke-width="3.4" marker-end="url(#m7-b)"/>
 
-            <line x1="320" y1="316" x2="392" y2="316" stroke="#2563EB" stroke-width="3.2" marker-end="url(#m7-b)"/>
+            <!-- Center Multi-Role + Simulator + Env -->
+            <rect x="378" y="186" width="872" height="332" rx="16" fill="#FAFBFD" stroke="#2563EB" stroke-width="2.2"/>
+            <text x="408" y="232" fill="#1D4ED8" font-size="24" font-weight="800">多角色策略推理 × 仿真求解器校核</text>
 
-            <!-- Center: Multi-Role Decision + Simulator Verification -->
-            <rect x="402" y="178" width="840" height="316" rx="16" fill="#FAFBFD" stroke="#2563EB" stroke-width="2.2"/>
-            <text x="434" y="218" fill="#1D4ED8" font-size="18" font-weight="800">多角色策略推理 × 仿真求解器校核</text>
+            <rect x="408" y="260" width="246" height="68" rx="10" fill="#FFFFFF" stroke="#93C5FD" stroke-width="2"/>
+            <text x="531" y="303" text-anchor="middle" fill="#0F172A" font-size="22" font-weight="800">态势分析角色</text>
 
-            <!-- Role Stack -->
-            <rect x="434" y="246" width="234" height="62" rx="10" fill="#FFFFFF" stroke="#93C5FD" stroke-width="1.8"/>
-            <text x="551" y="283" text-anchor="middle" fill="#0F172A" font-size="16.5" font-weight="800">态势分析角色</text>
+            <rect x="408" y="342" width="246" height="68" rx="10" fill="#FFFFFF" stroke="#93C5FD" stroke-width="2"/>
+            <text x="531" y="385" text-anchor="middle" fill="#0F172A" font-size="22" font-weight="800">博弈与风控审校</text>
 
-            <rect x="434" y="324" width="234" height="62" rx="10" fill="#FFFFFF" stroke="#93C5FD" stroke-width="1.8"/>
-            <text x="551" y="361" text-anchor="middle" fill="#0F172A" font-size="16.5" font-weight="800">多方博弈 / 风控审校</text>
+            <rect x="408" y="424" width="246" height="68" rx="10" fill="#EFF6FF" stroke="#1D4ED8" stroke-width="2.6"/>
+            <text x="531" y="467" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="800">动作决策输出</text>
 
-            <rect x="434" y="402" width="234" height="62" rx="10" fill="#1D4ED8"/>
-            <text x="551" y="439" text-anchor="middle" fill="#FFFFFF" font-size="16.5" font-weight="800">动作决策输出</text>
+            <line x1="654" y1="376" x2="704" y2="376" stroke="#2563EB" stroke-width="3.2" marker-end="url(#m7-b)"/>
 
-            <line x1="668" y1="355" x2="742" y2="355" stroke="#2563EB" stroke-width="3" marker-end="url(#m7-b)"/>
+            <rect x="714" y="260" width="256" height="232" rx="12" fill="#EFF6FF" stroke="#2563EB" stroke-width="2.2"/>
+            <text x="842" y="312" text-anchor="middle" fill="#1D4ED8" font-size="24" font-weight="800">仿真 / 求解器</text>
+            <text x="842" y="366" text-anchor="middle" fill="#334155" font-size="22">硬约束安全校核</text>
+            <text x="842" y="410" text-anchor="middle" fill="#334155" font-size="22">反事实推演评估</text>
+            <text x="842" y="454" text-anchor="middle" fill="#334155" font-size="22">量化收益与代价</text>
 
-            <!-- Simulator / Solver Box -->
-            <rect x="752" y="246" width="224" height="218" rx="12" fill="#EFF6FF" stroke="#2563EB" stroke-width="2"/>
-            <text x="864" y="294" text-anchor="middle" fill="#1D4ED8" font-size="18.5" font-weight="800">仿真器 / 求解器</text>
-            <text x="864" y="336" text-anchor="middle" fill="#334155" font-size="15">硬约束安全校核</text>
-            <text x="864" y="368" text-anchor="middle" fill="#334155" font-size="15">反事实推演评估</text>
-            <text x="864" y="400" text-anchor="middle" fill="#334155" font-size="15">量化收益与代价</text>
+            <line x1="970" y1="376" x2="1038" y2="376" stroke="#2563EB" stroke-width="3.2" marker-end="url(#m7-b)"/>
 
-            <line x1="976" y1="355" x2="1040" y2="355" stroke="#2563EB" stroke-width="3" marker-end="url(#m7-b)"/>
+            <circle cx="1132" cy="376" r="88" fill="#0F172A"/>
+            <text x="1132" y="366" text-anchor="middle" fill="#FFFFFF" font-size="26" font-weight="800">真实环境</text>
+            <text x="1132" y="408" text-anchor="middle" fill="#93C5FD" font-size="22">产生新状态</text>
 
-            <!-- Environment Node -->
-            <circle cx="1136" cy="355" r="76" fill="#0F172A"/>
-            <text x="1136" y="346" text-anchor="middle" fill="#FFFFFF" font-size="19" font-weight="800">真实环境</text>
-            <text x="1136" y="376" text-anchor="middle" fill="#93C5FD" font-size="14">执行并产生新状态</text>
+            <!-- Feedback loop -->
+            <path d="M 1132 464 L 1132 552 L 160 552 L 160 524" fill="none" stroke="#2563EB" stroke-width="2.8" stroke-dasharray="6 4" marker-end="url(#m7-b)"/>
+            <rect x="466" y="530" width="380" height="40" rx="8" fill="#EFF6FF"/>
+            <text x="656" y="558" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="800">环境新观测 + 收益反馈 → 更新策略</text>
 
-            <!-- Closed-loop Reward Feedback -->
-            <path d="M 1136 431 L 1136 522 L 160 522 L 160 504" fill="none" stroke="#2563EB" stroke-width="2.6" stroke-dasharray="6 4" marker-end="url(#m7-b)"/>
-            <rect x="520" y="504" width="320" height="34" rx="8" fill="#EFF6FF"/>
-            <text x="680" y="526" text-anchor="middle" fill="#1D4ED8" font-size="14.5" font-weight="800">环境新观测 + 收益反馈 → 更新记忆与策略</text>
+            <!-- Right 3 Domains -->
+            <rect x="1282" y="186" width="526" height="332" rx="16" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.8"/>
+            <text x="1312" y="232" fill="#0F172A" font-size="24" font-weight="800">三类核心落点</text>
 
-            <!-- Right: Three Typical Real-World Domains -->
-            <rect x="1282" y="178" width="542" height="316" rx="16" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.8"/>
-            <text x="1312" y="218" fill="#0F172A" font-size="18" font-weight="800">三类核心落点</text>
+            <rect x="1312" y="256" width="466" height="72" rx="12" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1.5"/>
+            <text x="1545" y="301" text-anchor="middle" fill="#1D4ED8" font-size="25" font-weight="800">金融交易</text>
 
-            <rect x="1312" y="244" width="482" height="68" rx="10" fill="#F8FAFC"/>
-            <text x="1336" y="285" fill="#1D4ED8" font-size="17" font-weight="800">金融交易</text>
-            <text x="1442" y="285" fill="#475569" font-size="15.5">融合量价时序与舆情，输出仓位与风控动作</text>
+            <rect x="1312" y="342" width="466" height="72" rx="12" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1.5"/>
+            <text x="1545" y="387" text-anchor="middle" fill="#1D4ED8" font-size="25" font-weight="800">交通控制</text>
 
-            <rect x="1312" y="326" width="482" height="68" rx="10" fill="#F8FAFC"/>
-            <text x="1336" y="367" fill="#1D4ED8" font-size="17" font-weight="800">交通控制</text>
-            <text x="1442" y="367" fill="#475569" font-size="15.5">感知路口排队时序，动态调控信号配时方案</text>
+            <rect x="1312" y="428" width="466" height="72" rx="12" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1.5"/>
+            <text x="1545" y="473" text-anchor="middle" fill="#1D4ED8" font-size="25" font-weight="800">电网调度</text>
 
-            <rect x="1312" y="408" width="482" height="68" rx="10" fill="#F8FAFC"/>
-            <text x="1336" y="449" fill="#1D4ED8" font-size="17" font-weight="800">电网调度</text>
-            <text x="1442" y="449" fill="#475569" font-size="15.5">耦合潮流求解器，在安全约束下完成经济调度</text>
+            <!-- Bottom 4 Papers -->
+            <line x1="0" y1="576" x2="1808" y2="576" stroke="#CBD5E1" stroke-width="1.8"/>
+            <text x="0" y="620" fill="#1D4ED8" font-size="22" font-weight="800">代表工作</text>
 
-            <!-- BOTTOM REPRESENTATIVE PAPERS STRIP -->
-            <line x1="0" y1="556" x2="1824" y2="556" stroke="#CBD5E1" stroke-width="1.8"/>
-            <text x="0" y="596" fill="#1D4ED8" font-size="16" font-weight="800" letter-spacing="1.2">代表工作</text>
-
-            <g transform="translate(0, 628)">
-              <text x="0" y="28" fill="#0F172A" font-size="22" font-weight="800">FinCon</text>
-              <text x="0" y="58" fill="#2563EB" font-size="14.5" font-weight="700">NeurIPS 2024 · 层级投资决策</text>
-              <text x="0" y="102" fill="#475569" font-size="16">经理—分析师分层协作，通过概念</text>
-              <text x="0" y="130" fill="#475569" font-size="16">反思更新交易信念与组合策略</text>
+            <g transform="translate(0, 650)">
+              <text x="0" y="30" fill="#0F172A" font-size="26" font-weight="800">FinCon</text>
+              <text x="0" y="70" fill="#2563EB" font-size="22" font-weight="700">NeurIPS 2024 · 投资决策</text>
+              <text x="0" y="122" fill="#475569" font-size="22">经理与分析师分层协作，</text>
+              <text x="0" y="160" fill="#475569" font-size="22">借概念反思更新组合策略</text>
             </g>
-            <line x1="440" y1="634" x2="440" y2="830" stroke="#E2E8F0" stroke-width="1.5"/>
+            <line x1="436" y1="654" x2="436" y2="880" stroke="#E2E8F0" stroke-width="1.5"/>
 
-            <g transform="translate(472, 628)">
-              <text x="0" y="28" fill="#0F172A" font-size="22" font-weight="800">TradingAgents</text>
-              <text x="0" y="58" fill="#2563EB" font-size="14.5" font-weight="700">2024 · 多空辩论与风控</text>
-              <text x="0" y="102" fill="#475569" font-size="16">引入多空对抗辩论与风控审校，</text>
-              <text x="0" y="130" fill="#475569" font-size="16">将市场信号与舆情转化为交易执行</text>
+            <g transform="translate(464, 650)">
+              <text x="0" y="30" fill="#0F172A" font-size="26" font-weight="800">TradingAgents</text>
+              <text x="0" y="70" fill="#2563EB" font-size="22" font-weight="700">2024 · 多空辩论风控</text>
+              <text x="0" y="122" fill="#475569" font-size="22">引入多空对抗与风控审校，</text>
+              <text x="0" y="160" fill="#475569" font-size="22">将信号与舆情转为交易</text>
             </g>
-            <line x1="904" y1="634" x2="904" y2="830" stroke="#E2E8F0" stroke-width="1.5"/>
+            <line x1="896" y1="654" x2="896" y2="880" stroke="#E2E8F0" stroke-width="1.5"/>
 
-            <g transform="translate(936, 628)">
-              <text x="0" y="28" fill="#0F172A" font-size="22" font-weight="800">LLMLight</text>
-              <text x="0" y="58" fill="#2563EB" font-size="14.5" font-weight="700">KDD 2025 · 交通信号控制</text>
-              <text x="0" y="102" fill="#475569" font-size="16">以实时车流时序为状态输入，</text>
-              <text x="0" y="130" fill="#475569" font-size="16">用可解释推理动态决策路口放行</text>
+            <g transform="translate(924, 650)">
+              <text x="0" y="30" fill="#0F172A" font-size="26" font-weight="800">LLMLight</text>
+              <text x="0" y="70" fill="#2563EB" font-size="22" font-weight="700">KDD 2025 · 交通控制</text>
+              <text x="0" y="122" fill="#475569" font-size="22">以实时车流为状态输入，</text>
+              <text x="0" y="160" fill="#475569" font-size="22">推理驱动路口信号放行</text>
             </g>
-            <line x1="1368" y1="634" x2="1368" y2="830" stroke="#E2E8F0" stroke-width="1.5"/>
+            <line x1="1356" y1="654" x2="1356" y2="880" stroke="#E2E8F0" stroke-width="1.5"/>
 
-            <g transform="translate(1400, 628)">
-              <text x="0" y="28" fill="#0F172A" font-size="22" font-weight="800">Grid-Agent</text>
-              <text x="0" y="58" fill="#2563EB" font-size="14.5" font-weight="700">2025 · 电力系统调度</text>
-              <text x="0" y="102" fill="#475569" font-size="16">将大模型推理与专业求解器绑定，</text>
-              <text x="0" y="130" fill="#475569" font-size="16">保障高可靠物理约束下的最优调度</text>
+            <g transform="translate(1384, 650)">
+              <text x="0" y="30" fill="#0F172A" font-size="26" font-weight="800">Grid-Agent</text>
+              <text x="0" y="70" fill="#2563EB" font-size="22" font-weight="700">2025 · 电网安全调度</text>
+              <text x="0" y="122" fill="#475569" font-size="22">绑定推理与专业求解器，</text>
+              <text x="0" y="160" fill="#475569" font-size="22">保障强物理约束下调度</text>
             </g>
           </svg>
         </div>
       </section>
 
-      <!-- ==================== SLIDE 8: TimeCopilot（占位骨架） ==================== -->
-      <section class="slide" data-title="TimeCopilot（占位）">
+      <!-- ==================== SLIDE 08 ==================== -->
+      <section class="slide" data-title="TimeCopilot · 统一预测模型枢纽与自动化代理">
         <header class="slide-header">
           <div class="header-left">
             <span class="slide-num">08</span>
@@ -1178,78 +990,62 @@
           </div>
           <nav class="slide-agenda-rail"></nav>
         </header>
-
         <div class="visual-stage">
-          <svg viewBox="0 0 1824 890" xmlns="http://www.w3.org/2000/svg">
+          <svg viewBox="0 0 1808 920" xmlns="http://www.w3.org/2000/svg">
             <defs>
-              <marker id="m8-b" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563EB"/>
+              <marker id="m8-b" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="9" markerHeight="9" orient="auto">
+                <path d="M 0 1.2 L 9.5 5 L 0 8.8 L 2.2 5 z" fill="#2563EB"/>
               </marker>
             </defs>
 
-            <!-- Left 64%: Clean Architectural Skeleton -->
-            <text x="0" y="46" fill="#1D4ED8" font-size="16" font-weight="800" letter-spacing="1.2">论文核心架构骨架 · NeurIPS 2025 研讨会</text>
+            <text x="0" y="42" fill="#64748B" font-size="22" font-weight="700">NeurIPS 2025 研讨会</text>
 
-            <!-- Unified Model Hub -->
-            <rect x="0" y="80" width="1160" height="224" rx="16" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.8"/>
-            <text x="34" y="124" fill="#0F172A" font-size="20" font-weight="800">统一预测模型接口层</text>
-            <rect x="34" y="154" width="526" height="114" rx="12" fill="#EFF6FF" stroke="#93C5FD" stroke-width="1.6"/>
-            <text x="297" y="198" text-anchor="middle" fill="#1D4ED8" font-size="18" font-weight="800">时序基座模型族</text>
-            <text x="297" y="234" text-anchor="middle" fill="#334155" font-size="15.5">Chronos-2 · TimesFM · TiRex · Moirai</text>
+            <!-- Top Full-Width: Unified Model Hub -->
+            <rect x="0" y="76" width="1808" height="256" rx="18" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.8"/>
+            <text x="40" y="130" fill="#0F172A" font-size="28" font-weight="800">统一预测模型接口层</text>
 
-            <rect x="598" y="154" width="528" height="114" rx="12" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.6"/>
-            <text x="862" y="198" text-anchor="middle" fill="#0F172A" font-size="18" font-weight="800">经典统计与深度模型族</text>
-            <text x="862" y="234" text-anchor="middle" fill="#475569" font-size="15.5">AutoARIMA · AutoLGBM · AutoNHITS · AutoTFT</text>
+            <rect x="40" y="162" width="844" height="134" rx="14" fill="#EFF6FF" stroke="#93C5FD" stroke-width="2"/>
+            <text x="462" y="216" text-anchor="middle" fill="#1D4ED8" font-size="26" font-weight="800">时序基座模型族</text>
+            <text x="462" y="266" text-anchor="middle" fill="#334155" font-size="23">Chronos-2  ·  TimesFM  ·  TiRex  ·  Moirai</text>
 
-            <!-- Down arrow -->
-            <line x1="580" y1="304" x2="580" y2="372" stroke="#2563EB" stroke-width="3.5" marker-end="url(#m8-b)"/>
+            <rect x="924" y="162" width="844" height="134" rx="14" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
+            <text x="1346" y="216" text-anchor="middle" fill="#0F172A" font-size="26" font-weight="800">经典统计与深度模型族</text>
+            <text x="1346" y="266" text-anchor="middle" fill="#475569" font-size="23">AutoARIMA  ·  AutoLGBM  ·  AutoNHITS  ·  AutoTFT</text>
 
-            <!-- 3-Step Agent Workflow -->
-            <rect x="0" y="384" width="1160" height="456" rx="16" fill="#FAFBFD" stroke="#2563EB" stroke-width="2"/>
-            <text x="34" y="432" fill="#1D4ED8" font-size="20" font-weight="800">三步代理工作流</text>
+            <!-- Clean Downward Connector -->
+            <line x1="904" y1="332" x2="904" y2="404" stroke="#2563EB" stroke-width="4.2" marker-end="url(#m8-b)"/>
 
-            <rect x="34" y="472" width="320" height="200" rx="14" fill="#FFFFFF" stroke="#2563EB" stroke-width="2"/>
-            <text x="194" y="520" text-anchor="middle" fill="#2563EB" font-size="15" font-weight="800">步骤一</text>
-            <text x="194" y="562" text-anchor="middle" fill="#0F172A" font-size="22" font-weight="800">时序特征分析</text>
-            <text x="194" y="612" text-anchor="middle" fill="#64748B" font-size="15.5">检测趋势、季节性、</text>
-            <text x="194" y="638" text-anchor="middle" fill="#64748B" font-size="15.5">平稳性与异常结构</text>
+            <!-- Bottom Full-Width: Ultra-Simple 3-Step Agent Workflow -->
+            <rect x="0" y="416" width="1808" height="476" rx="18" fill="#FAFBFD" stroke="#2563EB" stroke-width="2.2"/>
+            <text x="40" y="476" fill="#1D4ED8" font-size="28" font-weight="800">三步自动化代理流程</text>
 
-            <line x1="354" y1="572" x2="410" y2="572" stroke="#2563EB" stroke-width="3.2" marker-end="url(#m8-b)"/>
+            <rect x="40" y="518" width="520" height="270" rx="16" fill="#FFFFFF" stroke="#2563EB" stroke-width="2.2"/>
+            <text x="300" y="576" text-anchor="middle" fill="#2563EB" font-size="22" font-weight="800">步骤一</text>
+            <text x="300" y="632" text-anchor="middle" fill="#0F172A" font-size="30" font-weight="800">时序特征分析</text>
+            <text x="300" y="698" text-anchor="middle" fill="#64748B" font-size="23">自动检测趋势、季节性、</text>
+            <text x="300" y="742" text-anchor="middle" fill="#64748B" font-size="23">平稳性与异常结构</text>
 
-            <rect x="420" y="472" width="320" height="200" rx="14" fill="#1D4ED8"/>
-            <text x="580" y="520" text-anchor="middle" fill="#BFDBFE" font-size="15" font-weight="800">步骤二</text>
-            <text x="580" y="562" text-anchor="middle" fill="#FFFFFF" font-size="22" font-weight="800">选模与交叉验证</text>
-            <text x="580" y="612" text-anchor="middle" fill="#DBEAFE" font-size="15.5">依据特征筛选候选模型，</text>
-            <text x="580" y="638" text-anchor="middle" fill="#DBEAFE" font-size="15.5">在交叉验证上比较择优</text>
+            <line x1="560" y1="653" x2="634" y2="653" stroke="#2563EB" stroke-width="4" marker-end="url(#m8-b)"/>
 
-            <line x1="740" y1="572" x2="796" y2="572" stroke="#2563EB" stroke-width="3.2" marker-end="url(#m8-b)"/>
+            <rect x="644" y="518" width="520" height="270" rx="16" fill="#EFF6FF" stroke="#1D4ED8" stroke-width="2.6"/>
+            <text x="904" y="576" text-anchor="middle" fill="#2563EB" font-size="22" font-weight="800">步骤二</text>
+            <text x="904" y="632" text-anchor="middle" fill="#1D4ED8" font-size="30" font-weight="800">选模与交叉验证</text>
+            <text x="904" y="698" text-anchor="middle" fill="#334155" font-size="23">依据特征筛选候选模型，</text>
+            <text x="904" y="742" text-anchor="middle" fill="#334155" font-size="23">在交叉验证上量化择优</text>
 
-            <rect x="806" y="472" width="320" height="200" rx="14" fill="#FFFFFF" stroke="#2563EB" stroke-width="2"/>
-            <text x="966" y="520" text-anchor="middle" fill="#2563EB" font-size="15" font-weight="800">步骤三</text>
-            <text x="966" y="562" text-anchor="middle" fill="#0F172A" font-size="22" font-weight="800">集成预测与解释</text>
-            <text x="966" y="612" text-anchor="middle" fill="#64748B" font-size="15.5">中位数集成与保序校准，</text>
-            <text x="966" y="638" text-anchor="middle" fill="#64748B" font-size="15.5">同步生成自然语言说明</text>
+            <line x1="1164" y1="653" x2="1238" y2="653" stroke="#2563EB" stroke-width="4" marker-end="url(#m8-b)"/>
 
-            <text x="580" y="768" text-anchor="middle" fill="#475569" font-size="16.5" font-weight="700">核心定位：降低多模型调度门槛的自动化预测副驾驶</text>
+            <rect x="1248" y="518" width="520" height="270" rx="16" fill="#FFFFFF" stroke="#2563EB" stroke-width="2.2"/>
+            <text x="1508" y="618" text-anchor="middle" fill="#2563EB" font-size="23" font-weight="800">步骤三</text>
+            <text x="1508" y="682" text-anchor="middle" fill="#0F172A" font-size="32" font-weight="800">集成预测与解释</text>
 
-            <!-- Right 33%: Clean Editable Placeholder Zone -->
-            <rect x="1216" y="80" width="608" height="760" rx="16" fill="#FAFBFD" stroke="#94A3B8" stroke-width="2" stroke-dasharray="9 7"/>
-            <text x="1264" y="142" fill="#1D4ED8" font-size="17" font-weight="800" letter-spacing="1">本页待补充内容</text>
-            <line x1="1264" y1="166" x2="1776" y2="166" stroke="#E2E8F0" stroke-width="1.5"/>
-            <text x="1264" y="232" fill="#334155" font-size="20" font-weight="800">01 · 值得借鉴的设计点</text>
-            <text x="1264" y="274" fill="#94A3B8" font-size="16">待定：统一接口抽象 / 集成校准机制</text>
-
-            <text x="1264" y="388" fill="#334155" font-size="20" font-weight="800">02 · 核心局限与可改进空间</text>
-            <text x="1264" y="430" fill="#94A3B8" font-size="16">待定：偏工具编排，深层因果与反思较浅</text>
-
-            <text x="1264" y="544" fill="#334155" font-size="20" font-weight="800">03 · 拟展示的实验或图示</text>
-            <text x="1264" y="586" fill="#94A3B8" font-size="16">待定：基准对比表或案例截图</text>
+            <text x="904" y="852" text-anchor="middle" fill="#475569" font-size="23" font-weight="700">核心定位：通过统一接口与代理调度，大幅降低多模型集成预测的使用门槛</text>
           </svg>
         </div>
       </section>
 
-      <!-- ==================== SLIDE 9: TS-Reasoner（占位骨架） ==================== -->
-      <section class="slide" data-title="TS-Reasoner（占位）">
+      <!-- ==================== SLIDE 09 ==================== -->
+      <section class="slide" data-title="TS-Reasoner · 任务分解与专用算子编译推理">
         <header class="slide-header">
           <div class="header-left">
             <span class="slide-num">09</span>
@@ -1257,162 +1053,297 @@
           </div>
           <nav class="slide-agenda-rail"></nav>
         </header>
-
         <div class="visual-stage">
-          <svg viewBox="0 0 1824 890" xmlns="http://www.w3.org/2000/svg">
+          <svg viewBox="0 0 1808 920" xmlns="http://www.w3.org/2000/svg">
             <defs>
-              <marker id="m9-b" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563EB"/>
+              <marker id="m9-b" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8.5" markerHeight="8.5" orient="auto">
+                <path d="M 0 1.2 L 9.5 5 L 0 8.8 L 2.2 5 z" fill="#2563EB"/>
               </marker>
-              <marker id="m9-r" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#BE123C"/>
+              <marker id="m9-r" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8.5" markerHeight="8.5" orient="auto">
+                <path d="M 0 1.2 L 9.5 5 L 0 8.8 L 2.2 5 z" fill="#BE123C"/>
               </marker>
             </defs>
 
-            <!-- Left 64%: Clean Architectural Skeleton -->
-            <text x="0" y="46" fill="#1D4ED8" font-size="16" font-weight="800" letter-spacing="1.2">论文核心架构骨架 · TMLR 2026</text>
+            <text x="0" y="42" fill="#1D4ED8" font-size="22" font-weight="800">TMLR 2026 · 整体推理框架与专用算子库</text>
+            <text x="1156" y="42" fill="#1D4ED8" font-size="22" font-weight="800">核心模块展开 · 任务分解器工作机制</text>
 
-            <!-- Main Reasoning Pipeline -->
-            <rect x="0" y="80" width="1160" height="444" rx="16" fill="#FAFBFD" stroke="#2563EB" stroke-width="2"/>
-            <text x="34" y="128" fill="#1D4ED8" font-size="19" font-weight="800">程序化多步推理闭环</text>
+            <!-- LEFT: Main Reasoning Loop -->
+            <rect x="0" y="72" width="1104" height="464" rx="16" fill="#FAFBFD" stroke="#CBD5E1" stroke-width="1.8"/>
+            <text x="32" y="122" fill="#0F172A" font-size="25" font-weight="800">程序化多步推理闭环</text>
 
-            <rect x="34" y="176" width="218" height="122" rx="12" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.8"/>
-            <text x="143" y="226" text-anchor="middle" fill="#0F172A" font-size="19" font-weight="800">复杂任务与约束</text>
-            <text x="143" y="262" text-anchor="middle" fill="#64748B" font-size="14.5">因果 / 约束预测</text>
+            <rect x="32" y="172" width="210" height="142" rx="12" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
+            <text x="137" y="230" text-anchor="middle" fill="#0F172A" font-size="24" font-weight="800">任务与约束</text>
+            <text x="137" y="276" text-anchor="middle" fill="#64748B" font-size="22">因果与约束预测</text>
 
-            <line x1="252" y1="237" x2="312" y2="237" stroke="#2563EB" stroke-width="3" marker-end="url(#m9-b)"/>
+            <line x1="242" y1="243" x2="290" y2="243" stroke="#2563EB" stroke-width="3.2" marker-end="url(#m9-b)"/>
 
-            <rect x="322" y="176" width="240" height="122" rx="12" fill="#1D4ED8"/>
-            <text x="442" y="226" text-anchor="middle" fill="#FFFFFF" font-size="19" font-weight="800">任务分解器</text>
-            <text x="442" y="262" text-anchor="middle" fill="#DBEAFE" font-size="14.5">生成可执行算子程序</text>
+            <rect x="298" y="172" width="234" height="142" rx="12" fill="#EFF6FF" stroke="#1D4ED8" stroke-width="2.6"/>
+            <text x="415" y="230" text-anchor="middle" fill="#1D4ED8" font-size="25" font-weight="800">任务分解器</text>
+            <text x="415" y="276" text-anchor="middle" fill="#334155" font-size="22">生成算子程序</text>
 
-            <line x1="562" y1="237" x2="622" y2="237" stroke="#2563EB" stroke-width="3" marker-end="url(#m9-b)"/>
+            <line x1="532" y1="243" x2="580" y2="243" stroke="#2563EB" stroke-width="3.2" marker-end="url(#m9-b)"/>
 
-            <rect x="632" y="176" width="240" height="122" rx="12" fill="#EFF6FF" stroke="#2563EB" stroke-width="2"/>
-            <text x="752" y="226" text-anchor="middle" fill="#1D4ED8" font-size="19" font-weight="800">程序执行器</text>
-            <text x="752" y="262" text-anchor="middle" fill="#334155" font-size="14.5">调度专用算子库计算</text>
+            <rect x="588" y="172" width="234" height="142" rx="12" fill="#EFF6FF" stroke="#2563EB" stroke-width="2.2"/>
+            <text x="705" y="230" text-anchor="middle" fill="#1D4ED8" font-size="24" font-weight="800">程序执行器</text>
+            <text x="705" y="276" text-anchor="middle" fill="#334155" font-size="22">调度专用算子</text>
 
-            <line x1="872" y1="237" x2="932" y2="237" stroke="#2563EB" stroke-width="3" marker-end="url(#m9-b)"/>
+            <line x1="822" y1="243" x2="870" y2="243" stroke="#2563EB" stroke-width="3.2" marker-end="url(#m9-b)"/>
 
-            <rect x="942" y="176" width="184" height="122" rx="12" fill="#0F172A"/>
-            <text x="1034" y="226" text-anchor="middle" fill="#FFFFFF" font-size="19" font-weight="800">结构化答案</text>
-            <text x="1034" y="262" text-anchor="middle" fill="#93C5FD" font-size="14.5">数值 + 推理链</text>
+            <rect x="878" y="172" width="194" height="142" rx="12" fill="#0F172A"/>
+            <text x="975" y="230" text-anchor="middle" fill="#FFFFFF" font-size="24" font-weight="800">结构化输出</text>
+            <text x="975" y="276" text-anchor="middle" fill="#93C5FD" font-size="22">数值与推理链</text>
 
-            <!-- Feedback loop -->
-            <path d="M 752 298 L 752 418 L 442 418 L 442 308" fill="none" stroke="#BE123C" stroke-width="2.8" stroke-dasharray="6 4" marker-end="url(#m9-r)"/>
-            <rect x="466" y="398" width="268" height="38" rx="8" fill="#FFF1F2" stroke="#FECDD3" stroke-width="1.5"/>
-            <text x="600" y="423" text-anchor="middle" fill="#BE123C" font-size="15" font-weight="800">报错反馈 + 伪留出集选模自修</text>
+            <path d="M 705 314 L 705 448 L 415 448 L 415 322" fill="none" stroke="#BE123C" stroke-width="3" stroke-dasharray="6 4" marker-end="url(#m9-r)"/>
+            <rect x="386" y="422" width="356" height="50" rx="10" fill="#FFF1F2" stroke="#FECDD3" stroke-width="1.6"/>
+            <text x="564" y="456" text-anchor="middle" fill="#BE123C" font-size="22" font-weight="800">报错反馈 + 伪留出集选模自修</text>
 
-            <!-- 4 Operator Families -->
-            <rect x="0" y="564" width="1160" height="276" rx="16" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.8"/>
-            <text x="34" y="614" fill="#0F172A" font-size="19" font-weight="800">四大类专用算子库</text>
+            <!-- LEFT BOTTOM: 4 Operator Families -->
+            <rect x="0" y="572" width="1104" height="320" rx="16" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.8"/>
+            <text x="32" y="624" fill="#0F172A" font-size="25" font-weight="800">四大类专用算子库</text>
 
-            <rect x="34" y="648" width="256" height="148" rx="12" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
-            <text x="162" y="704" text-anchor="middle" fill="#1D4ED8" font-size="18" font-weight="800">时序模型算子</text>
-            <text x="162" y="746" text-anchor="middle" fill="#64748B" font-size="14.5">多类预测与分类器</text>
+            <rect x="32" y="660" width="244" height="190" rx="12" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.6"/>
+            <text x="154" y="730" text-anchor="middle" fill="#1D4ED8" font-size="23" font-weight="800">时序模型算子</text>
+            <text x="154" y="786" text-anchor="middle" fill="#64748B" font-size="22">多类预测与分类</text>
 
-            <rect x="312" y="648" width="256" height="148" rx="12" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
-            <text x="440" y="704" text-anchor="middle" fill="#1D4ED8" font-size="18" font-weight="800">数值与统计算子</text>
-            <text x="440" y="746" text-anchor="middle" fill="#64748B" font-size="14.5">分解、滤波、因果检验</text>
+            <rect x="298" y="660" width="244" height="190" rx="12" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.6"/>
+            <text x="420" y="730" text-anchor="middle" fill="#1D4ED8" font-size="23" font-weight="800">数值统计算子</text>
+            <text x="420" y="786" text-anchor="middle" fill="#64748B" font-size="22">分解滤波与因果</text>
 
-            <rect x="590" y="648" width="256" height="148" rx="12" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
-            <text x="718" y="704" text-anchor="middle" fill="#1D4ED8" font-size="18" font-weight="800">外部数据检索算子</text>
-            <text x="718" y="746" text-anchor="middle" fill="#64748B" font-size="14.5">接入外部上下文信息</text>
+            <rect x="564" y="660" width="244" height="190" rx="12" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.6"/>
+            <text x="686" y="730" text-anchor="middle" fill="#1D4ED8" font-size="23" font-weight="800">外部检索算子</text>
+            <text x="686" y="786" text-anchor="middle" fill="#64748B" font-size="22">接入外部上下文</text>
 
-            <rect x="868" y="648" width="258" height="148" rx="12" fill="#EFF6FF" stroke="#60A5FA" stroke-width="1.8"/>
-            <text x="997" y="704" text-anchor="middle" fill="#1D4ED8" font-size="18" font-weight="800">动态生成自定义算子</text>
-            <text x="997" y="746" text-anchor="middle" fill="#334155" font-size="14.5">按需编写新代码算子</text>
+            <rect x="830" y="660" width="242" height="190" rx="12" fill="#EFF6FF" stroke="#60A5FA" stroke-width="2"/>
+            <text x="951" y="730" text-anchor="middle" fill="#1D4ED8" font-size="23" font-weight="800">动态自定义算子</text>
+            <text x="951" y="786" text-anchor="middle" fill="#334155" font-size="22">按需编写新算子</text>
 
-            <!-- Right 33%: Clean Editable Placeholder Zone -->
-            <rect x="1216" y="80" width="608" height="760" rx="16" fill="#FAFBFD" stroke="#94A3B8" stroke-width="2" stroke-dasharray="9 7"/>
-            <text x="1264" y="142" fill="#1D4ED8" font-size="17" font-weight="800" letter-spacing="1">本页待补充内容</text>
-            <line x1="1264" y1="166" x2="1776" y2="166" stroke="#E2E8F0" stroke-width="1.5"/>
-            <text x="1264" y="232" fill="#334155" font-size="20" font-weight="800">01 · 核心启发</text>
-            <text x="1264" y="274" fill="#94A3B8" font-size="16">待定：把复杂推理编译为确定性算子程序</text>
+            <!-- Visual bridge arrow from Left to Right Task Decomposer detail -->
+            <line x1="1104" y1="243" x2="1148" y2="243" stroke="#2563EB" stroke-width="3.6" stroke-dasharray="6 4" marker-end="url(#m9-b)"/>
 
-            <text x="1264" y="388" fill="#334155" font-size="20" font-weight="800">02 · 瓶颈与思考</text>
-            <text x="1264" y="430" fill="#94A3B8" font-size="16">待定：算子库完备性 / 推理开销与泛化</text>
+            <!-- RIGHT: Task Decomposer Deep Dive -->
+            <rect x="1156" y="72" width="652" height="820" rx="18" fill="#EFF6FF" stroke="#2563EB" stroke-width="2.4"/>
 
-            <text x="1264" y="544" fill="#334155" font-size="20" font-weight="800">03 · 拟展示案例</text>
-            <text x="1264" y="586" fill="#94A3B8" font-size="16">待定：约束预测或因果问答流程实例</text>
+            <!-- Step 1 -->
+            <rect x="1192" y="110" width="580" height="148" rx="14" fill="#FFFFFF" stroke="#93C5FD" stroke-width="1.8"/>
+            <rect x="1216" y="132" width="96" height="38" rx="8" fill="#EFF6FF" stroke="#93C5FD" stroke-width="1.5"/>
+            <text x="1264" y="159" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="800">01</text>
+            <text x="1332" y="160" fill="#0F172A" font-size="25" font-weight="800">问题与硬约束拆解</text>
+            <text x="1216" y="218" fill="#475569" font-size="22">将自然语言推理目标拆为有序子步骤与约束条件</text>
+
+            <line x1="1482" y1="258" x2="1482" y2="300" stroke="#2563EB" stroke-width="3.2" marker-end="url(#m9-b)"/>
+
+            <!-- Step 2 -->
+            <rect x="1192" y="308" width="580" height="148" rx="14" fill="#FFFFFF" stroke="#93C5FD" stroke-width="1.8"/>
+            <rect x="1216" y="330" width="96" height="38" rx="8" fill="#EFF6FF" stroke="#93C5FD" stroke-width="1.5"/>
+            <text x="1264" y="357" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="800">02</text>
+            <text x="1332" y="358" fill="#0F172A" font-size="25" font-weight="800">算子匹配与程序编译</text>
+            <text x="1216" y="416" fill="#475569" font-size="22">从四类算子库挑选工具，编排为确定性执行程序</text>
+
+            <line x1="1482" y1="456" x2="1482" y2="498" stroke="#2563EB" stroke-width="3.2" marker-end="url(#m9-b)"/>
+
+            <!-- Step 3 -->
+            <rect x="1192" y="506" width="580" height="148" rx="14" fill="#FFFFFF" stroke="#93C5FD" stroke-width="1.8"/>
+            <rect x="1216" y="528" width="96" height="38" rx="8" fill="#EFF6FF" stroke="#93C5FD" stroke-width="1.5"/>
+            <text x="1264" y="555" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="800">03</text>
+            <text x="1332" y="556" fill="#0F172A" font-size="25" font-weight="800">能力缺口动态补齐</text>
+            <text x="1216" y="614" fill="#475569" font-size="22">标准算子无法覆盖时，现场合成自定义代码算子</text>
+
+            <line x1="1482" y1="654" x2="1482" y2="696" stroke="#2563EB" stroke-width="3.2" marker-end="url(#m9-b)"/>
+
+            <!-- Step 4 -->
+            <rect x="1192" y="704" width="580" height="148" rx="14" fill="#FFFFFF" stroke="#1D4ED8" stroke-width="2.4"/>
+            <rect x="1216" y="726" width="96" height="38" rx="8" fill="#EFF6FF" stroke="#93C5FD" stroke-width="1.5"/>
+            <text x="1264" y="753" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="800">04</text>
+            <text x="1332" y="754" fill="#1D4ED8" font-size="25" font-weight="800">反馈驱动迭代重写</text>
+            <text x="1216" y="812" fill="#334155" font-size="22">依据运行报错与伪留出误差自动修订程序与选模</text>
           </svg>
         </div>
       </section>
 
-      <!-- ==================== SLIDE 10: NEXUS（占位骨架） ==================== -->
-      <section class="slide" data-title="NEXUS（占位）">
+      <!-- ==================== SLIDE 10 ==================== -->
+      <section class="slide" data-title="NEXUS">
         <header class="slide-header">
           <div class="header-left">
             <span class="slide-num">10</span>
-            <h1 class="slide-title">NEXUS · 因果回测校准与闭式贝叶斯多流融合</h1>
+            <h1 class="slide-title">NEXUS</h1>
           </div>
           <nav class="slide-agenda-rail"></nav>
         </header>
-
         <div class="visual-stage">
-          <svg viewBox="0 0 1824 890" xmlns="http://www.w3.org/2000/svg">
+          <svg viewBox="0 0 1808 920" xmlns="http://www.w3.org/2000/svg">
             <defs>
-              <marker id="m10-b" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563EB"/>
+              <marker id="m10-b" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8.5" markerHeight="8.5" orient="auto">
+                <path d="M 0 1.2 L 9.5 5 L 0 8.8 L 2.2 5 z" fill="#2563EB"/>
               </marker>
+              <marker id="m10-s" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8.5" markerHeight="8.5" orient="auto">
+                <path d="M 0 1.2 L 9.5 5 L 0 8.8 L 2.2 5 z" fill="#475569"/>
+              </marker>
+              <!-- Clean OpenAI / GPT 6-petal knot icon (24x24 viewBox) -->
+                            <g id="ds-s10">
+                <circle cx="0" cy="0" r="17" fill="#EFF6FF" stroke="#2563EB" stroke-width="1.6"/>
+                <!-- DeepSeek signature blue whale silhouette -->
+                <path d="M -11 2 C -11 -5, -4 -9, 3 -7 C 7 -6, 9 -2, 10 2 C 11 0, 12.5 -3, 13.5 -5.5 C 12 -1, 13 3, 11.5 5.5 C 10.2 3.5, 9 4.5, 7.5 6 C 3.5 9.5, -5.5 9.5, -9.5 6.5 C -10.8 5.4, -11 3.8, -11 2 Z" fill="#2563EB"/>
+                <path d="M -9 5.5 C -5 7.2, 1 7.2, 4.5 5.2" fill="none" stroke="#DBEAFE" stroke-width="1.4" stroke-linecap="round"/>
+                <circle cx="-5.5" cy="0.5" r="1.4" fill="#FFFFFF"/>
+              </g>
+              <g id="gpt-icon">
+                <circle cx="0" cy="0" r="17" fill="#EFF6FF" stroke="#2563EB" stroke-width="1.6"/>
+                <g fill="none" stroke="#1D4ED8" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M 0 -5.2 L 4.5 -2.6 L 4.5 2.6 L 0 5.2 L -4.5 2.6 L -4.5 -2.6 Z"/>
+                  <path d="M 0 -5.2 C 0 -10.5, 6.2 -11.5, 8.6 -6.5 C 10.2 -3.2, 7.6 0.2, 4.5 2.6"/>
+                  <path d="M 4.5 -2.6 C 9.1 -5.2, 13.0 -0.2, 9.8 4.4 C 7.7 7.4, 3.6 6.8, 0 5.2"/>
+                  <path d="M 4.5 2.6 C 9.1 5.2, 6.8 11.2, 1.3 10.6 C -2.4 10.2, -4.1 6.5, -4.5 2.6"/>
+                  <path d="M 0 5.2 C 0 10.5, -6.2 11.5, -8.6 6.5 C -10.2 3.2, -7.6 -0.2, -4.5 -2.6"/>
+                  <path d="M -4.5 2.6 C -9.1 5.2, -13.0 0.2, -9.8 -4.4 C -7.7 -7.4, -3.6 -6.8, 0 -5.2"/>
+                  <path d="M -4.5 -2.6 C -9.1 -5.2, -6.8 -11.2, -1.3 -10.6 C 2.4 -10.2, 4.1 -6.5, 4.5 -2.6"/>
+                </g>
+              </g>
             </defs>
 
-            <!-- Left 64%: 3-Stage Vertical/Horizontal Flow -->
-            <text x="0" y="46" fill="#1D4ED8" font-size="16" font-weight="800" letter-spacing="1.2">论文核心架构骨架 · 2026</text>
+            <!-- Top Simple One-Line Summary -->
 
-            <!-- Stage 1 -->
-            <rect x="0" y="80" width="1160" height="196" rx="16" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.8"/>
-            <rect x="28" y="106" width="136" height="34" rx="8" fill="#334155"/>
-            <text x="96" y="129" text-anchor="middle" fill="#FFFFFF" font-size="15" font-weight="800">阶段一</text>
-            <text x="184" y="130" fill="#0F172A" font-size="21" font-weight="800">因果时序画像与数值先验锚点</text>
-            <text x="28" y="182" fill="#475569" font-size="16.5">提取序列分段、突变点与驱动因素，同时由时序基座模型给出纯数值先验均值与协方差 (π, Σ)</text>
-            <text x="28" y="222" fill="#64748B" font-size="15">作用：提供稳健的数值基准，避免大模型脱离统计规律自由发挥</text>
+            <!-- ==================== COLUMN 0: DUAL INPUTS (x=0..244) ==================== -->
+            <rect x="0" y="108" width="244" height="252" rx="16" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.8"/>
+            <text x="122" y="156" text-anchor="middle" fill="#0F172A" font-size="24" font-weight="800">历史时序数据</text>
+            <line x1="24" y1="306" x2="220" y2="306" stroke="#CBD5E1" stroke-width="1.6"/>
+            <path d="M 28 274 Q 68 220, 108 256 T 180 228 L 216 242" fill="none" stroke="#334155" stroke-width="3.6" stroke-linecap="round"/>
+            <line x1="156" y1="196" x2="156" y2="306" stroke="#BE123C" stroke-width="2" stroke-dasharray="4 4"/>
+            <text x="122" y="340" text-anchor="middle" fill="#64748B" font-size="22">连续数值轨迹</text>
 
-            <line x1="580" y1="276" x2="580" y2="328" stroke="#2563EB" stroke-width="3.2" marker-end="url(#m10-b)"/>
+            <rect x="0" y="420" width="244" height="252" rx="16" fill="#EFF6FF" stroke="#93C5FD" stroke-width="1.8"/>
+            <text x="122" y="472" text-anchor="middle" fill="#1D4ED8" font-size="24" font-weight="800">外部事件文本</text>
+            <rect x="22" y="502" width="200" height="44" rx="8" fill="#FFFFFF"/>
+            <text x="122" y="532" text-anchor="middle" fill="#334155" font-size="22">天气 · 政策公告</text>
+            <rect x="22" y="562" width="200" height="44" rx="8" fill="#FFFFFF"/>
+            <text x="122" y="592" text-anchor="middle" fill="#334155" font-size="22">突发新闻 · 节假日</text>
+            <text x="122" y="648" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="700">非结构化驱动</text>
 
-            <!-- Stage 2 -->
-            <rect x="0" y="338" width="1160" height="236" rx="16" fill="#FAFBFD" stroke="#2563EB" stroke-width="2"/>
-            <rect x="28" y="364" width="136" height="34" rx="8" fill="#2563EB"/>
-            <text x="96" y="387" text-anchor="middle" fill="#FFFFFF" font-size="15" font-weight="800">阶段二</text>
-            <text x="184" y="388" fill="#1D4ED8" font-size="21" font-weight="800">宏观 / 微观双视角推演 + 无泄漏因果回测校准</text>
+            <line x1="244" y1="234" x2="294" y2="234" stroke="#475569" stroke-width="3.4" marker-end="url(#m10-s)"/>
+            <line x1="244" y1="546" x2="294" y2="546" stroke="#2563EB" stroke-width="3.4" marker-end="url(#m10-b)"/>
 
-            <rect x="28" y="418" width="330" height="124" rx="12" fill="#FFFFFF" stroke="#93C5FD" stroke-width="1.6"/>
-            <text x="193" y="462" text-anchor="middle" fill="#0F172A" font-size="18" font-weight="800">宏观与微观双视角</text>
-            <text x="193" y="502" text-anchor="middle" fill="#475569" font-size="15">先形态后数值 + 逐点突发冲击</text>
+            <!-- ==================== STAGE 1: ANCHOR + CAUSAL PROFILING (x=302..666) ==================== -->
+            <rect x="302" y="72" width="364" height="824" rx="18" fill="#FAFBFD" stroke="#CBD5E1" stroke-width="1.8"/>
+            <rect x="326" y="96" width="116" height="38" rx="8" fill="#334155"/>
+            <text x="384" y="123" text-anchor="middle" fill="#FFFFFF" font-size="22" font-weight="800">阶段一</text>
+            <text x="458" y="124" fill="#0F172A" font-size="24" font-weight="800">画像与数值锚点</text>
 
-            <line x1="358" y1="480" x2="412" y2="480" stroke="#2563EB" stroke-width="2.8" marker-end="url(#m10-b)"/>
+            <!-- Upper Branch: Numerical TSFM Anchor -->
+            <rect x="326" y="164" width="316" height="216" rx="14" fill="#FFFFFF" stroke="#475569" stroke-width="2"/>
+            <text x="484" y="210" text-anchor="middle" fill="#0F172A" font-size="24" font-weight="800">时序基座数值锚点</text>
+                        <path d="M 354 334 Q 404 304, 452 322" fill="none" stroke="#334155" stroke-width="3"/>
+            <path d="M 452 322 L 612 286 L 612 352 Z" fill="#E2E8F0"/>
+            <path d="M 452 322 Q 532 314, 612 320" fill="none" stroke="#475569" stroke-width="3.2" stroke-dasharray="6 4"/>
 
-            <rect x="422" y="418" width="706" height="124" rx="12" fill="#EFF6FF" stroke="#60A5FA" stroke-width="1.8"/>
-            <text x="775" y="462" text-anchor="middle" fill="#1D4ED8" font-size="18.5" font-weight="800">严格无未来泄漏因果回测</text>
-            <text x="775" y="502" text-anchor="middle" fill="#334155" font-size="15.5">残差反思调优配置，并从历史误差中估计两路视角的经验误差协方差 Ω</text>
+            <!-- Lower Branch: Causal-Temporal Profiling + GPT ICON -->
+            <rect x="326" y="420" width="316" height="446" rx="14" fill="#EFF6FF" stroke="#2563EB" stroke-width="2"/>
+            <use href="#gpt-icon" x="364" y="472"/>
+            <use href="#ds-s10" x="406" y="472"/>
+            <text x="436" y="480" fill="#1D4ED8" font-size="24" font-weight="800">因果时序画像</text>
+            
+            <rect x="352" y="550" width="264" height="76" rx="10" fill="#FFFFFF" stroke="#93C5FD" stroke-width="1.6"/>
+            <text x="484" y="597" text-anchor="middle" fill="#0F172A" font-size="23" font-weight="800">状态分段识别</text>
 
-            <line x1="580" y1="574" x2="580" y2="626" stroke="#2563EB" stroke-width="3.2" marker-end="url(#m10-b)"/>
+            <rect x="352" y="646" width="264" height="76" rx="10" fill="#FFFFFF" stroke="#93C5FD" stroke-width="1.6"/>
+            <text x="484" y="693" text-anchor="middle" fill="#0F172A" font-size="23" font-weight="800">结构突变定位</text>
 
-            <!-- Stage 3 -->
-            <rect x="0" y="636" width="1160" height="204" rx="16" fill="#1D4ED8"/>
-            <rect x="28" y="662" width="136" height="34" rx="8" fill="#FFFFFF"/>
-            <text x="96" y="685" text-anchor="middle" fill="#1D4ED8" font-size="15" font-weight="800">阶段三</text>
-            <text x="184" y="686" fill="#FFFFFF" font-size="21" font-weight="800">类 Black–Litterman 闭式贝叶斯精度融合</text>
-            <text x="28" y="742" fill="#DBEAFE" font-size="17" font-family="JetBrains Mono, monospace">后验均值 ∝ (τ₀Σ)⁻¹π + Ω<tspan dy="4" font-size="12">macro</tspan><tspan dy="-4">⁻¹q</tspan><tspan dy="4" font-size="12">macro</tspan><tspan dy="-4"> + Ω</tspan><tspan dy="4" font-size="12">micro</tspan><tspan dy="-4">⁻¹q</tspan><tspan dy="4" font-size="12">micro</tspan></text>
-            <text x="28" y="794" fill="#BFDBFE" font-size="15.5">利用文本事件流与数值基座模型之间的低误差相关性，联合求解整条轨迹并保留跨步结构</text>
+            <rect x="352" y="742" width="264" height="76" rx="10" fill="#FFFFFF" stroke="#93C5FD" stroke-width="1.6"/>
+            <text x="484" y="789" text-anchor="middle" fill="#0F172A" font-size="23" font-weight="800">核心驱动因子提取</text>
 
-            <!-- Right 33%: Clean Editable Placeholder Zone -->
-            <rect x="1216" y="80" width="608" height="760" rx="16" fill="#FAFBFD" stroke="#94A3B8" stroke-width="2" stroke-dasharray="9 7"/>
-            <text x="1264" y="142" fill="#1D4ED8" font-size="17" font-weight="800" letter-spacing="1">本页待补充内容</text>
-            <line x1="1264" y1="166" x2="1776" y2="166" stroke="#E2E8F0" stroke-width="1.5"/>
-            <text x="1264" y="232" fill="#334155" font-size="20" font-weight="800">01 · 方法最亮眼之处</text>
-            <text x="1264" y="274" fill="#94A3B8" font-size="16">待定：把 LLM 观点转化为可校准的概率精度</text>
+            <!-- Top Express Route: Numerical Anchor -> Stage 3 -->
+            <path d="M 642 216 L 1384 216" fill="none" stroke="#475569" stroke-width="3.4" marker-end="url(#m10-s)"/>
+            <rect x="884" y="194" width="300" height="42" rx="8" fill="#F1F5F9" stroke="#CBD5E1" stroke-width="1.4"/>
+            <text x="1034" y="223" text-anchor="middle" fill="#334155" font-size="22" font-weight="800">纯数值锚点直通融合</text>
 
-            <text x="1264" y="388" fill="#334155" font-size="20" font-weight="800">02 · 适用边界与疑问</text>
-            <text x="1264" y="430" fill="#94A3B8" font-size="16">待定：协方差估计样本量 / 强非线性突变</text>
+            <!-- Arrow: Causal Profiling -> Stage 2 -->
+            <line x1="666" y1="600" x2="716" y2="600" stroke="#2563EB" stroke-width="3.6" marker-end="url(#m10-b)"/>
 
-            <text x="1264" y="544" fill="#334155" font-size="20" font-weight="800">03 · 与自己课题的关联</text>
-            <text x="1264" y="586" fill="#94A3B8" font-size="16">待定：衔接第 11 页个人研究构想</text>
+            <!-- ==================== STAGE 2: DUAL OUTLOOKS (GPT) + HISTORY CHECK (x=724..1336) ==================== -->
+            <rect x="724" y="274" width="612" height="622" rx="18" fill="#FAFBFD" stroke="#2563EB" stroke-width="2.2"/>
+            <rect x="748" y="298" width="116" height="38" rx="8" fill="#EFF6FF" stroke="#2563EB" stroke-width="1.8"/>
+            <text x="806" y="325" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="800">阶段二</text>
+            <use href="#gpt-icon" x="892" y="317"/>
+            <use href="#ds-s10" x="934" y="317"/>
+            <text x="962" y="326" fill="#1D4ED8" font-size="24" font-weight="800">大模型双视角推演与历史检验</text>
+
+            <!-- Dual Semantic Outlooks (Spacious, Zero Crowding) -->
+            <rect x="748" y="362" width="274" height="156" rx="14" fill="#FFFFFF" stroke="#2563EB" stroke-width="2"/>
+            <text x="885" y="408" text-anchor="middle" fill="#1D4ED8" font-size="24" font-weight="800">宏观走势视角</text>
+            <text x="885" y="454" text-anchor="middle" fill="#475569" font-size="22">先定整体趋势形态</text>
+            <text x="885" y="492" text-anchor="middle" fill="#475569" font-size="22">再落具体数值走势</text>
+
+            <rect x="1038" y="362" width="274" height="156" rx="14" fill="#FFFFFF" stroke="#2563EB" stroke-width="2"/>
+            <text x="1175" y="424" text-anchor="middle" fill="#1D4ED8" font-size="24" font-weight="800">微观突变视角</text>
+            <text x="1175" y="474" text-anchor="middle" fill="#475569" font-size="22">逐点直接推演</text>
+
+            <!-- Dedicated Down + Up Arrows for BOTH Macro (left) and Micro (right) Outlooks! -->
+            <!-- Macro down & up -->
+            <line x1="848" y1="518" x2="848" y2="692" stroke="#2563EB" stroke-width="3.2" marker-end="url(#m10-b)"/>
+            <line x1="922" y1="700" x2="922" y2="526" stroke="#2563EB" stroke-width="3.2" stroke-dasharray="6 4" marker-end="url(#m10-b)"/>
+            <!-- Micro down & up -->
+            <line x1="1138" y1="518" x2="1138" y2="692" stroke="#2563EB" stroke-width="3.2" marker-end="url(#m10-b)"/>
+            <line x1="1212" y1="700" x2="1212" y2="526" stroke="#2563EB" stroke-width="3.2" stroke-dasharray="6 4" marker-end="url(#m10-b)"/>
+            <!-- Clean centered label in the generous gap -->
+            <rect x="952" y="586" width="156" height="44" rx="8" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1.4"/>
+            <text x="1030" y="616" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="800">调整提示词</text>
+
+            <!-- Compact Bottom Box: 根据历史数据计算误差 -->
+            <rect x="748" y="700" width="564" height="156" rx="14" fill="#EFF6FF" stroke="#1D4ED8" stroke-width="2.2"/>
+            <text x="1030" y="788" text-anchor="middle" fill="#1D4ED8" font-size="28" font-weight="800">根据历史数据计算误差</text>
+
+                        
+            <!-- Arrow: Stage 2 -> Stage 3 -->
+            <line x1="1336" y1="560" x2="1384" y2="560" stroke="#2563EB" stroke-width="3.8" marker-end="url(#m10-b)"/>
+
+            <!-- ==================== STAGE 3: CLEAN WHITE WEIGHTED FUSION (x=1392..1808, NO DARK BLUE BLOCK!) ==================== -->
+            <rect x="1392" y="72" width="416" height="824" rx="18" fill="#FAFBFD" stroke="#2563EB" stroke-width="2.4"/>
+            <rect x="1418" y="96" width="116" height="38" rx="8" fill="#EFF6FF" stroke="#1D4ED8" stroke-width="1.8"/>
+            <text x="1476" y="123" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="800">阶段三</text>
+            <text x="1552" y="124" fill="#1D4ED8" font-size="26" font-weight="800">加权融合</text>
+
+            <!-- Clean White Visual Weighted-Merge Diagram (Zero dark-blue wall, zero 4-bullet list) -->
+            <rect x="1418" y="164" width="364" height="324" rx="14" fill="#FFFFFF" stroke="#93C5FD" stroke-width="2"/>
+            <text x="1600" y="212" text-anchor="middle" fill="#0F172A" font-size="24" font-weight="800">按历史可信度自动配权</text>
+
+            <!-- 3 Clean Source Pills Merging into Weighted Fusion -->
+            <rect x="1442" y="242" width="152" height="52" rx="10" fill="#F1F5F9" stroke="#CBD5E1" stroke-width="1.5"/>
+            <text x="1518" y="276" text-anchor="middle" fill="#334155" font-size="22" font-weight="700">数值锚点</text>
+
+            <rect x="1442" y="310" width="152" height="52" rx="10" fill="#EFF6FF" stroke="#93C5FD" stroke-width="1.5"/>
+            <text x="1518" y="344" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="700">宏观视角</text>
+
+            <rect x="1442" y="378" width="152" height="52" rx="10" fill="#EFF6FF" stroke="#93C5FD" stroke-width="1.5"/>
+            <text x="1518" y="412" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="700">微观视角</text>
+
+            <!-- Clean orthogonal merge lines -> Weighted Sum circle -->
+            <line x1="1594" y1="268" x2="1632" y2="268" stroke="#64748B" stroke-width="2.4"/>
+            <line x1="1594" y1="336" x2="1658" y2="336" stroke="#2563EB" stroke-width="2.6" marker-end="url(#m10-b)"/>
+            <line x1="1594" y1="404" x2="1632" y2="404" stroke="#2563EB" stroke-width="2.4"/>
+            <line x1="1632" y1="268" x2="1632" y2="404" stroke="#2563EB" stroke-width="2.4"/>
+
+            <circle cx="1712" cy="336" r="46" fill="#EFF6FF" stroke="#1D4ED8" stroke-width="2.6"/>
+            <text x="1712" y="328" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="800">加权</text>
+            <text x="1712" y="358" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="800">融合</text>
+
+            
+            <line x1="1600" y1="488" x2="1600" y2="540" stroke="#2563EB" stroke-width="3.6" marker-end="url(#m10-b)"/>
+
+            <!-- Final Output Trajectory Comparison -->
+            <rect x="1418" y="548" width="364" height="318" rx="14" fill="#FFFFFF" stroke="#2563EB" stroke-width="2"/>
+            <text x="1600" y="596" text-anchor="middle" fill="#0F172A" font-size="24" font-weight="800">融合轨迹 + 因果解释</text>
+            <line x1="1442" y1="774" x2="1758" y2="774" stroke="#CBD5E1" stroke-width="1.6"/>
+            <line x1="1566" y1="628" x2="1566" y2="774" stroke="#2563EB" stroke-width="2" stroke-dasharray="4 4"/>
+            <path d="M 1446 734 Q 1486 694, 1524 716 T 1566 700" fill="none" stroke="#334155" stroke-width="3.4"/>
+            <path d="M 1566 700 Q 1656 718, 1752 742" fill="none" stroke="#94A3B8" stroke-width="2.8" stroke-dasharray="6 4"/>
+            <path d="M 1566 700 L 1752 634 L 1752 708 Z" fill="#DBEAFE" opacity="0.75"/>
+            <path d="M 1566 700 Q 1654 664, 1752 662" fill="none" stroke="#1D4ED8" stroke-width="4.4" stroke-linecap="round"/>
+            <text x="1676" y="646" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="800">融合预测</text>
+            <text x="1676" y="762" text-anchor="middle" fill="#64748B" font-size="22">纯基座预测</text>
+            <text x="1600" y="832" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="800">文本与数值互补降错</text>
           </svg>
         </div>
       </section>
 
-      <!-- ==================== SLIDE 11: 个人思考与后续方向（占位） ==================== -->
+      <!-- ==================== SLIDE 11 ==================== -->
       <section class="slide" data-title="个人思考与研究构想">
         <header class="slide-header">
           <div class="header-left">
@@ -1421,56 +1352,57 @@
           </div>
           <nav class="slide-agenda-rail"></nav>
         </header>
-
         <div class="visual-stage">
-          <svg viewBox="0 0 1824 890" xmlns="http://www.w3.org/2000/svg">
+          <svg viewBox="0 0 1808 920" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <marker id="m11-b" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563EB"/>
+                <path d="M 0 1.2 L 9.5 5 L 0 8.8 L 2.2 5 z" fill="#2563EB"/>
               </marker>
             </defs>
 
-            <text x="0" y="48" fill="#64748B" font-size="17" font-weight="700">从既有工作演进脉络出发，梳理自己的问题切入点、方法设想与验证路径（占位待填）</text>
+            <text x="0" y="42" fill="#64748B" font-size="22" font-weight="700">从既有工作脉络出发，梳理自己的问题切入点、方法设想与验证路径（占位待填）</text>
 
-            <!-- 3 Progressive Open Columns -->
-            <g transform="translate(0, 96)">
-              <rect x="0" y="0" width="564" height="714" rx="16" fill="#FAFBFD" stroke="#CBD5E1" stroke-width="2" stroke-dasharray="9 7"/>
-              <rect x="34" y="34" width="120" height="36" rx="8" fill="#EFF6FF"/>
-              <text x="94" y="58" text-anchor="middle" fill="#1D4ED8" font-size="15.5" font-weight="800">思考一</text>
-              <text x="34" y="124" fill="#0F172A" font-size="28" font-weight="800">问题切入点</text>
-              <text x="34" y="166" fill="#64748B" font-size="16">现有时序智能体尚未解决的根本矛盾是什么？</text>
-              <line x1="34" y1="202" x2="530" y2="202" stroke="#E2E8F0" stroke-width="1.5"/>
-              <text x="34" y="274" fill="#94A3B8" font-size="18" font-weight="600">· 待填写核心痛点 1</text>
-              <text x="34" y="348" fill="#94A3B8" font-size="18" font-weight="600">· 待填写核心痛点 2</text>
-              <text x="34" y="422" fill="#94A3B8" font-size="18" font-weight="600">· 待填写与前文三篇工作的差异</text>
+            <g transform="translate(0, 82)">
+              <rect x="0" y="0" width="564" height="804" rx="16" fill="#FAFBFD" stroke="#CBD5E1" stroke-width="2" stroke-dasharray="9 7"/>
+              <rect x="34" y="34" width="128" height="44" rx="8" fill="#EFF6FF"/>
+              <text x="98" y="64" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="800">思考一</text>
+              <text x="34" y="140" fill="#0F172A" font-size="32" font-weight="800">问题切入点</text>
+              <text x="34" y="196" fill="#64748B" font-size="22">现有时序智能体尚未解决的</text>
+              <text x="34" y="232" fill="#64748B" font-size="22">根本矛盾是什么？</text>
+              <line x1="34" y1="274" x2="530" y2="274" stroke="#E2E8F0" stroke-width="1.6"/>
+              <text x="34" y="352" fill="#64748B" font-size="23" font-weight="600">· 待填写核心痛点 1</text>
+              <text x="34" y="438" fill="#64748B" font-size="23" font-weight="600">· 待填写核心痛点 2</text>
+              <text x="34" y="524" fill="#64748B" font-size="23" font-weight="600">· 待填写与前文工作的差异</text>
             </g>
 
-            <line x1="576" y1="452" x2="616" y2="452" stroke="#2563EB" stroke-width="3.5" marker-end="url(#m11-b)"/>
+            <line x1="574" y1="484" x2="612" y2="484" stroke="#2563EB" stroke-width="4" marker-end="url(#m11-b)"/>
 
-            <g transform="translate(630, 96)">
-              <rect x="0" y="0" width="564" height="714" rx="16" fill="#EFF6FF" stroke="#2563EB" stroke-width="2.2" stroke-dasharray="9 7"/>
-              <rect x="34" y="34" width="120" height="36" rx="8" fill="#1D4ED8"/>
-              <text x="94" y="58" text-anchor="middle" fill="#FFFFFF" font-size="15.5" font-weight="800">思考二</text>
-              <text x="34" y="124" fill="#1D4ED8" font-size="28" font-weight="800">核心方法构想</text>
-              <text x="34" y="166" fill="#334155" font-size="16">语义控制流与数值计算流如何更优雅地结合？</text>
-              <line x1="34" y1="202" x2="530" y2="202" stroke="#BFDBFE" stroke-width="1.5"/>
-              <text x="34" y="274" fill="#64748B" font-size="18" font-weight="600">· 待填写核心机制 / 数学直觉</text>
-              <text x="34" y="348" fill="#64748B" font-size="18" font-weight="600">· 待填写工具或记忆闭环设计</text>
-              <text x="34" y="422" fill="#64748B" font-size="18" font-weight="600">· 待填写框架示意草图</text>
+            <g transform="translate(622, 82)">
+              <rect x="0" y="0" width="564" height="804" rx="16" fill="#EFF6FF" stroke="#2563EB" stroke-width="2.4" stroke-dasharray="9 7"/>
+              <rect x="34" y="34" width="128" height="44" rx="8" fill="#DBEAFE" stroke="#93C5FD" stroke-width="1.5"/>
+              <text x="98" y="64" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="800">思考二</text>
+              <text x="34" y="140" fill="#1D4ED8" font-size="32" font-weight="800">核心方法构想</text>
+              <text x="34" y="196" fill="#334155" font-size="22">语义控制流与数值计算流</text>
+              <text x="34" y="232" fill="#334155" font-size="22">如何更优雅地结合？</text>
+              <line x1="34" y1="274" x2="530" y2="274" stroke="#BFDBFE" stroke-width="1.6"/>
+              <text x="34" y="352" fill="#334155" font-size="23" font-weight="600">· 待填写核心机制与直觉</text>
+              <text x="34" y="438" fill="#334155" font-size="23" font-weight="600">· 待填写工具或记忆闭环</text>
+              <text x="34" y="524" fill="#334155" font-size="23" font-weight="600">· 待填写框架示意草图</text>
             </g>
 
-            <line x1="1206" y1="452" x2="1246" y2="452" stroke="#2563EB" stroke-width="3.5" marker-end="url(#m11-b)"/>
+            <line x1="1196" y1="484" x2="1234" y2="484" stroke="#2563EB" stroke-width="4" marker-end="url(#m11-b)"/>
 
-            <g transform="translate(1260, 96)">
-              <rect x="0" y="0" width="564" height="714" rx="16" fill="#FAFBFD" stroke="#CBD5E1" stroke-width="2" stroke-dasharray="9 7"/>
-              <rect x="34" y="34" width="120" height="36" rx="8" fill="#EFF6FF"/>
-              <text x="94" y="58" text-anchor="middle" fill="#1D4ED8" font-size="15.5" font-weight="800">思考三</text>
-              <text x="34" y="124" fill="#0F172A" font-size="28" font-weight="800">实验与验证设想</text>
-              <text x="34" y="166" fill="#64748B" font-size="16">如何设计最小闭环实验证明想法真正有效？</text>
-              <line x1="34" y1="202" x2="530" y2="202" stroke="#E2E8F0" stroke-width="1.5"/>
-              <text x="34" y="274" fill="#94A3B8" font-size="18" font-weight="600">· 待填写目标基准与场景</text>
-              <text x="34" y="348" fill="#94A3B8" font-size="18" font-weight="600">· 待填写关键对照与消融设计</text>
-              <text x="34" y="422" fill="#94A3B8" font-size="18" font-weight="600">· 待填写预期核心结论</text>
+            <g transform="translate(1244, 82)">
+              <rect x="0" y="0" width="564" height="804" rx="16" fill="#FAFBFD" stroke="#CBD5E1" stroke-width="2" stroke-dasharray="9 7"/>
+              <rect x="34" y="34" width="128" height="44" rx="8" fill="#EFF6FF"/>
+              <text x="98" y="64" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="800">思考三</text>
+              <text x="34" y="140" fill="#0F172A" font-size="32" font-weight="800">实验与验证设想</text>
+              <text x="34" y="196" fill="#64748B" font-size="22">如何设计最小闭环实验</text>
+              <text x="34" y="232" fill="#64748B" font-size="22">证明想法真正有效？</text>
+              <line x1="34" y1="274" x2="530" y2="274" stroke="#E2E8F0" stroke-width="1.6"/>
+              <text x="34" y="352" fill="#64748B" font-size="23" font-weight="600">· 待填写目标基准与场景</text>
+              <text x="34" y="438" fill="#64748B" font-size="23" font-weight="600">· 待填写关键对照与消融</text>
+              <text x="34" y="524" fill="#64748B" font-size="23" font-weight="600">· 待填写预期核心结论</text>
             </g>
           </svg>
         </div>
@@ -1487,7 +1419,6 @@
     <button class="hud-btn" id="btn-next" type="button" aria-label="下一页">▶</button>
   </div>
 
-  <!-- TOC Drawer -->
   <div class="drawer-backdrop" id="drawer-backdrop"></div>
   <aside class="toc-drawer" id="toc-drawer">
     <div class="toc-title">演示目录（共 11 页）</div>
@@ -1504,10 +1435,8 @@
         '4 预测推理', '5 增强合成', '6 异常诊断', '7 决策支持',
         '8 TimeCopilot', '9 TS-Reasoner', '10 NEXUS', '11 思考'
       ];
-
       let current = 0;
 
-      // Build top agenda rails on every slide
       slides.forEach((slide) => {
         const rail = slide.querySelector('.slide-agenda-rail');
         if (!rail) return;
@@ -1522,17 +1451,13 @@
         });
       });
 
-      // Build TOC drawer
       const tocList = document.getElementById('toc-list');
       slides.forEach((slide, idx) => {
         const li = document.createElement('li');
         li.className = 'toc-item';
         const num = String(idx + 1).padStart(2, '0');
         li.innerHTML = `<span class="toc-num">${num}</span><span>${slide.dataset.title || shortLabels[idx]}</span>`;
-        li.addEventListener('click', () => {
-          goTo(idx);
-          closeDrawer();
-        });
+        li.addEventListener('click', () => { goTo(idx); closeDrawer(); });
         tocList.appendChild(li);
       });
 
@@ -1543,17 +1468,14 @@
         current = (index + total) % total;
         slides.forEach((s, i) => {
           s.classList.toggle('active', i === current);
-          const pills = s.querySelectorAll('.agenda-pill');
-          pills.forEach((p, j) => p.classList.toggle('active', j === current));
+          s.querySelectorAll('.agenda-pill').forEach((p, j) => p.classList.toggle('active', j === current));
         });
         tocItems.forEach((item, i) => item.classList.toggle('active', i === current));
         hudCounter.textContent = `${String(current + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')}`;
       }
 
       function fitStage() {
-        const vw = window.innerWidth;
-        const vh = window.innerHeight;
-        const scale = Math.min(vw / 1920, vh / 1080);
+        const scale = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
         stage.style.transform = `scale(${scale})`;
       }
 
@@ -1568,15 +1490,10 @@
       backdrop.addEventListener('click', closeDrawer);
 
       window.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
-          e.preventDefault(); goTo(current + 1);
-        } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
-          e.preventDefault(); goTo(current - 1);
-        } else if (e.key === 'Escape') {
-          closeDrawer();
-        }
+        if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); goTo(current + 1); }
+        else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); goTo(current - 1); }
+        else if (e.key === 'Escape') { closeDrawer(); }
       });
-
       window.addEventListener('resize', fitStage);
       fitStage();
       goTo(0);
