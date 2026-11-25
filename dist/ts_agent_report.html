@@ -507,13 +507,13 @@
         <header class="slide-header">
           <div class="header-left">
             <span class="slide-num">03</span>
-            <h1 class="slide-title">问题驱动的四大任务分类：沿时序信号生命周期展开</h1>
+            <h1 class="slide-title">问题驱动的四大任务分类</h1>
           </div>
           <nav class="slide-agenda-rail"></nav>
         </header>
 
         <div class="visual-stage">
-          <svg viewBox="0 0 1824 890" xmlns="http://www.w3.org/2000/svg">
+                    <svg viewBox="0 0 1824 890" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <marker id="m3-blue" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
                 <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563EB"/>
@@ -521,126 +521,118 @@
             </defs>
 
             <!-- Top Lead Caption -->
-            <text x="0" y="42" fill="#64748B" font-size="17" font-weight="700">综述按「待解决的时序核心问题」划分四大方向，而非按模型技巧堆砌 —— 四类任务分别作用在时序演化的不同阶段</text>
+            <text x="0" y="42" fill="#64748B" font-size="18" font-weight="700">综述按「待解决的时序核心问题」划分四大任务方向，而非按模型技巧堆砌</text>
 
-            <!-- UNIFIED TIME-SERIES LIFECYCLE HORIZON BAND -->
+            <!-- UNIFIED FOUR-TASK HORIZON BAND (Strict Order: 预测与推理 -> 增强与合成 -> 异常检测与诊断 -> 决策支持) -->
             <rect x="0" y="72" width="1824" height="536" rx="18" fill="#FAFBFD" stroke="#E2E8F0" stroke-width="1.5"/>
 
-            <!-- 4 Subtle Vertical Phase Dividers -->
+            <!-- 3 Subtle Vertical Dividers -->
             <line x1="456" y1="96" x2="456" y2="584" stroke="#E2E8F0" stroke-width="1.5" stroke-dasharray="6 6"/>
             <line x1="912" y1="96" x2="912" y2="584" stroke="#E2E8F0" stroke-width="1.5" stroke-dasharray="6 6"/>
             <line x1="1368" y1="96" x2="1368" y2="584" stroke="#E2E8F0" stroke-width="1.5" stroke-dasharray="6 6"/>
 
-            <!-- Phase Axis Labels at Top of Canvas -->
-            <text x="228" y="114" text-anchor="middle" fill="#64748B" font-size="14" font-weight="800" letter-spacing="1.2">阶段一 · 历史数据稀缺与失衡</text>
-            <text x="684" y="114" text-anchor="middle" fill="#64748B" font-size="14" font-weight="800" letter-spacing="1.2">阶段二 · 实时监测与故障突发</text>
-            <text x="1140" y="114" text-anchor="middle" fill="#1D4ED8" font-size="14" font-weight="800" letter-spacing="1.2">阶段三 · 未知未来与隐含因果</text>
-            <text x="1596" y="114" text-anchor="middle" fill="#1D4ED8" font-size="14" font-weight="800" letter-spacing="1.2">阶段四 · 实时环境交互控制</text>
+            <!-- Problem Context Eyebrows at Top -->
+            <text x="228" y="116" text-anchor="middle" fill="#1D4ED8" font-size="15.5" font-weight="800">未知未来与隐含因果</text>
+            <text x="684" y="116" text-anchor="middle" fill="#1D4ED8" font-size="15.5" font-weight="800">数据稀缺与分布失衡</text>
+            <text x="1140" y="116" text-anchor="middle" fill="#1D4ED8" font-size="15.5" font-weight="800">实时监测与故障突发</text>
+            <text x="1596" y="116" text-anchor="middle" fill="#1D4ED8" font-size="15.5" font-weight="800">动态环境交互控制</text>
 
             <!-- Continuous Horizontal Baseline -->
-            <line x1="44" y1="358" x2="1776" y2="358" stroke="#CBD5E1" stroke-width="1.8"/>
-            <line x1="1750" y1="358" x2="1786" y2="358" stroke="#2563EB" stroke-width="2.5" marker-end="url(#m3-blue)"/>
+            <line x1="40" y1="364" x2="1776" y2="364" stroke="#CBD5E1" stroke-width="1.8"/>
+            <line x1="1750" y1="364" x2="1786" y2="364" stroke="#2563EB" stroke-width="2.5" marker-end="url(#m3-blue)"/>
 
-            <!-- PHASE 1 VISUAL: Augmentation & Synthesis (Sparse dots -> Generated dashed family) -->
+            <!-- COL 1 VISUAL: 预测与推理 -->
             <g>
-              <path d="M 56 322 Q 112 248, 168 304 T 280 264 T 396 294" fill="none" stroke="#93C5FD" stroke-width="2.8" stroke-dasharray="6 5"/>
-              <path d="M 56 336 Q 112 272, 168 318 T 280 282 T 396 308" fill="none" stroke="#2563EB" stroke-width="3.2"/>
-              <circle cx="88" cy="306" r="5" fill="#1D4ED8"/>
-              <circle cx="196" cy="296" r="5" fill="#1D4ED8"/>
-              <circle cx="324" cy="288" r="5" fill="#1D4ED8"/>
-              <text x="228" y="210" text-anchor="middle" fill="#2563EB" font-size="14" font-weight="700">条件补全与可控合成族</text>
+              <path d="M 48 304 Q 96 276, 148 294 T 212 270" fill="none" stroke="#334155" stroke-width="3.4"/>
+              <line x1="212" y1="190" x2="212" y2="364" stroke="#2563EB" stroke-width="2" stroke-dasharray="5 4"/>
+              <path d="M 212 270 L 418 198 L 418 320 Z" fill="#DBEAFE" opacity="0.75"/>
+              <path d="M 212 270 Q 314 230, 418 248" fill="none" stroke="#1D4ED8" stroke-width="4.2" stroke-linecap="round"/>
+              <text x="316" y="198" text-anchor="middle" fill="#1D4ED8" font-size="15" font-weight="800">事件约束外推与推理</text>
             </g>
 
-            <!-- PHASE 2 VISUAL: Anomaly Detection & Diagnosis (Streaming spike + root cause marker) -->
+            <!-- COL 2 VISUAL: 增强与合成 -->
             <g>
-              <path d="M 488 308 Q 536 286, 584 304 L 642 302 L 664 188 L 686 312 Q 748 294, 868 298" fill="none" stroke="#334155" stroke-width="3.2"/>
-              <circle cx="664" cy="188" r="10" fill="#FFF1F2" stroke="#BE123C" stroke-width="2.8"/>
-              <circle cx="664" cy="188" r="4" fill="#BE123C"/>
-              <line x1="664" y1="198" x2="664" y2="358" stroke="#BE123C" stroke-width="1.8" stroke-dasharray="4 3"/>
-              <text x="748" y="202" fill="#BE123C" font-size="14" font-weight="800">异常尖峰 + 根因定位</text>
+              <path d="M 508 326 Q 564 252, 620 308 T 732 268 T 848 298" fill="none" stroke="#93C5FD" stroke-width="2.8" stroke-dasharray="6 5"/>
+              <path d="M 508 340 Q 564 276, 620 322 T 732 286 T 848 312" fill="none" stroke="#2563EB" stroke-width="3.4"/>
+              <circle cx="540" cy="310" r="5.5" fill="#1D4ED8"/>
+              <circle cx="648" cy="300" r="5.5" fill="#1D4ED8"/>
+              <circle cx="776" cy="292" r="5.5" fill="#1D4ED8"/>
+              <text x="684" y="212" text-anchor="middle" fill="#2563EB" font-size="15" font-weight="800">条件补全与可控合成族</text>
             </g>
 
-            <!-- PHASE 3 VISUAL: Forecasting & Reasoning (Current cutoff -> uncertainty fan & conditioned trajectory) -->
+            <!-- COL 3 VISUAL: 异常检测与诊断 -->
             <g>
-              <path d="M 944 298 Q 992 272, 1044 288 T 1106 266" fill="none" stroke="#334155" stroke-width="3.2"/>
-              <line x1="1106" y1="186" x2="1106" y2="358" stroke="#2563EB" stroke-width="2" stroke-dasharray="5 4"/>
-              <path d="M 1106 266 L 1326 196 L 1326 316 Z" fill="#DBEAFE" opacity="0.75"/>
-              <path d="M 1106 266 Q 1216 226, 1326 244" fill="none" stroke="#1D4ED8" stroke-width="4" stroke-linecap="round"/>
-              <text x="1220" y="196" text-anchor="middle" fill="#1D4ED8" font-size="14" font-weight="800">事件约束外推与机理推理</text>
+              <path d="M 944 312 Q 992 290, 1040 308 L 1098 306 L 1120 192 L 1142 316 Q 1204 298, 1324 302" fill="none" stroke="#334155" stroke-width="3.4"/>
+              <circle cx="1120" cy="192" r="10.5" fill="#FFF1F2" stroke="#BE123C" stroke-width="2.8"/>
+              <circle cx="1120" cy="192" r="4.2" fill="#BE123C"/>
+              <line x1="1120" y1="202" x2="1120" y2="364" stroke="#BE123C" stroke-width="1.8" stroke-dasharray="4 3"/>
+              <text x="1208" y="206" fill="#BE123C" font-size="15" font-weight="800">异常尖峰 + 根因定位</text>
             </g>
 
-            <!-- PHASE 4 VISUAL: Decision Support (State -> Action -> Environment Feedback Loop) -->
+            <!-- COL 4 VISUAL: 决策支持 -->
             <g>
-              <path d="M 1400 288 Q 1446 254, 1492 272" fill="none" stroke="#334155" stroke-width="3.2"/>
-              <rect x="1508" y="228" width="120" height="58" rx="10" fill="#1D4ED8"/>
-              <text x="1568" y="263" text-anchor="middle" fill="#FFFFFF" font-size="16" font-weight="800">执行策略</text>
-              <path d="M 1628 257 L 1692 257" stroke="#2563EB" stroke-width="3" marker-end="url(#m3-blue)"/>
-              <circle cx="1736" cy="257" r="34" fill="#EFF6FF" stroke="#2563EB" stroke-width="2.2"/>
-              <text x="1736" y="263" text-anchor="middle" fill="#1D4ED8" font-size="15" font-weight="800">环境</text>
-              <path d="M 1736 291 C 1736 336, 1568 336, 1568 294" fill="none" stroke="#2563EB" stroke-width="2.4" stroke-dasharray="5 4" marker-end="url(#m3-blue)"/>
-              <text x="1652" y="346" text-anchor="middle" fill="#2563EB" font-size="13.5" font-weight="700">仿真与收益回写</text>
+              <path d="M 1400 292 Q 1446 258, 1492 276" fill="none" stroke="#334155" stroke-width="3.4"/>
+              <rect x="1508" y="232" width="120" height="58" rx="10" fill="#1D4ED8"/>
+              <text x="1568" y="267" text-anchor="middle" fill="#FFFFFF" font-size="16.5" font-weight="800">执行策略</text>
+              <path d="M 1628 261 L 1692 261" stroke="#2563EB" stroke-width="3" marker-end="url(#m3-blue)"/>
+              <circle cx="1736" cy="261" r="34" fill="#EFF6FF" stroke="#2563EB" stroke-width="2.2"/>
+              <text x="1736" y="267" text-anchor="middle" fill="#1D4ED8" font-size="15.5" font-weight="800">环境</text>
+              <path d="M 1736 295 C 1736 340, 1568 340, 1568 298" fill="none" stroke="#2563EB" stroke-width="2.4" stroke-dasharray="5 4" marker-end="url(#m3-blue)"/>
+              <text x="1652" y="352" text-anchor="middle" fill="#2563EB" font-size="14" font-weight="700">仿真与收益回写</text>
             </g>
 
-            <!-- 4 Crisp Typographic Definitions Anchored Below Each Phase -->
-            <!-- Cat 2 (Data Phase) -->
-            <g transform="translate(36, 404)">
-              <text x="0" y="26" fill="#2563EB" font-size="15" font-weight="800">分类二</text>
-              <text x="0" y="64" fill="#0F172A" font-size="25" font-weight="800">增强与合成</text>
-              <text x="0" y="106" fill="#475569" font-size="16">受控生成或改写保真时序样本，</text>
-              <text x="0" y="132" fill="#475569" font-size="16">缓解稀缺与失衡并抑制语义漂移</text>
+            <!-- 4 Crisp Definitions Strictly In Order (Zero "分类一二三四") -->
+            <g transform="translate(36, 412)">
+              <text x="0" y="36" fill="#0F172A" font-size="27" font-weight="800">预测与推理</text>
+              <text x="0" y="84" fill="#475569" font-size="17">结合外部信息与约束调用工具，</text>
+              <text x="0" y="114" fill="#475569" font-size="17">推断未来演化轨迹与潜在因果</text>
             </g>
 
-            <!-- Cat 3 (Monitoring Phase) -->
-            <g transform="translate(492, 404)">
-              <text x="0" y="26" fill="#2563EB" font-size="15" font-weight="800">分类三</text>
-              <text x="0" y="64" fill="#0F172A" font-size="25" font-weight="800">异常检测与诊断</text>
-              <text x="0" y="106" fill="#475569" font-size="16">筛选多维监测证据、防误报退化，</text>
-              <text x="0" y="132" fill="#475569" font-size="16">并串联线索完成故障根因溯源</text>
+            <g transform="translate(492, 412)">
+              <text x="0" y="36" fill="#0F172A" font-size="27" font-weight="800">增强与合成</text>
+              <text x="0" y="84" fill="#475569" font-size="17">受控生成或改写保真时序样本，</text>
+              <text x="0" y="114" fill="#475569" font-size="17">缓解稀缺与失衡并抑制语义漂移</text>
             </g>
 
-            <!-- Cat 1 (Future Phase) -->
-            <g transform="translate(948, 404)">
-              <text x="0" y="26" fill="#1D4ED8" font-size="15" font-weight="800">分类一</text>
-              <text x="0" y="64" fill="#0F172A" font-size="25" font-weight="800">预测与推理</text>
-              <text x="0" y="106" fill="#475569" font-size="16">结合外部信息与约束调用工具，</text>
-              <text x="0" y="132" fill="#475569" font-size="16">推断未来演化轨迹与潜在因果</text>
+            <g transform="translate(948, 412)">
+              <text x="0" y="36" fill="#0F172A" font-size="27" font-weight="800">异常检测与诊断</text>
+              <text x="0" y="84" fill="#475569" font-size="17">筛选多维监测证据、防误报退化，</text>
+              <text x="0" y="114" fill="#475569" font-size="17">并串联线索完成故障根因溯源</text>
             </g>
 
-            <!-- Cat 4 (Control Phase) -->
-            <g transform="translate(1404, 404)">
-              <text x="0" y="26" fill="#1D4ED8" font-size="15" font-weight="800">分类四</text>
-              <text x="0" y="64" fill="#0F172A" font-size="25" font-weight="800">决策支持</text>
-              <text x="0" y="106" fill="#475569" font-size="16">将实时时序状态耦合求解器，</text>
-              <text x="0" y="132" fill="#475569" font-size="16">直接转化为可执行的策略动作</text>
+            <g transform="translate(1404, 412)">
+              <text x="0" y="36" fill="#0F172A" font-size="27" font-weight="800">决策支持</text>
+              <text x="0" y="84" fill="#475569" font-size="17">将实时时序状态耦合求解器，</text>
+              <text x="0" y="114" fill="#475569" font-size="17">直接转化为可执行的策略动作</text>
             </g>
 
-            <!-- BOTTOM UNIFIED DESIGN DIMENSIONS BAR (3 Shared Building Blocks) -->
-            <text x="0" y="656" fill="#64748B" font-size="15.5" font-weight="800" letter-spacing="1.2">共性支撑底座 · 贯穿四类任务的三维设计要素</text>
+            <!-- BOTTOM UNIFIED DESIGN DIMENSIONS BAR -->
+            <text x="0" y="656" fill="#64748B" font-size="16" font-weight="800" letter-spacing="1.2">共性支撑底座 · 贯穿四类任务的三维设计要素</text>
 
             <rect x="0" y="678" width="584" height="174" rx="14" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.5"/>
-            <text x="32" y="720" fill="#1D4ED8" font-size="19" font-weight="800">一 · 协作架构</text>
-            <text x="32" y="762" fill="#334155" font-size="16.5" font-weight="600">单智能体闭环  /  多智能体协作  /  辩论博弈</text>
-            <text x="32" y="806" fill="#64748B" font-size="15">决定复杂时序任务如何拆解角色与交叉审校</text>
+            <text x="32" y="722" fill="#1D4ED8" font-size="20" font-weight="800">协作架构</text>
+            <text x="32" y="766" fill="#334155" font-size="17" font-weight="600">单智能体闭环  /  多智能体协作  /  辩论博弈</text>
+            <text x="32" y="810" fill="#64748B" font-size="15.5">决定复杂时序任务如何拆解角色与交叉审校</text>
 
             <rect x="620" y="678" width="584" height="174" rx="14" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.5"/>
-            <text x="652" y="720" fill="#1D4ED8" font-size="19" font-weight="800">二 · 外部工具</text>
-            <text x="652" y="762" fill="#334155" font-size="16.5" font-weight="600">数据库检索  ·  数据处理  ·  统计与时序模型  ·  仿真求解器</text>
-            <text x="652" y="806" fill="#64748B" font-size="15">提供可验证的精确数值计算与物理约束反馈</text>
+            <text x="652" y="722" fill="#1D4ED8" font-size="20" font-weight="800">外部工具</text>
+            <text x="652" y="766" fill="#334155" font-size="17" font-weight="600">数据库检索  ·  数据处理  ·  统计与时序模型  ·  仿真求解器</text>
+            <text x="652" y="810" fill="#64748B" font-size="15.5">提供可验证的精确数值计算与物理约束反馈</text>
 
             <rect x="1240" y="678" width="584" height="174" rx="14" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.5"/>
-            <text x="1272" y="720" fill="#1D4ED8" font-size="19" font-weight="800">三 · 记忆机制</text>
-            <text x="1272" y="762" fill="#334155" font-size="16.5" font-weight="600">证据日志  ·  历史模式库  ·  复用分析策略</text>
-            <text x="1272" y="806" fill="#64748B" font-size="15">支撑跨时间步一致性与长期经验沉淀</text>
+            <text x="1272" y="722" fill="#1D4ED8" font-size="20" font-weight="800">记忆机制</text>
+            <text x="1272" y="766" fill="#334155" font-size="17" font-weight="600">证据日志  ·  历史模式库  ·  复用分析策略</text>
+            <text x="1272" y="810" fill="#64748B" font-size="15.5">支撑跨时间步一致性与长期经验沉淀</text>
           </svg>
         </div>
       </section>
 
       <!-- ==================== SLIDE 4: 分类一 · 预测与推理 ==================== -->
-      <section class="slide" data-title="分类一：预测与推理">
+      <section class="slide" data-title="预测与推理">
         <header class="slide-header">
           <div class="header-left">
             <span class="slide-num">04</span>
-            <h1 class="slide-title">分类一：预测与推理</h1>
+            <h1 class="slide-title">预测与推理</h1>
           </div>
           <nav class="slide-agenda-rail"></nav>
         </header>
@@ -769,11 +761,11 @@
       </section>
 
       <!-- ==================== SLIDE 5: 分类二 · 增强与合成 ==================== -->
-      <section class="slide" data-title="分类二：增强与合成">
+      <section class="slide" data-title="增强与合成">
         <header class="slide-header">
           <div class="header-left">
             <span class="slide-num">05</span>
-            <h1 class="slide-title">分类二：增强与合成</h1>
+            <h1 class="slide-title">增强与合成</h1>
           </div>
           <nav class="slide-agenda-rail"></nav>
         </header>
@@ -892,11 +884,11 @@
       </section>
 
       <!-- ==================== SLIDE 6: 分类三 · 异常检测与诊断 ==================== -->
-      <section class="slide" data-title="分类三：异常检测与诊断">
+      <section class="slide" data-title="异常检测与诊断">
         <header class="slide-header">
           <div class="header-left">
             <span class="slide-num">06</span>
-            <h1 class="slide-title">分类三：异常检测与诊断</h1>
+            <h1 class="slide-title">异常检测与诊断</h1>
           </div>
           <nav class="slide-agenda-rail"></nav>
         </header>
@@ -1021,11 +1013,11 @@
       </section>
 
       <!-- ==================== SLIDE 7: 分类四 · 决策支持 ==================== -->
-      <section class="slide" data-title="分类四：决策支持">
+      <section class="slide" data-title="决策支持">
         <header class="slide-header">
           <div class="header-left">
             <span class="slide-num">07</span>
-            <h1 class="slide-title">分类四：决策支持</h1>
+            <h1 class="slide-title">决策支持</h1>
           </div>
           <nav class="slide-agenda-rail"></nav>
         </header>
