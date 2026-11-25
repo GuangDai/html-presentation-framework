@@ -10,7 +10,7 @@
 
 ```text
 aurora_html_framework/
-├── index.html                        # 语义化 HTML5 容器入口（引入 KaTeX v0.16.11 与 MathJax v3.2.2）
+├── index.html                        # 最新演示入口及旧稿的通用 HTML 容器
 ├── AGENTS.md                         # AI Agent 与开发者全局工程规范与视觉校验指南（本文件）
 ├── README.md                         # 项目快速上手与目录说明
 ├── css/
@@ -20,11 +20,11 @@ aurora_html_framework/
 ├── js/                               # 通用 slide-layouts.js 与 presentation-engine.js
 ├── decks/
 │   ├── active.js                     # 当前论文目录选择
-│   ├── aurora/                       # content.js、visuals.js、math-cache.js
+│   ├── aurora/                       # content.js、visuals.js、math-cache.js、PDF、PPTX 和渲染对比
+│   ├── ts-agent-report/              # 最新报告的独立 HTML 和导出脚本
 │   └── paper-template/               # 可复制的新论文模板
-├── rendered_slides_16x9/             # 2x Retina (3840×2160) 16:9 渲染幻灯片 PNG
-├── Aurora_Presentation_16x9.pdf      # 16:9 高清演示文稿 PDF
-└── Aurora_Presentation_16x9.pptx     # 16:9 标准宽屏 PowerPoint 演示文稿
+├── TS_Agent_Presentation_16x9.pdf     # 最新报告的 PDF
+└── TS_Agent_Presentation_16x9.pptx    # 最新报告的 PowerPoint
 ```
 
 ### 修改路由守则：

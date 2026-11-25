@@ -7,9 +7,10 @@ from pptx import Presentation
 from pptx.util import Inches
 
 ROOT = Path(__file__).resolve().parent.parent
+REPO_ROOT = ROOT.parent.parent
 HTML_IN = ROOT / "index.html"
-PDF_OUT = ROOT / "dist" / "ts_agent_report.pdf"
-PPTX_OUT = ROOT / "dist" / "ts_agent_report.pptx"
+PDF_OUT = REPO_ROOT / "TS_Agent_Presentation_16x9.pdf"
+PPTX_OUT = REPO_ROOT / "TS_Agent_Presentation_16x9.pptx"
 
 short_labels = [
     "1 本质要素", "2 时序结合", "3 分类总览",

@@ -6,9 +6,9 @@
 
 - `index.html`：独立交互式演示稿（支持方向键、空格翻页、顶部议程跳转与右侧目录抽屉）
 - `dist/ts_agent_report.html`：独立 HTML 发行版
-- `dist/ts_agent_report.pdf`：11 页 16:9 矢量 PDF
-- `dist/ts_agent_report.pptx`：11 页 16:9 PowerPoint 演示文稿
-- `scripts/export_pdf_pptx.py`：从 `index.html` 重新导出 PDF 与 PPTX 的脚本
+- 11 页 16:9 矢量 PDF。[仓库根目录的 PDF](../../TS_Agent_Presentation_16x9.pdf)
+- 11 页 16:9 PowerPoint 演示文稿。[仓库根目录的 PPTX](../../TS_Agent_Presentation_16x9.pptx)
+- `scripts/export_pdf_pptx.py` 从 `index.html` 重新导出 PDF 和 PPTX 到仓库根目录。
 
 ## 页面大纲
 

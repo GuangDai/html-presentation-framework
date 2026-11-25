@@ -1,10 +1,14 @@
 # 学术论文 16:9 HTML 演示框架
 
-默认打开 CW-Gen 条件白化生成模型演示，共 13 页。第 5–7 页展示 JMCE 的训练伪算法、滑窗协方差与损失，第 10–11 页展示[复现实验](decks/cw-gen/reproduction/README.md)，第 12–13 页分别比较中心化、标准化与白化，并讨论方法局限。可按 D 打开演示库，或通过 `?deck=decomp-dbloss` 等 URL 参数切换论文。页面使用 1920×1080 舞台，支持目录、键盘翻页与动画。
+首页默认打开 11 页《时间序列 LLM Agent 专题报告》，PDF 和 PPTX 位于仓库根目录。[HTML](decks/ts-agent-report/index.html) · [PDF](TS_Agent_Presentation_16x9.pdf) · [PPTX](TS_Agent_Presentation_16x9.pptx) · [报告说明](decks/ts-agent-report/README.md)
 
-JMCE 三页按论文第 3.2 节、附录 B 算法 1 和作者代码的滑窗实现整理。个人分析区分了第 4.1 节的对称白化与附录 E.9 的三角因子实现。[ICLR 2026 论文](https://openreview.net/pdf/f432c68f6a40faf1e92fe144d16f3a59ca636095.pdf) · [作者代码](https://github.com/Yanfeng-Yang-0316/Conditionally_whitened_generative_models)
+## 归档演示
 
-时间序列 LLM Agent 专题报告共 11 页，可从演示库进入，也可打开[独立 HTML](decks/ts-agent-report/index.html)。[报告说明](decks/ts-agent-report/README.md) · [PDF](decks/ts-agent-report/dist/ts_agent_report.pdf) · [PPTX](decks/ts-agent-report/dist/ts_agent_report.pptx)
+- CW-Gen 条件白化生成模型。第 5–7 页展示 JMCE 的训练伪算法、滑窗协方差与损失，第 10–11 页展示复现实验，第 12–13 页比较中心化、标准化与白化，并讨论方法局限。[HTML](index.html?deck=cw-gen) · [PDF](decks/cw-gen/CW_Gen_Presentation_16x9.pdf) · [PPTX](decks/cw-gen/CW_Gen_Presentation_16x9.pptx) · [复现实验](decks/cw-gen/reproduction/README.md)
+- DecompNet 与 DBLoss 时序分解双论文解析。[HTML](index.html?deck=decomp-dbloss) · [PDF](decks/decomp-dbloss/DBLoss_DecompNet_Presentation_16x9.pdf) · [PPTX](decks/decomp-dbloss/DBLoss_DecompNet_Presentation_16x9.pptx)
+- Aurora 多模态时间序列生成框架。[HTML](index.html?deck=aurora) · [PDF](decks/aurora/Aurora_Presentation_16x9.pdf) · [PPTX](decks/aurora/Aurora_Presentation_16x9.pptx)
+
+CW-Gen 的 JMCE 三页按论文第 3.2 节、附录 B 算法 1 和作者代码的滑窗实现整理。个人分析区分了第 4.1 节的对称白化与附录 E.9 的三角因子实现。[ICLR 2026 论文](https://openreview.net/pdf/f432c68f6a40faf1e92fe144d16f3a59ca636095.pdf) · [作者代码](https://github.com/Yanfeng-Yang-0316/Conditionally_whitened_generative_models)
 
 ## 为新稿选组件
 
@@ -15,7 +19,7 @@ JMCE 三页按论文第 3.2 节、附录 B 算法 1 和作者代码的滑窗实�
 ## 目录和职责
 
 ```text
-index.html                  通用页面入口、公式引擎和演示控件
+index.html                  最新演示入口、归档演示框架和控件
 css/variables.css           设计变量（部分颜色也写在 layout.css 和 SVG 中）
 css/layout.css              舞台、页面及控件布局和样式
 css/components.css          阶段条和扩展布局组件样式
@@ -25,21 +29,22 @@ js/slide-layouts.js         七种页面的 HTML 结构
 js/visual-components.js     阶段条和扩展布局的组件构建器
 js/presentation-variants.js A、B、C 版式配置与分页计算
 js/presentation-engine.js   渲染、公式、区域等高和交互
-decks/active.js             当前论文目录选择
-decks/cw-gen/               CW-Gen 论文素材
-decks/decomp-dbloss/        DecompNet 与 DBLoss 论文素材
-decks/aurora/               Aurora 论文素材
+decks/active.js             演示入口路由
+decks/ts-agent-report/      最新报告的独立 HTML 源码和导出脚本
+decks/cw-gen/               CW-Gen 论文素材及 PDF、PPTX、PNG
+decks/decomp-dbloss/        DecompNet 与 DBLoss 论文素材及 PDF、PPTX、PNG
+decks/aurora/               Aurora 论文素材及 PDF、PPTX、渲染对比
   content.js                页面文字、公式、图形引用和导航配置
   visuals.js                论文专用 SVG 图形
   math-cache.js             Aurora 公式的离线 SVG 缓存
 decks/paper-template/       可复制的新论文模板，含上述三个文件
 decks/component-showcase/   六种布局的展示示例
 scripts/build_math_cache.py 生成离线公式缓存（需本机 TeX 工具）
-rendered_cwgen_16x9/        CW-Gen 的 13 页导出 PNG
-rendered_slides_16x9/       DecompNet 与 DBLoss 的 6 页导出 PNG
+TS_Agent_Presentation_16x9.pdf   最新报告的 16:9 PDF
+TS_Agent_Presentation_16x9.pptx  最新报告的 16:9 PowerPoint
 ```
 
-根目录提供 CW-Gen、DecompNet 与 DBLoss、Aurora 三套 PDF 和 PPTX。CW-Gen 导出文件为 [PDF](CW_Gen_Presentation_16x9.pdf) 和 [PPTX](CW_Gen_Presentation_16x9.pptx)。导出文件需要单独更新，PPTX 每页包含一张完整的幻灯片图片。
+导出文件需要单独更新，PPTX 每页包含一张完整的幻灯片图片。
 
 ## 新建和切换论文
 
@@ -47,9 +52,9 @@ rendered_slides_16x9/       DecompNet 与 DBLoss 的 6 页导出 PNG
 2. 修改该目录的 `content.js`：填写论文标题、页面文字、公式与导航。按需复制或删减 `slides` 数组中的页面。
 3. 修改该目录的 `visuals.js`：用论文专用 SVG 替换示例图形，并让内容中的 `visualKey` 与图形键名一致。图内文字、连线和颜色都属于图形素材。
 4. 模板的 `math-cache.js` 带有示例公式缓存；如需离线显示新论文公式，可为新公式添加对应 SVG，或使用 `scripts/build_math_cache.py` 生成缓存。它是每个论文目录都需要保留的文件。
-5. 将 `decks/active.js` 中的 `defaultDeck` 改成 `my-paper`，然后用浏览器打开或刷新 `index.html`。恢复 Aurora 时把目录名改回 `aurora`。
+5. 用浏览器打开 `index.html?deck=my-paper` 预览。要将新稿设为默认演示，可修改 `decks/active.js` 中的 `defaultDeck`。
 
-也可通过 URL 参数 `?deck=目录名` 临时切换演示，或按 D 打开演示库选择。每个目录的三个脚本会按 `math-cache.js`、`visuals.js`、`content.js` 的顺序同步加载，然后由通用布局和引擎渲染。复制模板时保留三个文件，即使某个文件暂时为空。`active.js` 使用浏览器解析阶段的 `document.write` 加载脚本，应通过 `index.html` 的普通同步 `<script>` 引用，不要添加 `async` 或 `defer`。
+框架演示可按 D 打开演示库。每个框架演示的三个脚本会按 `math-cache.js`、`visuals.js`、`content.js` 的顺序同步加载，然后由通用布局和引擎渲染。复制模板时保留三个文件，即使某个文件暂时为空。`active.js` 使用浏览器解析阶段的 `document.write` 加载脚本，应通过 `index.html` 的普通同步 `<script>` 引用，不要添加 `async` 或 `defer`。
 
 ## 内容格式
 
