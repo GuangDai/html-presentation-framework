@@ -4,6 +4,8 @@
 
 JMCE 三页按论文第 3.2 节、附录 B 算法 1 和作者代码的滑窗实现整理。个人分析区分了第 4.1 节的对称白化与附录 E.9 的三角因子实现。[ICLR 2026 论文](https://openreview.net/pdf/f432c68f6a40faf1e92fe144d16f3a59ca636095.pdf) · [作者代码](https://github.com/Yanfeng-Yang-0316/Conditionally_whitened_generative_models)
 
+时间序列 LLM Agent 专题报告共 11 页，可从演示库进入，也可打开[独立 HTML](decks/ts-agent-report/index.html)。[报告说明](decks/ts-agent-report/README.md) · [PDF](decks/ts-agent-report/dist/ts_agent_report.pdf) · [PPTX](decks/ts-agent-report/dist/ts_agent_report.pptx)
+
 ## 为新稿选组件
 
 在浏览器打开 [研究组件库](research/index.html)，可按名称、用途、中文或英文关键词搜索。选择组件后可直接修改示例数据、复制单个组件，或将多个组件加入组合，调整顺序、栏宽、密度和配色，再复制整页到新稿的 `slides` 数组。组件库可以离线使用。

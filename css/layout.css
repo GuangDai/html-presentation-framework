@@ -1224,6 +1224,14 @@ body.export-mode .drawer-backdrop {
   transition: all 0.15s ease;
 }
 
+a.deck-option-btn {
+  text-decoration: none;
+}
+
+a.deck-option-btn .toc-sub {
+  display: block;
+}
+
 .toc-item:hover, .anim-option-btn:hover, .deck-option-btn:hover {
   border-color: var(--c-primary);
   background: #FFFFFF;
