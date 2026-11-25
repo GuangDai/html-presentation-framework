@@ -99,7 +99,7 @@
 
     .slide-num {
       font-family: var(--font-mono);
-      font-size: 16px;
+      font-size: 20px;
       font-weight: 800;
       color: #2563EB;
       letter-spacing: 0.04em;
@@ -107,7 +107,7 @@
     }
 
     .slide-title {
-      font-size: 30px;
+      font-size: 34px;
       font-weight: 800;
       color: #0F172A;
       letter-spacing: -0.02em;
@@ -239,15 +239,12 @@
         </header>
 
         <div class="visual-stage">
-          <svg viewBox="0 0 1824 890" xmlns="http://www.w3.org/2000/svg">
+                    <svg viewBox="0 0 1808 920" xmlns="http://www.w3.org/2000/svg">
             <defs>
-              <marker id="m-blue" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563EB"/>
-              </marker>
-              <marker id="m-blue-lg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="9" markerHeight="9" orient="auto">
+              <marker id="m-blue-lg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="10" markerHeight="10" orient="auto">
                 <path d="M 0 1 L 10 5 L 0 9 z" fill="#1D4ED8"/>
               </marker>
-              <marker id="m-slate" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+              <marker id="m-slate" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
                 <path d="M 0 1 L 10 5 L 0 9 z" fill="#94A3B8"/>
               </marker>
               <radialGradient id="g-core" cx="50%" cy="45%" r="55%">
@@ -256,108 +253,92 @@
               </radialGradient>
             </defs>
 
-            <!-- LEFT ZONE: Traditional Static Mapping (Muted, Compressed) -->
-            <rect x="0" y="34" width="520" height="822" rx="18" fill="#F8FAFC"/>
-            <text x="40" y="88" fill="#64748B" font-size="16" font-weight="800" letter-spacing="1.5">对照 · 传统静态模型</text>
-            <text x="40" y="132" fill="#0F172A" font-size="28" font-weight="800">单次前向映射</text>
-            <text x="40" y="172" fill="#64748B" font-size="18" font-family="JetBrains Mono, monospace">y = f<tspan dy="4" font-size="13">θ</tspan><tspan dy="-4">(x)</tspan></text>
+            <!-- LEFT ZONE: Traditional Static Mapping (Proportionally Expanded, >=22px floor, Zero Math Symbols) -->
+            <rect x="0" y="20" width="496" height="880" rx="20" fill="#F8FAFC"/>
+            <text x="40" y="82" fill="#64748B" font-size="22" font-weight="800" letter-spacing="1">对照 · 传统静态模型</text>
+            <text x="40" y="136" fill="#0F172A" font-size="34" font-weight="800">单次前向映射</text>
 
-            <!-- Open-loop dead-end vertical/stepped flow -->
-            <g transform="translate(0, 20)">
-              <rect x="76" y="218" width="368" height="72" rx="12" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.8"/>
-              <text x="260" y="261" text-anchor="middle" fill="#334155" font-size="20" font-weight="700">固定输入 x</text>
+            <!-- Clean Open-Loop Flow -->
+            <rect x="52" y="196" width="392" height="88" rx="14" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
+            <text x="248" y="250" text-anchor="middle" fill="#334155" font-size="27" font-weight="800">固定输入</text>
 
-              <line x1="260" y1="290" x2="260" y2="352" stroke="#94A3B8" stroke-width="2.5" marker-end="url(#m-slate)"/>
+            <line x1="248" y1="284" x2="248" y2="360" stroke="#94A3B8" stroke-width="3" marker-end="url(#m-slate)"/>
 
-              <rect x="76" y="362" width="368" height="84" rx="12" fill="#E2E8F0"/>
-              <text x="260" y="401" text-anchor="middle" fill="#334155" font-size="20" font-weight="800">黑盒单次前向</text>
-              <text x="260" y="428" text-anchor="middle" fill="#64748B" font-size="14.5">参数冻结 · 无中途决策分支</text>
+            <rect x="52" y="372" width="392" height="96" rx="14" fill="#E2E8F0"/>
+            <text x="248" y="430" text-anchor="middle" fill="#1E293B" font-size="28" font-weight="800">黑盒单次前向</text>
 
-              <line x1="260" y1="446" x2="260" y2="508" stroke="#94A3B8" stroke-width="2.5" marker-end="url(#m-slate)"/>
+            <line x1="248" y1="468" x2="248" y2="544" stroke="#94A3B8" stroke-width="3" marker-end="url(#m-slate)"/>
 
-              <rect x="76" y="518" width="368" height="72" rx="12" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.8"/>
-              <text x="260" y="561" text-anchor="middle" fill="#334155" font-size="20" font-weight="700">静态输出 y</text>
+            <rect x="52" y="556" width="392" height="88" rx="14" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
+            <text x="248" y="610" text-anchor="middle" fill="#334155" font-size="27" font-weight="800">静态输出</text>
 
-              <!-- Dead-end red stop -->
-              <line x1="260" y1="590" x2="260" y2="646" stroke="#BE123C" stroke-width="2.5" stroke-dasharray="5 5"/>
-              <line x1="210" y1="652" x2="310" y2="652" stroke="#BE123C" stroke-width="3.5" stroke-linecap="round"/>
-              <text x="260" y="688" text-anchor="middle" fill="#BE123C" font-size="16" font-weight="800">流程终止 · 无法自纠</text>
-            </g>
+            <!-- Dead-end red stop -->
+            <line x1="248" y1="644" x2="248" y2="716" stroke="#BE123C" stroke-width="3" stroke-dasharray="6 6"/>
+            <line x1="186" y1="722" x2="310" y2="722" stroke="#BE123C" stroke-width="4.5" stroke-linecap="round"/>
+            <text x="248" y="766" text-anchor="middle" fill="#BE123C" font-size="23" font-weight="800">流程终止 · 无法自纠</text>
 
-            <!-- Bottom 3 crisp limitations -->
-            <line x1="40" y1="744" x2="480" y2="744" stroke="#E2E8F0" stroke-width="1.5"/>
-            <text x="260" y="792" text-anchor="middle" fill="#64748B" font-size="16.5" font-weight="700">无持久状态  ·  无外部校验  ·  错即终结</text>
+            <line x1="36" y1="812" x2="460" y2="812" stroke="#E2E8F0" stroke-width="1.8"/>
+            <text x="248" y="862" text-anchor="middle" fill="#64748B" font-size="22" font-weight="700">无状态 · 无校验 · 错即终结</text>
 
             <!-- Transition Arrow -->
-            <path d="M 542 445 L 594 445" stroke="#2563EB" stroke-width="3.5" marker-end="url(#m-blue-lg)"/>
+            <path d="M 516 470 L 564 470" stroke="#2563EB" stroke-width="4.5" marker-end="url(#m-blue-lg)"/>
 
-            <!-- RIGHT ZONE: Unified Open-Canvas Closed-Loop Dynamical System -->
-            <text x="636" y="76" fill="#2563EB" font-size="16" font-weight="800" letter-spacing="1.5">共性抽象 · 智能体定义</text>
-            <text x="636" y="122" fill="#0F172A" font-size="28" font-weight="800">以目标为导向，在动态环境中持续感知、决策、执行并演化状态的闭环系统</text>
+            <!-- RIGHT ZONE: Unified Open-Canvas Closed-Loop System (No Bottom Formula Bar, Generous Scale) -->
+            <text x="600" y="74" fill="#2563EB" font-size="22" font-weight="800" letter-spacing="1">共性抽象 · 智能体定义</text>
+            <text x="600" y="128" fill="#0F172A" font-size="31" font-weight="800">以目标为导向，在动态环境中持续感知、决策、执行并演化状态的闭环系统</text>
 
-            <!-- Subtle orbital guide ring -->
-            <circle cx="1220" cy="466" r="268" fill="none" stroke="#DBEAFE" stroke-width="2" stroke-dasharray="8 8"/>
-            <circle cx="1220" cy="466" r="192" fill="#F8FAFC" opacity="0.65"/>
+            <!-- Orbital Guide Rings (Centered at 1200, 526) -->
+            <circle cx="1200" cy="526" r="296" fill="none" stroke="#DBEAFE" stroke-width="2.2" stroke-dasharray="9 9"/>
+            <circle cx="1200" cy="526" r="204" fill="#F8FAFC" opacity="0.72"/>
 
-            <!-- Four directional orbital arcs (Clockwise: Top -> Right -> Bottom -> Left -> Top) -->
-            <!-- Top to Right -->
-            <path d="M 1358 228 A 268 268 0 0 1 1468 358" fill="none" stroke="#2563EB" stroke-width="4" marker-end="url(#m-blue-lg)"/>
-            <!-- Right to Bottom -->
-            <path d="M 1468 574 A 268 268 0 0 1 1358 704" fill="none" stroke="#2563EB" stroke-width="4" marker-end="url(#m-blue-lg)"/>
-            <!-- Bottom to Left -->
-            <path d="M 1082 704 A 268 268 0 0 1 972 574" fill="none" stroke="#2563EB" stroke-width="4" marker-end="url(#m-blue-lg)"/>
-            <!-- Left to Top -->
-            <path d="M 972 358 A 268 268 0 0 1 1082 228" fill="none" stroke="#2563EB" stroke-width="4" marker-end="url(#m-blue-lg)"/>
+            <!-- Four Clockwise Orbital Arcs (Cleanly visible arrowheads between cards) -->
+            <path d="M 1434 316 Q 1478 368, 1488 446" fill="none" stroke="#2563EB" stroke-width="4.5" stroke-linecap="round" marker-end="url(#m-blue-lg)"/>
+            <path d="M 1488 602 Q 1478 672, 1446 728" fill="none" stroke="#2563EB" stroke-width="4.5" stroke-linecap="round" marker-end="url(#m-blue-lg)"/>
+            <path d="M 954 732 Q 922 674, 912 606" fill="none" stroke="#2563EB" stroke-width="4.5" stroke-linecap="round" marker-end="url(#m-blue-lg)"/>
+            <path d="M 912 448 Q 924 374, 964 322" fill="none" stroke="#2563EB" stroke-width="4.5" stroke-linecap="round" marker-end="url(#m-blue-lg)"/>
 
-            <!-- Central Hub: State & Goal-Driven Controller -->
-            <circle cx="1220" cy="466" r="108" fill="url(#g-core)"/>
-            <circle cx="1220" cy="466" r="118" fill="none" stroke="#93C5FD" stroke-width="1.8"/>
-            <text x="1220" y="444" text-anchor="middle" fill="#BFDBFE" font-size="14" font-weight="700" letter-spacing="1.5">核心机制</text>
-            <text x="1220" y="478" text-anchor="middle" fill="#FFFFFF" font-size="26" font-weight="800">有状态闭环</text>
-            <text x="1220" y="510" text-anchor="middle" fill="#DBEAFE" font-size="14.5" font-weight="600">自主决定下一步</text>
+            <!-- Central Hub -->
+            <circle cx="1200" cy="526" r="126" fill="url(#g-core)"/>
+            <circle cx="1200" cy="526" r="138" fill="none" stroke="#93C5FD" stroke-width="2"/>
+            <text x="1200" y="492" text-anchor="middle" fill="#BFDBFE" font-size="22" font-weight="700">核心机制</text>
+            <text x="1200" y="538" text-anchor="middle" fill="#FFFFFF" font-size="34" font-weight="800">有状态闭环</text>
+            <text x="1200" y="578" text-anchor="middle" fill="#DBEAFE" font-size="22" font-weight="600">自主决定下一步</text>
 
-            <!-- NODE 1 (TOP): 感知 -->
-            <g transform="translate(1055, 166)">
-              <rect x="0" y="0" width="330" height="106" rx="14" fill="#FFFFFF" stroke="#2563EB" stroke-width="2.2"/>
-              <circle cx="38" cy="53" r="18" fill="#EFF6FF"/>
-              <text x="38" y="59" text-anchor="middle" fill="#1D4ED8" font-size="15" font-weight="800">01</text>
-              <text x="72" y="45" fill="#0F172A" font-size="22" font-weight="800">持续感知</text>
-              <text x="72" y="75" fill="#475569" font-size="15">接入动态环境观测 o<tspan dy="3" font-size="11">t</tspan><tspan dy="-3"> 与外部约束</tspan></text>
+            <!-- NODE 01 (TOP): 持续感知 -->
+            <g transform="translate(972, 182)">
+              <rect x="0" y="0" width="456" height="126" rx="16" fill="#FFFFFF" stroke="#2563EB" stroke-width="2.5"/>
+              <circle cx="46" cy="63" r="24" fill="#EFF6FF"/>
+              <text x="46" y="71" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="800">01</text>
+              <text x="90" y="52" fill="#0F172A" font-size="28" font-weight="800">持续感知</text>
+              <text x="90" y="94" fill="#475569" font-size="22">接入动态环境观测与外部约束</text>
             </g>
 
-            <!-- NODE 2 (RIGHT): 推理规划 -->
-            <g transform="translate(1418, 412)">
-              <rect x="0" y="0" width="356" height="114" rx="14" fill="#FFFFFF" stroke="#2563EB" stroke-width="2.2"/>
-              <circle cx="38" cy="57" r="18" fill="#EFF6FF"/>
-              <text x="38" y="63" text-anchor="middle" fill="#1D4ED8" font-size="15" font-weight="800">02</text>
-              <text x="72" y="47" fill="#0F172A" font-size="22" font-weight="800">推理与规划</text>
-              <text x="72" y="77" fill="#475569" font-size="15">拆解目标、编排动作、修正假设</text>
+            <!-- NODE 02 (RIGHT): 推理与规划 -->
+            <g transform="translate(1378, 463)">
+              <rect x="0" y="0" width="430" height="126" rx="16" fill="#FFFFFF" stroke="#2563EB" stroke-width="2.5"/>
+              <circle cx="44" cy="63" r="24" fill="#EFF6FF"/>
+              <text x="44" y="71" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="800">02</text>
+              <text x="86" y="52" fill="#0F172A" font-size="28" font-weight="800">推理与规划</text>
+              <text x="86" y="94" fill="#475569" font-size="22">拆解目标、编排动作、修正假设</text>
             </g>
 
-            <!-- NODE 3 (BOTTOM): 工具执行 -->
-            <g transform="translate(1055, 660)">
-              <rect x="0" y="0" width="330" height="106" rx="14" fill="#FFFFFF" stroke="#2563EB" stroke-width="2.2"/>
-              <circle cx="38" cy="53" r="18" fill="#EFF6FF"/>
-              <text x="38" y="59" text-anchor="middle" fill="#1D4ED8" font-size="15" font-weight="800">03</text>
-              <text x="72" y="45" fill="#0F172A" font-size="22" font-weight="800">工具与动作执行</text>
-              <text x="72" y="75" fill="#475569" font-size="15">外包精确计算、检索与环境交互</text>
+            <!-- NODE 03 (BOTTOM): 工具与动作执行 (外部工具) -->
+            <g transform="translate(954, 744)">
+              <rect x="0" y="0" width="492" height="126" rx="16" fill="#FFFFFF" stroke="#2563EB" stroke-width="2.5"/>
+              <circle cx="46" cy="63" r="24" fill="#EFF6FF"/>
+              <text x="46" y="71" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="800">03</text>
+              <text x="90" y="52" fill="#0F172A" font-size="28" font-weight="800">工具与动作执行</text>
+              <text x="90" y="94" fill="#475569" font-size="22">调用外部工具完成计算、检索与交互</text>
             </g>
 
-            <!-- NODE 4 (LEFT): 记忆更新 -->
-            <g transform="translate(666, 412)">
-              <rect x="0" y="0" width="356" height="114" rx="14" fill="#EFF6FF" stroke="#1D4ED8" stroke-width="2.5"/>
-              <circle cx="38" cy="57" r="18" fill="#1D4ED8"/>
-              <text x="38" y="63" text-anchor="middle" fill="#FFFFFF" font-size="15" font-weight="800">04</text>
-              <text x="72" y="47" fill="#1D4ED8" font-size="22" font-weight="800">记忆与状态更新</text>
-              <text x="72" y="77" fill="#334155" font-size="15">吸收执行反馈，跨步演化内部状态</text>
+            <!-- NODE 04 (LEFT): 记忆与状态更新 -->
+            <g transform="translate(592, 463)">
+              <rect x="0" y="0" width="430" height="126" rx="16" fill="#EFF6FF" stroke="#1D4ED8" stroke-width="2.8"/>
+              <circle cx="44" cy="63" r="24" fill="#1D4ED8"/>
+              <text x="44" y="71" text-anchor="middle" fill="#FFFFFF" font-size="22" font-weight="800">04</text>
+              <text x="86" y="52" fill="#1D4ED8" font-size="28" font-weight="800">记忆与状态更新</text>
+              <text x="86" y="94" fill="#334155" font-size="22">吸收执行反馈，跨步演化状态</text>
             </g>
-
-            <!-- Abstract Mathematical Formula Strip at Bottom Right -->
-            <rect x="636" y="798" width="1164" height="58" rx="10" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1.5"/>
-            <text x="668" y="833" fill="#1D4ED8" font-size="15.5" font-weight="800">抽象形式化</text>
-            <line x1="774" y1="812" x2="774" y2="842" stroke="#CBD5E1" stroke-width="1.5"/>
-            <text x="798" y="834" fill="#0F172A" font-size="17" font-family="JetBrains Mono, monospace" font-weight="700">s<tspan dy="4" font-size="12">t+1</tspan><tspan dy="-4"> = U( s</tspan><tspan dy="4" font-size="12">t</tspan><tspan dy="-4"> , o</tspan><tspan dy="4" font-size="12">t</tspan><tspan dy="-4"> , Exec( π(s</tspan><tspan dy="4" font-size="12">t</tspan><tspan dy="-4">, o</tspan><tspan dy="4" font-size="12">t</tspan><tspan dy="-4">, M</tspan><tspan dy="4" font-size="12">t</tspan><tspan dy="-4">) ) )</tspan></text>
-            <text x="1772" y="833" text-anchor="end" fill="#64748B" font-size="15">状态 · 观测 · 策略 · 工具执行 · 记忆</text>
           </svg>
         </div>
       </section>
