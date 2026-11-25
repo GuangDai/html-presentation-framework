@@ -369,7 +369,7 @@ SLIDES_HTML = f'''
             </g>
 
             <!-- Bottom Shared Dimensions -->
-            <text x="0" y="672" fill="#64748B" font-size="22" font-weight="800">共性支撑底座 · 贯穿四类任务的三维设计要素</text>
+            <text x="0" y="672" fill="#64748B" font-size="22" font-weight="800">时序 Agent 的三个要素</text>
 
             <rect x="0" y="696" width="582" height="158" rx="14" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.6"/>
             <text x="30" y="754" fill="#1D4ED8" font-size="26" font-weight="800">协作架构</text>
