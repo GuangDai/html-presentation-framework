@@ -1071,11 +1071,11 @@ SLIDES_HTML = f'''
       </section>
 
       <!-- ==================== SLIDE 10 ==================== -->
-      <section class="slide" data-title="NEXUS · 因果回测校准与多流融合架构">
+      <section class="slide" data-title="NEXUS">
         <header class="slide-header">
           <div class="header-left">
             <span class="slide-num">10</span>
-            <h1 class="slide-title">NEXUS · 因果回测校准与多流融合架构</h1>
+            <h1 class="slide-title">NEXUS</h1>
           </div>
           <nav class="slide-agenda-rail"></nav>
         </header>
@@ -1088,129 +1088,159 @@ SLIDES_HTML = f'''
               <marker id="m10-s" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8.5" markerHeight="8.5" orient="auto">
                 <path d="M 0 1.2 L 9.5 5 L 0 8.8 L 2.2 5 z" fill="#475569"/>
               </marker>
+              <!-- Clean OpenAI / GPT 6-petal knot icon (24x24 viewBox) -->
+              <g id="gpt-icon">
+                <circle cx="0" cy="0" r="17" fill="#EFF6FF" stroke="#2563EB" stroke-width="1.6"/>
+                <g fill="none" stroke="#1D4ED8" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M 0 -5.2 L 4.5 -2.6 L 4.5 2.6 L 0 5.2 L -4.5 2.6 L -4.5 -2.6 Z"/>
+                  <path d="M 0 -5.2 C 0 -10.5, 6.2 -11.5, 8.6 -6.5 C 10.2 -3.2, 7.6 0.2, 4.5 2.6"/>
+                  <path d="M 4.5 -2.6 C 9.1 -5.2, 13.0 -0.2, 9.8 4.4 C 7.7 7.4, 3.6 6.8, 0 5.2"/>
+                  <path d="M 4.5 2.6 C 9.1 5.2, 6.8 11.2, 1.3 10.6 C -2.4 10.2, -4.1 6.5, -4.5 2.6"/>
+                  <path d="M 0 5.2 C 0 10.5, -6.2 11.5, -8.6 6.5 C -10.2 3.2, -7.6 -0.2, -4.5 -2.6"/>
+                  <path d="M -4.5 2.6 C -9.1 5.2, -13.0 0.2, -9.8 -4.4 C -7.7 -7.4, -3.6 -6.8, 0 -5.2"/>
+                  <path d="M -4.5 -2.6 C -9.1 -5.2, -6.8 -11.2, -1.3 -10.6 C 2.4 -10.2, 4.1 -6.5, 4.5 -2.6"/>
+                </g>
+              </g>
             </defs>
 
-            <!-- Top One-Line Intuitive Framing -->
-            <text x="0" y="38" fill="#64748B" font-size="22" font-weight="700">核心思想：先用无未来泄漏的历史回测标定「文本事件视角」有多可信，再与「时序基座模型」按精度自动融合</text>
+            <!-- Top Simple One-Line Summary -->
+            <text x="0" y="38" fill="#64748B" font-size="22" font-weight="700">先根据历史数据检验大模型预测有多准，再与时序基座模型按可信度加权融合</text>
 
-            <!-- ==================== COLUMN 0: DUAL INPUTS (x=0..250) ==================== -->
-            <rect x="0" y="106" width="248" height="250" rx="16" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.8"/>
-            <text x="124" y="154" text-anchor="middle" fill="#0F172A" font-size="24" font-weight="800">历史时序数据</text>
-            <line x1="24" y1="306" x2="224" y2="306" stroke="#CBD5E1" stroke-width="1.6"/>
-            <path d="M 28 274 Q 68 220, 108 256 T 182 228 L 220 242" fill="none" stroke="#334155" stroke-width="3.6" stroke-linecap="round"/>
-            <line x1="158" y1="196" x2="158" y2="306" stroke="#BE123C" stroke-width="2" stroke-dasharray="4 4"/>
-            <text x="124" y="338" text-anchor="middle" fill="#64748B" font-size="22">连续数值轨迹</text>
+            <!-- ==================== COLUMN 0: DUAL INPUTS (x=0..244) ==================== -->
+            <rect x="0" y="108" width="244" height="252" rx="16" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.8"/>
+            <text x="122" y="156" text-anchor="middle" fill="#0F172A" font-size="24" font-weight="800">历史时序数据</text>
+            <line x1="24" y1="306" x2="220" y2="306" stroke="#CBD5E1" stroke-width="1.6"/>
+            <path d="M 28 274 Q 68 220, 108 256 T 180 228 L 216 242" fill="none" stroke="#334155" stroke-width="3.6" stroke-linecap="round"/>
+            <line x1="156" y1="196" x2="156" y2="306" stroke="#BE123C" stroke-width="2" stroke-dasharray="4 4"/>
+            <text x="122" y="340" text-anchor="middle" fill="#64748B" font-size="22">连续数值轨迹</text>
 
-            <rect x="0" y="420" width="248" height="250" rx="16" fill="#EFF6FF" stroke="#93C5FD" stroke-width="1.8"/>
-            <text x="124" y="472" text-anchor="middle" fill="#1D4ED8" font-size="24" font-weight="800">外部事件文本</text>
-            <rect x="24" y="502" width="200" height="44" rx="8" fill="#FFFFFF"/>
-            <text x="124" y="532" text-anchor="middle" fill="#334155" font-size="22">天气 · 政策公告</text>
-            <rect x="24" y="562" width="200" height="44" rx="8" fill="#FFFFFF"/>
-            <text x="124" y="592" text-anchor="middle" fill="#334155" font-size="22">突发新闻 · 节假日</text>
-            <text x="124" y="646" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="700">非结构化驱动</text>
+            <rect x="0" y="420" width="244" height="252" rx="16" fill="#EFF6FF" stroke="#93C5FD" stroke-width="1.8"/>
+            <text x="122" y="472" text-anchor="middle" fill="#1D4ED8" font-size="24" font-weight="800">外部事件文本</text>
+            <rect x="22" y="502" width="200" height="44" rx="8" fill="#FFFFFF"/>
+            <text x="122" y="532" text-anchor="middle" fill="#334155" font-size="22">天气 · 政策公告</text>
+            <rect x="22" y="562" width="200" height="44" rx="8" fill="#FFFFFF"/>
+            <text x="122" y="592" text-anchor="middle" fill="#334155" font-size="22">突发新闻 · 节假日</text>
+            <text x="122" y="648" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="700">非结构化驱动</text>
 
-            <!-- Clean Horizontal Arrows: Inputs -> Stage 1 -->
-            <line x1="248" y1="230" x2="298" y2="230" stroke="#475569" stroke-width="3.4" marker-end="url(#m10-s)"/>
-            <line x1="248" y1="545" x2="298" y2="545" stroke="#2563EB" stroke-width="3.4" marker-end="url(#m10-b)"/>
+            <line x1="244" y1="234" x2="294" y2="234" stroke="#475569" stroke-width="3.4" marker-end="url(#m10-s)"/>
+            <line x1="244" y1="546" x2="294" y2="546" stroke="#2563EB" stroke-width="3.4" marker-end="url(#m10-b)"/>
 
-            <!-- ==================== STAGE 1: ANCHOR + CAUSAL PROFILING (x=306..670) ==================== -->
-            <rect x="306" y="72" width="364" height="824" rx="18" fill="#FAFBFD" stroke="#CBD5E1" stroke-width="1.8"/>
-            <rect x="330" y="96" width="122" height="38" rx="8" fill="#334155"/>
-            <text x="391" y="123" text-anchor="middle" fill="#FFFFFF" font-size="22" font-weight="800">阶段一</text>
-            <text x="468" y="124" fill="#0F172A" font-size="24" font-weight="800">画像与数值锚点</text>
+            <!-- ==================== STAGE 1: ANCHOR + CAUSAL PROFILING (x=302..666) ==================== -->
+            <rect x="302" y="72" width="364" height="824" rx="18" fill="#FAFBFD" stroke="#CBD5E1" stroke-width="1.8"/>
+            <rect x="326" y="96" width="116" height="38" rx="8" fill="#334155"/>
+            <text x="384" y="123" text-anchor="middle" fill="#FFFFFF" font-size="22" font-weight="800">阶段一</text>
+            <text x="458" y="124" fill="#0F172A" font-size="24" font-weight="800">画像与数值锚点</text>
 
             <!-- Upper Branch: Numerical TSFM Anchor -->
-            <rect x="330" y="164" width="316" height="218" rx="14" fill="#FFFFFF" stroke="#475569" stroke-width="2"/>
-            <text x="488" y="210" text-anchor="middle" fill="#0F172A" font-size="24" font-weight="800">时序基座数值锚点</text>
-            <text x="488" y="254" text-anchor="middle" fill="#64748B" font-size="22">纯数值预测均值与波动</text>
-            <!-- Mini anchor wave -->
-            <path d="M 358 334 Q 408 304, 456 322" fill="none" stroke="#334155" stroke-width="3"/>
-            <path d="M 456 322 L 616 286 L 616 352 Z" fill="#E2E8F0"/>
-            <path d="M 456 322 Q 536 314, 616 320" fill="none" stroke="#475569" stroke-width="3.2" stroke-dasharray="6 4"/>
+            <rect x="326" y="164" width="316" height="216" rx="14" fill="#FFFFFF" stroke="#475569" stroke-width="2"/>
+            <text x="484" y="210" text-anchor="middle" fill="#0F172A" font-size="24" font-weight="800">时序基座数值锚点</text>
+            <text x="484" y="254" text-anchor="middle" fill="#64748B" font-size="22">纯数值基准与波动范围</text>
+            <path d="M 354 334 Q 404 304, 452 322" fill="none" stroke="#334155" stroke-width="3"/>
+            <path d="M 452 322 L 612 286 L 612 352 Z" fill="#E2E8F0"/>
+            <path d="M 452 322 Q 532 314, 612 320" fill="none" stroke="#475569" stroke-width="3.2" stroke-dasharray="6 4"/>
 
-            <!-- Lower Branch: Causal-Temporal Profiling -->
-            <rect x="330" y="424" width="316" height="440" rx="14" fill="#EFF6FF" stroke="#2563EB" stroke-width="2"/>
-            <text x="488" y="476" text-anchor="middle" fill="#1D4ED8" font-size="24" font-weight="800">因果时序画像</text>
-            <text x="488" y="518" text-anchor="middle" fill="#475569" font-size="22">提炼结构化演化线索</text>
+            <!-- Lower Branch: Causal-Temporal Profiling + GPT ICON -->
+            <rect x="326" y="420" width="316" height="446" rx="14" fill="#EFF6FF" stroke="#2563EB" stroke-width="2"/>
+            <use href="#gpt-icon" x="384" y="468"/>
+            <text x="414" y="476" fill="#1D4ED8" font-size="24" font-weight="800">因果时序画像</text>
+            <text x="484" y="520" text-anchor="middle" fill="#475569" font-size="22">大模型提炼演化线索</text>
 
-            <rect x="356" y="548" width="264" height="76" rx="10" fill="#FFFFFF" stroke="#93C5FD" stroke-width="1.6"/>
-            <text x="488" y="595" text-anchor="middle" fill="#0F172A" font-size="23" font-weight="800">状态分段识别</text>
+            <rect x="352" y="550" width="264" height="76" rx="10" fill="#FFFFFF" stroke="#93C5FD" stroke-width="1.6"/>
+            <text x="484" y="597" text-anchor="middle" fill="#0F172A" font-size="23" font-weight="800">状态分段识别</text>
 
-            <rect x="356" y="644" width="264" height="76" rx="10" fill="#FFFFFF" stroke="#93C5FD" stroke-width="1.6"/>
-            <text x="488" y="691" text-anchor="middle" fill="#0F172A" font-size="23" font-weight="800">结构突变定位</text>
+            <rect x="352" y="646" width="264" height="76" rx="10" fill="#FFFFFF" stroke="#93C5FD" stroke-width="1.6"/>
+            <text x="484" y="693" text-anchor="middle" fill="#0F172A" font-size="23" font-weight="800">结构突变定位</text>
 
-            <rect x="356" y="740" width="264" height="76" rx="10" fill="#FFFFFF" stroke="#93C5FD" stroke-width="1.6"/>
-            <text x="488" y="787" text-anchor="middle" fill="#0F172A" font-size="23" font-weight="800">核心驱动因子提取</text>
+            <rect x="352" y="742" width="264" height="76" rx="10" fill="#FFFFFF" stroke="#93C5FD" stroke-width="1.6"/>
+            <text x="484" y="789" text-anchor="middle" fill="#0F172A" font-size="23" font-weight="800">核心驱动因子提取</text>
 
-            <!-- LONG TOP EXPRESS ROUTE: Numerical Anchor -> Stage 3 (Orthogonal clean bypass above Stage 2!) -->
-            <path d="M 646 218 L 1384 218" fill="none" stroke="#475569" stroke-width="3.4" marker-end="url(#m10-s)"/>
-            <rect x="880" y="196" width="308" height="42" rx="8" fill="#F1F5F9" stroke="#CBD5E1" stroke-width="1.4"/>
-            <text x="1034" y="225" text-anchor="middle" fill="#334155" font-size="22" font-weight="800">纯数值基准锚点直通融合</text>
+            <!-- Top Express Route: Numerical Anchor -> Stage 3 -->
+            <path d="M 642 216 L 1384 216" fill="none" stroke="#475569" stroke-width="3.4" marker-end="url(#m10-s)"/>
+            <rect x="884" y="194" width="300" height="42" rx="8" fill="#F1F5F9" stroke="#CBD5E1" stroke-width="1.4"/>
+            <text x="1034" y="223" text-anchor="middle" fill="#334155" font-size="22" font-weight="800">纯数值锚点直通融合</text>
 
             <!-- Arrow: Causal Profiling -> Stage 2 -->
-            <line x1="670" y1="600" x2="720" y2="600" stroke="#2563EB" stroke-width="3.6" marker-end="url(#m10-b)"/>
+            <line x1="666" y1="600" x2="716" y2="600" stroke="#2563EB" stroke-width="3.6" marker-end="url(#m10-b)"/>
 
-            <!-- ==================== STAGE 2: DUAL OUTLOOKS + LEAKAGE-FREE BACKTEST (x=728..1336) ==================== -->
-            <rect x="728" y="274" width="608" height="622" rx="18" fill="#FAFBFD" stroke="#2563EB" stroke-width="2.2"/>
-            <rect x="752" y="298" width="122" height="38" rx="8" fill="#2563EB"/>
-            <text x="813" y="325" text-anchor="middle" fill="#FFFFFF" font-size="22" font-weight="800">阶段二</text>
-            <text x="892" y="326" fill="#1D4ED8" font-size="24" font-weight="800">双视角推演 × 无泄漏因果回测</text>
+            <!-- ==================== STAGE 2: DUAL OUTLOOKS (GPT) + HISTORY CHECK (x=724..1336) ==================== -->
+            <rect x="724" y="274" width="612" height="622" rx="18" fill="#FAFBFD" stroke="#2563EB" stroke-width="2.2"/>
+            <rect x="748" y="298" width="116" height="38" rx="8" fill="#2563EB"/>
+            <text x="806" y="325" text-anchor="middle" fill="#FFFFFF" font-size="22" font-weight="800">阶段二</text>
+            <use href="#gpt-icon" x="896" y="317"/>
+            <text x="926" y="326" fill="#1D4ED8" font-size="24" font-weight="800">大模型双视角推演与历史检验</text>
 
-            <!-- Dual Semantic Outlooks -->
-            <rect x="752" y="362" width="270" height="156" rx="14" fill="#FFFFFF" stroke="#2563EB" stroke-width="2"/>
-            <text x="887" y="408" text-anchor="middle" fill="#1D4ED8" font-size="24" font-weight="800">宏观走势视角</text>
-            <text x="887" y="454" text-anchor="middle" fill="#475569" font-size="22">先定整体形态轮廓</text>
-            <text x="887" y="492" text-anchor="middle" fill="#475569" font-size="22">再落具体数值走势</text>
+            <!-- Dual Semantic Outlooks (Spacious, Zero Crowding) -->
+            <rect x="748" y="362" width="274" height="156" rx="14" fill="#FFFFFF" stroke="#2563EB" stroke-width="2"/>
+            <text x="885" y="408" text-anchor="middle" fill="#1D4ED8" font-size="24" font-weight="800">宏观走势视角</text>
+            <text x="885" y="454" text-anchor="middle" fill="#475569" font-size="22">先定整体趋势形态</text>
+            <text x="885" y="492" text-anchor="middle" fill="#475569" font-size="22">再落具体数值走势</text>
 
-            <rect x="1042" y="362" width="270" height="156" rx="14" fill="#FFFFFF" stroke="#2563EB" stroke-width="2"/>
-            <text x="1177" y="408" text-anchor="middle" fill="#1D4ED8" font-size="24" font-weight="800">微观突变视角</text>
-            <text x="1177" y="454" text-anchor="middle" fill="#475569" font-size="22">逐点精细直推，</text>
-            <text x="1177" y="492" text-anchor="middle" fill="#475569" font-size="22">捕捉短期突发冲击</text>
+            <rect x="1038" y="362" width="274" height="156" rx="14" fill="#FFFFFF" stroke="#2563EB" stroke-width="2"/>
+            <text x="1175" y="408" text-anchor="middle" fill="#1D4ED8" font-size="24" font-weight="800">微观突变视角</text>
+            <text x="1175" y="454" text-anchor="middle" fill="#475569" font-size="22">逐点直接推演</text>
+            <text x="1175" y="492" text-anchor="middle" fill="#475569" font-size="22">捕捉短期突发冲击</text>
 
-            <!-- Bidirectional vertical arrows between Outlooks & Backtest -->
-            <line x1="948" y1="518" x2="948" y2="574" stroke="#2563EB" stroke-width="3.2" marker-end="url(#m10-b)"/>
-            <line x1="1116" y1="582" x2="1116" y2="526" stroke="#2563EB" stroke-width="3.2" stroke-dasharray="6 4" marker-end="url(#m10-b)"/>
-            <text x="1224" y="558" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="700">残差反思调优</text>
+            <!-- Bidirectional arrows: Down to History Check, Up = 调整提示词 -->
+            <line x1="944" y1="518" x2="944" y2="574" stroke="#2563EB" stroke-width="3.2" marker-end="url(#m10-b)"/>
+            <line x1="1104" y1="582" x2="1104" y2="526" stroke="#2563EB" stroke-width="3.2" stroke-dasharray="6 4" marker-end="url(#m10-b)"/>
+            <text x="1202" y="558" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="800">调整提示词</text>
 
-            <!-- Leakage-Free Causal Backtest Calibration Box -->
-            <rect x="752" y="582" width="560" height="284" rx="14" fill="#EFF6FF" stroke="#1D4ED8" stroke-width="2.2"/>
-            <text x="1032" y="630" text-anchor="middle" fill="#1D4ED8" font-size="25" font-weight="800">严格无未来泄漏因果回测校准</text>
+            <!-- Simple Direct History Verification Box -->
+            <rect x="748" y="582" width="564" height="284" rx="14" fill="#EFF6FF" stroke="#1D4ED8" stroke-width="2.2"/>
+            <text x="1030" y="632" text-anchor="middle" fill="#1D4ED8" font-size="25" font-weight="800">根据历史数据检验</text>
 
-            <!-- Timeline Split Bar (Visualizing Zero Future Leakage) -->
-            <rect x="780" y="658" width="166" height="52" rx="8" fill="#FFFFFF" stroke="#93C5FD" stroke-width="1.6"/>
-            <text x="863" y="692" text-anchor="middle" fill="#334155" font-size="22" font-weight="700">历史调优窗</text>
+            <!-- Clean 3-Window Timeline -->
+            <rect x="776" y="660" width="166" height="52" rx="8" fill="#FFFFFF" stroke="#93C5FD" stroke-width="1.6"/>
+            <text x="859" y="694" text-anchor="middle" fill="#334155" font-size="22" font-weight="700">历史调优</text>
 
-            <rect x="954" y="658" width="166" height="52" rx="8" fill="#1D4ED8"/>
-            <text x="1037" y="692" text-anchor="middle" fill="#FFFFFF" font-size="22" font-weight="800">误差标定窗</text>
+            <rect x="950" y="660" width="166" height="52" rx="8" fill="#1D4ED8"/>
+            <text x="1033" y="694" text-anchor="middle" fill="#FFFFFF" font-size="22" font-weight="800">误差标定</text>
 
-            <rect x="1128" y="658" width="156" height="52" rx="8" fill="#E2E8F0"/>
-            <text x="1206" y="692" text-anchor="middle" fill="#64748B" font-size="22" font-weight="700">未来待预测</text>
+            <rect x="1124" y="660" width="160" height="52" rx="8" fill="#E2E8F0"/>
+            <text x="1204" y="694" text-anchor="middle" fill="#64748B" font-size="22" font-weight="700">未来预测</text>
 
-            <text x="1032" y="766" text-anchor="middle" fill="#0F172A" font-size="22" font-weight="800">① 用历史误差标定两路视角各自的可信度</text>
-            <text x="1032" y="814" text-anchor="middle" fill="#475569" font-size="22">② 绝不偷看未来，误差越小的视角权重越高</text>
+            <text x="1030" y="766" text-anchor="middle" fill="#0F172A" font-size="22" font-weight="800">用历史误差评估两路视角各自有多准</text>
+            <text x="1030" y="816" text-anchor="middle" fill="#475569" font-size="22">绝不偷看未来，误差越小后续权重越高</text>
 
             <!-- Arrow: Stage 2 -> Stage 3 -->
             <line x1="1336" y1="560" x2="1384" y2="560" stroke="#2563EB" stroke-width="3.8" marker-end="url(#m10-b)"/>
 
-            <!-- ==================== STAGE 3: PRECISION-WEIGHTED BAYESIAN FUSION (x=1392..1808) ==================== -->
-            <rect x="1392" y="72" width="416" height="824" rx="18" fill="#EFF6FF" stroke="#1D4ED8" stroke-width="2.6"/>
-            <rect x="1418" y="96" width="122" height="38" rx="8" fill="#1D4ED8"/>
-            <text x="1479" y="123" text-anchor="middle" fill="#FFFFFF" font-size="22" font-weight="800">阶段三</text>
-            <text x="1556" y="124" fill="#1D4ED8" font-size="24" font-weight="800">精度加权融合</text>
+            <!-- ==================== STAGE 3: CLEAN WHITE WEIGHTED FUSION (x=1392..1808, NO DARK BLUE BLOCK!) ==================== -->
+            <rect x="1392" y="72" width="416" height="824" rx="18" fill="#FAFBFD" stroke="#2563EB" stroke-width="2.4"/>
+            <rect x="1418" y="96" width="116" height="38" rx="8" fill="#1D4ED8"/>
+            <text x="1476" y="123" text-anchor="middle" fill="#FFFFFF" font-size="22" font-weight="800">阶段三</text>
+            <text x="1552" y="124" fill="#1D4ED8" font-size="26" font-weight="800">加权融合</text>
 
-            <!-- Fusion Engine Block (Zero scary equations, pure visual intuition) -->
-            <rect x="1418" y="164" width="364" height="328" rx="14" fill="#1D4ED8"/>
-            <text x="1600" y="218" text-anchor="middle" fill="#FFFFFF" font-size="26" font-weight="800">贝叶斯精度加权融合</text>
-            <line x1="1450" y1="246" x2="1750" y2="246" stroke="rgba(255,255,255,0.28)" stroke-width="1.5"/>
-            <text x="1600" y="298" text-anchor="middle" fill="#DBEAFE" font-size="22" font-weight="700">· 按历史可信度自动配权</text>
-            <text x="1600" y="348" text-anchor="middle" fill="#DBEAFE" font-size="22" font-weight="700">· 保留跨时间步相关性</text>
-            <text x="1600" y="398" text-anchor="middle" fill="#DBEAFE" font-size="22" font-weight="700">· 联合求解整条未来轨迹</text>
-            <text x="1600" y="456" text-anchor="middle" fill="#93C5FD" font-size="22">解析闭式求解 · 无需重训</text>
+            <!-- Clean White Visual Weighted-Merge Diagram (Zero dark-blue wall, zero 4-bullet list) -->
+            <rect x="1418" y="164" width="364" height="324" rx="14" fill="#FFFFFF" stroke="#93C5FD" stroke-width="2"/>
+            <text x="1600" y="212" text-anchor="middle" fill="#0F172A" font-size="24" font-weight="800">按历史可信度自动配权</text>
 
-            <line x1="1600" y1="492" x2="1600" y2="540" stroke="#1D4ED8" stroke-width="3.6" marker-end="url(#m10-b)"/>
+            <!-- 3 Clean Source Pills Merging into Weighted Fusion -->
+            <rect x="1442" y="242" width="152" height="52" rx="10" fill="#F1F5F9" stroke="#CBD5E1" stroke-width="1.5"/>
+            <text x="1518" y="276" text-anchor="middle" fill="#334155" font-size="22" font-weight="700">数值锚点</text>
+
+            <rect x="1442" y="310" width="152" height="52" rx="10" fill="#EFF6FF" stroke="#93C5FD" stroke-width="1.5"/>
+            <text x="1518" y="344" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="700">宏观视角</text>
+
+            <rect x="1442" y="378" width="152" height="52" rx="10" fill="#EFF6FF" stroke="#93C5FD" stroke-width="1.5"/>
+            <text x="1518" y="412" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="700">微观视角</text>
+
+            <!-- Clean orthogonal merge lines -> Weighted Sum circle -->
+            <line x1="1594" y1="268" x2="1632" y2="268" stroke="#64748B" stroke-width="2.4"/>
+            <line x1="1594" y1="336" x2="1658" y2="336" stroke="#2563EB" stroke-width="2.6" marker-end="url(#m10-b)"/>
+            <line x1="1594" y1="404" x2="1632" y2="404" stroke="#2563EB" stroke-width="2.4"/>
+            <line x1="1632" y1="268" x2="1632" y2="404" stroke="#2563EB" stroke-width="2.4"/>
+
+            <circle cx="1712" cy="336" r="46" fill="#EFF6FF" stroke="#1D4ED8" stroke-width="2.6"/>
+            <text x="1712" y="328" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="800">加权</text>
+            <text x="1712" y="358" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="800">融合</text>
+
+            <text x="1600" y="468" text-anchor="middle" fill="#64748B" font-size="22">无需重训 · 联合求解整条轨迹</text>
+
+            <line x1="1600" y1="488" x2="1600" y2="540" stroke="#2563EB" stroke-width="3.6" marker-end="url(#m10-b)"/>
 
             <!-- Final Output Trajectory Comparison -->
-            <rect x="1418" y="548" width="364" height="316" rx="14" fill="#FFFFFF" stroke="#2563EB" stroke-width="2"/>
+            <rect x="1418" y="548" width="364" height="318" rx="14" fill="#FFFFFF" stroke="#2563EB" stroke-width="2"/>
             <text x="1600" y="596" text-anchor="middle" fill="#0F172A" font-size="24" font-weight="800">融合轨迹 + 因果解释</text>
             <line x1="1442" y1="774" x2="1758" y2="774" stroke="#CBD5E1" stroke-width="1.6"/>
             <line x1="1566" y1="628" x2="1566" y2="774" stroke="#2563EB" stroke-width="2" stroke-dasharray="4 4"/>
@@ -1220,7 +1250,7 @@ SLIDES_HTML = f'''
             <path d="M 1566 700 Q 1654 664, 1752 662" fill="none" stroke="#1D4ED8" stroke-width="4.4" stroke-linecap="round"/>
             <text x="1676" y="646" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="800">融合预测</text>
             <text x="1676" y="762" text-anchor="middle" fill="#64748B" font-size="22">纯基座预测</text>
-            <text x="1600" y="832" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="800">语义流与数值流互补降错</text>
+            <text x="1600" y="832" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="800">文本与数值互补降错</text>
           </svg>
         </div>
       </section>
