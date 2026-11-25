@@ -57,10 +57,10 @@ SLIDES_HTML = f'''
           <svg viewBox="0 0 1808 920" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <marker id="m-blue-lg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="10" markerHeight="10" orient="auto">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#1D4ED8"/>
+                <path d="M 0 1.2 L 9.5 5 L 0 8.8 L 2.2 5 z" fill="#1D4ED8"/>
               </marker>
               <marker id="m-slate" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#94A3B8"/>
+                <path d="M 0 1.2 L 9.5 5 L 0 8.8 L 2.2 5 z" fill="#94A3B8"/>
               </marker>
               <radialGradient id="g-core" cx="50%" cy="45%" r="55%">
                 <stop offset="0%" stop-color="#2563EB"/>
@@ -90,18 +90,18 @@ SLIDES_HTML = f'''
             <line x1="36" y1="812" x2="460" y2="812" stroke="#E2E8F0" stroke-width="1.8"/>
             <text x="248" y="862" text-anchor="middle" fill="#64748B" font-size="22" font-weight="700">无状态 · 无校验 · 错即终结</text>
 
-            <path d="M 516 470 L 564 470" stroke="#2563EB" stroke-width="4.5" marker-end="url(#m-blue-lg)"/>
+            <path d="M 512 526 L 574 526" stroke="#2563EB" stroke-width="4.2" marker-end="url(#m-blue-lg)"/>
 
             <text x="600" y="74" fill="#2563EB" font-size="22" font-weight="800" letter-spacing="1">共性抽象 · 智能体定义</text>
             <text x="600" y="128" fill="#0F172A" font-size="31" font-weight="800">以目标为导向，在动态环境中持续感知、决策、执行并演化状态的闭环系统</text>
 
-            <circle cx="1200" cy="526" r="296" fill="none" stroke="#DBEAFE" stroke-width="2.2" stroke-dasharray="9 9"/>
-            <circle cx="1200" cy="526" r="204" fill="#F8FAFC" opacity="0.72"/>
+            <circle cx="1200" cy="526" r="204" fill="#F8FAFC" opacity="0.78"/>
 
-            <path d="M 1434 316 Q 1478 368, 1488 446" fill="none" stroke="#2563EB" stroke-width="4.5" stroke-linecap="round" marker-end="url(#m-blue-lg)"/>
-            <path d="M 1488 602 Q 1478 672, 1446 728" fill="none" stroke="#2563EB" stroke-width="4.5" stroke-linecap="round" marker-end="url(#m-blue-lg)"/>
-            <path d="M 954 732 Q 922 674, 912 606" fill="none" stroke="#2563EB" stroke-width="4.5" stroke-linecap="round" marker-end="url(#m-blue-lg)"/>
-            <path d="M 912 448 Q 924 374, 964 322" fill="none" stroke="#2563EB" stroke-width="4.5" stroke-linecap="round" marker-end="url(#m-blue-lg)"/>
+            <!-- Exact 90-degree perpendicular-entry clockwise closed loop (zero crooked arrowheads) -->
+            <path d="M 1432 245 C 1548 245, 1593 305, 1593 455" fill="none" stroke="#2563EB" stroke-width="4.2" stroke-linecap="round" marker-end="url(#m-blue-lg)"/>
+            <path d="M 1593 593 C 1593 742, 1548 807, 1454 807" fill="none" stroke="#2563EB" stroke-width="4.2" stroke-linecap="round" marker-end="url(#m-blue-lg)"/>
+            <path d="M 950 807 C 852 807, 807 742, 807 597" fill="none" stroke="#2563EB" stroke-width="4.2" stroke-linecap="round" marker-end="url(#m-blue-lg)"/>
+            <path d="M 807 459 C 807 305, 852 245, 964 245" fill="none" stroke="#2563EB" stroke-width="4.2" stroke-linecap="round" marker-end="url(#m-blue-lg)"/>
 
             <circle cx="1200" cy="526" r="126" fill="url(#g-core)"/>
             <circle cx="1200" cy="526" r="138" fill="none" stroke="#93C5FD" stroke-width="2"/>
@@ -157,13 +157,13 @@ SLIDES_HTML = f'''
           <svg viewBox="0 0 1808 920" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <marker id="m2-blue" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563EB"/>
+                <path d="M 0 1.2 L 9.5 5 L 0 8.8 L 2.2 5 z" fill="#2563EB"/>
               </marker>
               <marker id="m2-dark" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#334155"/>
+                <path d="M 0 1.2 L 9.5 5 L 0 8.8 L 2.2 5 z" fill="#334155"/>
               </marker>
               <marker id="m2-red" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#BE123C"/>
+                <path d="M 0 1.2 L 9.5 5 L 0 8.8 L 2.2 5 z" fill="#BE123C"/>
               </marker>
             </defs>
 
@@ -198,14 +198,14 @@ SLIDES_HTML = f'''
             <text x="1048" y="344" text-anchor="middle" fill="#0F172A" font-size="25" font-weight="800">误差反思与修正</text>
             <text x="1048" y="388" text-anchor="middle" fill="#64748B" font-size="22">审视残差并更新记忆</text>
 
-            <path d="M 1048 294 L 1048 268 L 626 268 L 626 286" fill="none" stroke="#2563EB" stroke-width="2.5" stroke-dasharray="6 4" marker-end="url(#m2-blue)"/>
+            <path d="M 1048 294 L 1048 262 L 626 262 L 626 289" fill="none" stroke="#2563EB" stroke-width="2.5" stroke-dasharray="6 4" marker-end="url(#m2-blue)"/>
 
             <!-- Bidirectional Coupling Bridges -->
-            <line x1="548" y1="446" x2="548" y2="530" stroke="#1D4ED8" stroke-width="4" marker-end="url(#m2-blue)"/>
+            <line x1="548" y1="446" x2="548" y2="535" stroke="#1D4ED8" stroke-width="3.8" marker-end="url(#m2-blue)"/>
             <rect x="334" y="468" width="198" height="42" rx="8" fill="#EFF6FF"/>
             <text x="433" y="497" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="800">调度指令与约束</text>
 
-            <line x1="704" y1="540" x2="704" y2="456" stroke="#334155" stroke-width="4" marker-end="url(#m2-dark)"/>
+            <line x1="704" y1="540" x2="704" y2="451" stroke="#334155" stroke-width="3.8" marker-end="url(#m2-dark)"/>
             <rect x="720" y="468" width="218" height="42" rx="8" fill="#F1F5F9"/>
             <text x="829" y="497" text-anchor="middle" fill="#334155" font-size="22" font-weight="800">量化结果与残差</text>
 
@@ -224,7 +224,7 @@ SLIDES_HTML = f'''
             <circle cx="286" cy="762" r="6" fill="#BE123C"/>
             <text x="202" y="856" text-anchor="middle" fill="#BE123C" font-size="22" font-weight="700">结构突变 / 外部冲击</text>
 
-            <line x1="376" y1="750" x2="438" y2="750" stroke="#334155" stroke-width="3.2" marker-end="url(#m2-dark)"/>
+            <line x1="376" y1="750" x2="443" y2="750" stroke="#334155" stroke-width="3.2" marker-end="url(#m2-dark)"/>
 
             <!-- Middle Tool Bank -->
             <rect x="448" y="624" width="356" height="252" rx="12" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.6"/>
@@ -236,7 +236,7 @@ SLIDES_HTML = f'''
             <rect x="472" y="808" width="308" height="48" rx="8" fill="#F1F5F9"/>
             <text x="626" y="840" text-anchor="middle" fill="#334155" font-size="22" font-weight="700">仿真器与约束求解器</text>
 
-            <line x1="804" y1="750" x2="866" y2="750" stroke="#334155" stroke-width="3.2" marker-end="url(#m2-dark)"/>
+            <line x1="804" y1="750" x2="871" y2="750" stroke="#334155" stroke-width="3.2" marker-end="url(#m2-dark)"/>
 
             <!-- Right Calibrated Output -->
             <rect x="876" y="624" width="344" height="252" rx="12" fill="#FFFFFF" stroke="#2563EB" stroke-width="2.2"/>
@@ -270,7 +270,7 @@ SLIDES_HTML = f'''
               <text x="0" y="28" fill="#BE123C" font-size="25" font-weight="800">×  静态编码拼接</text>
               <rect x="0" y="48" width="468" height="84" rx="10" fill="#FFFFFF" stroke="#FECDD3" stroke-width="1.5"/>
               <rect x="18" y="68" width="106" height="44" rx="8" fill="#F1F5F9"/><text x="71" y="98" text-anchor="middle" fill="#475569" font-size="22" font-weight="700">编码</text>
-              <line x1="124" y1="90" x2="162" y2="90" stroke="#94A3B8" stroke-width="2.4"/>
+              <line x1="124" y1="90" x2="163" y2="90" stroke="#94A3B8" stroke-width="2.4" marker-end="url(#m2-dark)"/>
               <rect x="168" y="68" width="132" height="44" rx="8" fill="#E2E8F0"/><text x="234" y="98" text-anchor="middle" fill="#334155" font-size="22" font-weight="700">固定网络</text>
               <line x1="300" y1="90" x2="338" y2="90" stroke="#BE123C" stroke-width="2.4" marker-end="url(#m2-red)"/>
               <text x="404" y="98" text-anchor="middle" fill="#BE123C" font-size="22" font-weight="800">无分支</text>
@@ -308,7 +308,7 @@ SLIDES_HTML = f'''
           <svg viewBox="0 0 1808 920" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <marker id="m3-blue" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563EB"/>
+                <path d="M 0 1.2 L 9.5 5 L 0 8.8 L 2.2 5 z" fill="#2563EB"/>
               </marker>
             </defs>
 
@@ -350,15 +350,15 @@ SLIDES_HTML = f'''
             <line x1="1098" y1="209" x2="1098" y2="368" stroke="#BE123C" stroke-width="2" stroke-dasharray="4 3"/>
             <text x="1224" y="210" text-anchor="middle" fill="#BE123C" font-size="22" font-weight="800">尖峰与根因</text>
 
-            <!-- Col 4: 决策支持 -->
-            <path d="M 1388 294 Q 1428 262, 1468 278" fill="none" stroke="#334155" stroke-width="3.6"/>
-            <rect x="1482" y="226" width="128" height="62" rx="10" fill="#1D4ED8"/>
-            <text x="1546" y="266" text-anchor="middle" fill="#FFFFFF" font-size="22" font-weight="800">执行策略</text>
-            <path d="M 1610 257 L 1666 257" stroke="#2563EB" stroke-width="3.2" marker-end="url(#m3-blue)"/>
-            <circle cx="1718" cy="257" r="40" fill="#EFF6FF" stroke="#2563EB" stroke-width="2.4"/>
-            <text x="1718" y="266" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="800">环境</text>
-            <path d="M 1718 297 C 1718 340, 1546 340, 1546 296" fill="none" stroke="#2563EB" stroke-width="2.6" stroke-dasharray="5 4" marker-end="url(#m3-blue)"/>
-            <text x="1632" y="356" text-anchor="middle" fill="#2563EB" font-size="22" font-weight="700">仿真反馈回写</text>
+            <!-- Col 4: 决策支持 (Crisp orthogonal straight-up feedback arrow, zero baseline touch) -->
+            <path d="M 1388 272 Q 1426 244, 1468 258" fill="none" stroke="#334155" stroke-width="3.6"/>
+            <rect x="1480" y="210" width="130" height="60" rx="10" fill="#1D4ED8"/>
+            <text x="1545" y="249" text-anchor="middle" fill="#FFFFFF" font-size="22" font-weight="800">执行策略</text>
+            <path d="M 1610 240 L 1672 240" stroke="#2563EB" stroke-width="3.2" marker-end="url(#m3-blue)"/>
+            <circle cx="1720" cy="240" r="40" fill="#EFF6FF" stroke="#2563EB" stroke-width="2.4"/>
+            <text x="1720" y="249" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="800">环境</text>
+            <path d="M 1720 280 L 1720 314 Q 1720 322, 1712 322 L 1553 322 Q 1545 322, 1545 314 L 1545 276" fill="none" stroke="#2563EB" stroke-width="2.8" stroke-dasharray="5 4" marker-end="url(#m3-blue)"/>
+            <text x="1632" y="354" text-anchor="middle" fill="#2563EB" font-size="22" font-weight="700">仿真反馈回写</text>
 
             <!-- 4 Definitions Strictly in Order -->
             <g transform="translate(32, 412)">
@@ -419,10 +419,10 @@ SLIDES_HTML = f'''
           <svg viewBox="0 0 1808 920" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <marker id="m4-b" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563EB"/>
+                <path d="M 0 1.2 L 9.5 5 L 0 8.8 L 2.2 5 z" fill="#2563EB"/>
               </marker>
               <marker id="m4-s" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#64748B"/>
+                <path d="M 0 1.2 L 9.5 5 L 0 8.8 L 2.2 5 z" fill="#64748B"/>
               </marker>
             </defs>
 
@@ -443,8 +443,8 @@ SLIDES_HTML = f'''
             <text x="24" y="464" fill="#334155" font-size="22">突发政策 · 极端天气</text>
             <text x="24" y="502" fill="#334155" font-size="22">物理守恒 · 因果假设</text>
 
-            <path d="M 276 268 L 336 322" stroke="#64748B" stroke-width="2.8" marker-end="url(#m4-s)"/>
-            <path d="M 276 452 L 336 398" stroke="#2563EB" stroke-width="2.8" marker-end="url(#m4-b)"/>
+            <line x1="276" y1="268" x2="340" y2="268" stroke="#64748B" stroke-width="3.2" marker-end="url(#m4-s)"/>
+            <line x1="276" y1="452" x2="340" y2="452" stroke="#2563EB" stroke-width="3.2" marker-end="url(#m4-b)"/>
 
             <!-- Center Loop -->
             <rect x="346" y="186" width="820" height="348" rx="18" fill="#FAFBFD" stroke="#2563EB" stroke-width="2.2"/>
@@ -466,7 +466,7 @@ SLIDES_HTML = f'''
             <text x="1042" y="320" text-anchor="middle" fill="#1D4ED8" font-size="25" font-weight="800">回测校准</text>
             <text x="1042" y="366" text-anchor="middle" fill="#334155" font-size="22">校验残差约束</text>
 
-            <path d="M 1042 406 L 1042 482 L 490 482 L 490 416" fill="none" stroke="#2563EB" stroke-width="2.8" stroke-dasharray="6 4" marker-end="url(#m4-b)"/>
+            <path d="M 1042 406 L 1042 482 L 490 482 L 490 412" fill="none" stroke="#2563EB" stroke-width="2.8" stroke-dasharray="6 4" marker-end="url(#m4-b)"/>
             <rect x="628" y="458" width="280" height="44" rx="8" fill="#EFF6FF"/>
             <text x="768" y="488" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="800">残差反馈 → 修正策略</text>
 
@@ -538,10 +538,10 @@ SLIDES_HTML = f'''
           <svg viewBox="0 0 1808 920" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <marker id="m5-b" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563EB"/>
+                <path d="M 0 1.2 L 9.5 5 L 0 8.8 L 2.2 5 z" fill="#2563EB"/>
               </marker>
               <marker id="m5-r" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#BE123C"/>
+                <path d="M 0 1.2 L 9.5 5 L 0 8.8 L 2.2 5 z" fill="#BE123C"/>
               </marker>
             </defs>
 
@@ -565,7 +565,7 @@ SLIDES_HTML = f'''
             <text x="168" y="436" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="800">目标分布与约束</text>
             <text x="168" y="472" text-anchor="middle" fill="#475569" font-size="22">趋势、周期与边界</text>
 
-            <line x1="336" y1="352" x2="388" y2="352" stroke="#2563EB" stroke-width="3.2" marker-end="url(#m5-b)"/>
+            <line x1="336" y1="352" x2="393" y2="352" stroke="#2563EB" stroke-width="3.2" marker-end="url(#m5-b)"/>
 
             <!-- Step 2 -->
             <rect x="398" y="186" width="440" height="332" rx="16" fill="#FAFBFD" stroke="#2563EB" stroke-width="2.2"/>
@@ -580,7 +580,7 @@ SLIDES_HTML = f'''
             <text x="618" y="442" text-anchor="middle" fill="#0F172A" font-size="24" font-weight="800">生成 / 编辑工具执行</text>
             <text x="618" y="478" text-anchor="middle" fill="#64748B" font-size="22">扩散、流匹配或局部编辑</text>
 
-            <line x1="838" y1="352" x2="890" y2="352" stroke="#2563EB" stroke-width="3.2" marker-end="url(#m5-b)"/>
+            <line x1="838" y1="352" x2="895" y2="352" stroke="#2563EB" stroke-width="3.2" marker-end="url(#m5-b)"/>
 
             <!-- Step 3 -->
             <rect x="900" y="186" width="368" height="332" rx="16" fill="#FFFFFF" stroke="#1D4ED8" stroke-width="2.2"/>
@@ -592,9 +592,9 @@ SLIDES_HTML = f'''
             <rect x="936" y="438" width="296" height="52" rx="10" fill="#FFF1F2" stroke="#FECDD3" stroke-width="1.6"/>
             <text x="1084" y="472" text-anchor="middle" fill="#BE123C" font-size="22" font-weight="800">语义漂移 → 打回重写</text>
 
-            <path d="M 1084 518 L 1084 548 L 618 548 L 618 504" fill="none" stroke="#BE123C" stroke-width="2.6" stroke-dasharray="6 4" marker-end="url(#m5-r)"/>
+            <path d="M 1084 518 L 1084 548 L 618 548 L 618 499" fill="none" stroke="#BE123C" stroke-width="2.6" stroke-dasharray="6 4" marker-end="url(#m5-r)"/>
 
-            <line x1="1268" y1="352" x2="1320" y2="352" stroke="#2563EB" stroke-width="3.6" marker-end="url(#m5-b)"/>
+            <line x1="1268" y1="352" x2="1325" y2="352" stroke="#2563EB" stroke-width="3.6" marker-end="url(#m5-b)"/>
 
             <!-- Step 4 -->
             <rect x="1330" y="186" width="478" height="332" rx="16" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.8"/>
@@ -656,10 +656,10 @@ SLIDES_HTML = f'''
           <svg viewBox="0 0 1808 920" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <marker id="m6-b" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563EB"/>
+                <path d="M 0 1.2 L 9.5 5 L 0 8.8 L 2.2 5 z" fill="#2563EB"/>
               </marker>
               <marker id="m6-r" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#BE123C"/>
+                <path d="M 0 1.2 L 9.5 5 L 0 8.8 L 2.2 5 z" fill="#BE123C"/>
               </marker>
             </defs>
 
@@ -713,9 +713,11 @@ SLIDES_HTML = f'''
             <circle cx="1536" cy="296" r="36" fill="#FFF1F2" stroke="#BE123C" stroke-width="3.2"/>
             <text x="1536" y="304" text-anchor="middle" fill="#BE123C" font-size="22" font-weight="800">根因</text>
 
-            <line x1="1504" y1="322" x2="1396" y2="388" stroke="#BE123C" stroke-width="2.8" marker-end="url(#m6-r)"/>
-            <line x1="1536" y1="332" x2="1536" y2="388" stroke="#2563EB" stroke-width="2.8" marker-end="url(#m6-b)"/>
-            <line x1="1568" y1="322" x2="1676" y2="388" stroke="#94A3B8" stroke-width="2.2"/>
+            <line x1="1536" y1="332" x2="1536" y2="360" stroke="#334155" stroke-width="2.6"/>
+            <line x1="1372" y1="360" x2="1700" y2="360" stroke="#94A3B8" stroke-width="2.4"/>
+            <line x1="1372" y1="360" x2="1372" y2="393" stroke="#BE123C" stroke-width="2.8" marker-end="url(#m6-r)"/>
+            <line x1="1536" y1="360" x2="1536" y2="393" stroke="#2563EB" stroke-width="2.8" marker-end="url(#m6-b)"/>
+            <line x1="1700" y1="360" x2="1700" y2="393" stroke="#94A3B8" stroke-width="2.4"/>
 
             <rect x="1296" y="398" width="152" height="54" rx="10" fill="#EFF6FF" stroke="#2563EB" stroke-width="2"/>
             <text x="1372" y="434" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="800">主告警 A</text>
@@ -779,7 +781,7 @@ SLIDES_HTML = f'''
           <svg viewBox="0 0 1808 920" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <marker id="m7-b" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563EB"/>
+                <path d="M 0 1.2 L 9.5 5 L 0 8.8 L 2.2 5 z" fill="#2563EB"/>
               </marker>
             </defs>
 
@@ -822,16 +824,16 @@ SLIDES_HTML = f'''
             <text x="842" y="410" text-anchor="middle" fill="#334155" font-size="22">反事实推演评估</text>
             <text x="842" y="454" text-anchor="middle" fill="#334155" font-size="22">量化收益与代价</text>
 
-            <line x1="970" y1="376" x2="1024" y2="376" stroke="#2563EB" stroke-width="3.2" marker-end="url(#m7-b)"/>
+            <line x1="970" y1="376" x2="1038" y2="376" stroke="#2563EB" stroke-width="3.2" marker-end="url(#m7-b)"/>
 
             <circle cx="1132" cy="376" r="88" fill="#0F172A"/>
             <text x="1132" y="366" text-anchor="middle" fill="#FFFFFF" font-size="26" font-weight="800">真实环境</text>
             <text x="1132" y="408" text-anchor="middle" fill="#93C5FD" font-size="22">产生新状态</text>
 
             <!-- Feedback loop -->
-            <path d="M 1132 464 L 1132 548 L 160 548 L 160 528" fill="none" stroke="#2563EB" stroke-width="2.8" stroke-dasharray="6 4" marker-end="url(#m7-b)"/>
-            <rect x="466" y="526" width="380" height="40" rx="8" fill="#EFF6FF"/>
-            <text x="656" y="554" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="800">环境新观测 + 收益反馈 → 更新策略</text>
+            <path d="M 1132 464 L 1132 552 L 160 552 L 160 524" fill="none" stroke="#2563EB" stroke-width="2.8" stroke-dasharray="6 4" marker-end="url(#m7-b)"/>
+            <rect x="466" y="530" width="380" height="40" rx="8" fill="#EFF6FF"/>
+            <text x="656" y="558" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="800">环境新观测 + 收益反馈 → 更新策略</text>
 
             <!-- Right 3 Domains -->
             <rect x="1282" y="186" width="526" height="332" rx="16" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.8"/>
@@ -900,7 +902,7 @@ SLIDES_HTML = f'''
           <svg viewBox="0 0 1808 920" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <marker id="m8-b" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563EB"/>
+                <path d="M 0 1.2 L 9.5 5 L 0 8.8 L 2.2 5 z" fill="#2563EB"/>
               </marker>
             </defs>
 
@@ -976,10 +978,10 @@ SLIDES_HTML = f'''
           <svg viewBox="0 0 1808 920" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <marker id="m9-b" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563EB"/>
+                <path d="M 0 1.2 L 9.5 5 L 0 8.8 L 2.2 5 z" fill="#2563EB"/>
               </marker>
               <marker id="m9-r" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#BE123C"/>
+                <path d="M 0 1.2 L 9.5 5 L 0 8.8 L 2.2 5 z" fill="#BE123C"/>
               </marker>
             </defs>
 
@@ -1010,7 +1012,7 @@ SLIDES_HTML = f'''
             <text x="1022" y="230" text-anchor="middle" fill="#FFFFFF" font-size="24" font-weight="800">结构化输出</text>
             <text x="1022" y="278" text-anchor="middle" fill="#93C5FD" font-size="22">数值与推理链</text>
 
-            <path d="M 742 318 L 742 452 L 438 452 L 438 328" fill="none" stroke="#BE123C" stroke-width="3" stroke-dasharray="6 4" marker-end="url(#m9-r)"/>
+            <path d="M 742 318 L 742 452 L 438 452 L 438 324" fill="none" stroke="#BE123C" stroke-width="3" stroke-dasharray="6 4" marker-end="url(#m9-r)"/>
             <rect x="412" y="426" width="356" height="50" rx="10" fill="#FFF1F2" stroke="#FECDD3" stroke-width="1.6"/>
             <text x="590" y="460" text-anchor="middle" fill="#BE123C" font-size="22" font-weight="800">报错反馈 + 伪留出集选模自修</text>
 
@@ -1064,7 +1066,7 @@ SLIDES_HTML = f'''
           <svg viewBox="0 0 1808 920" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <marker id="m10-b" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563EB"/>
+                <path d="M 0 1.2 L 9.5 5 L 0 8.8 L 2.2 5 z" fill="#2563EB"/>
               </marker>
             </defs>
 
@@ -1139,7 +1141,7 @@ SLIDES_HTML = f'''
           <svg viewBox="0 0 1808 920" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <marker id="m11-b" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563EB"/>
+                <path d="M 0 1.2 L 9.5 5 L 0 8.8 L 2.2 5 z" fill="#2563EB"/>
               </marker>
             </defs>
 
