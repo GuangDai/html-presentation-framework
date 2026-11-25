@@ -89,7 +89,6 @@ SLIDES_HTML = f'''
 
 
 
-            <path d="M 512 526 L 574 526" stroke="#2563EB" stroke-width="4.2" marker-end="url(#m-blue-lg)"/>
 
             <text x="600" y="74" fill="#2563EB" font-size="22" font-weight="800" letter-spacing="1">共性抽象 · 智能体定义</text>
             <text x="600" y="128" fill="#0F172A" font-size="31" font-weight="800">以目标为导向，在动态环境中持续感知、决策、执行并演化状态的闭环系统</text>
