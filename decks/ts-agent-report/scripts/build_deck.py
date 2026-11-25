@@ -427,7 +427,7 @@ SLIDES_HTML = f'''
 
             <rect x="0" y="10" width="1808" height="106" rx="14" fill="#EFF6FF"/>
             <rect x="0" y="10" width="8" height="106" rx="4" fill="#1D4ED8"/>
-            <text x="32" y="48" fill="#1D4ED8" font-size="22" font-weight="800">共性定义</text>
+            <text x="32" y="48" fill="#1D4ED8" font-size="22" font-weight="800">任务定义</text>
             <text x="32" y="92" fill="#0F172A" font-size="24" font-weight="800">在多源上下文与外部约束下，由智能体自主规划流程、调度预测与统计工具并迭代修正，完成未来预测或机理推理</text>
 
             
@@ -563,7 +563,7 @@ SLIDES_HTML = f'''
 
             <rect x="0" y="10" width="1808" height="106" rx="14" fill="#EFF6FF"/>
             <rect x="0" y="10" width="8" height="106" rx="4" fill="#1D4ED8"/>
-            <text x="32" y="48" fill="#1D4ED8" font-size="22" font-weight="800">共性定义</text>
+            <text x="32" y="48" fill="#1D4ED8" font-size="22" font-weight="800">任务定义</text>
             <text x="32" y="92" fill="#0F172A" font-size="24" font-weight="800">面对小样本与分布偏移，由智能体解析语义与统计条件，驱动生成或编辑工具构造保真时序并严控语义漂移</text>
 
             
@@ -679,7 +679,7 @@ SLIDES_HTML = f'''
 
             <rect x="0" y="10" width="1808" height="106" rx="14" fill="#EFF6FF"/>
             <rect x="0" y="10" width="8" height="106" rx="4" fill="#1D4ED8"/>
-            <text x="32" y="48" fill="#1D4ED8" font-size="22" font-weight="800">共性定义</text>
+            <text x="32" y="48" fill="#1D4ED8" font-size="22" font-weight="800">任务定义</text>
             <text x="32" y="92" fill="#0F172A" font-size="24" font-weight="800">面向连续监测流与系统故障，由智能体协同检测器与分析工具核验证据、防误报退化，并串联线索定位根因</text>
 
             
@@ -795,7 +795,7 @@ SLIDES_HTML = f'''
 
             <rect x="0" y="10" width="1808" height="106" rx="14" fill="#EFF6FF"/>
             <rect x="0" y="10" width="8" height="106" rx="4" fill="#1D4ED8"/>
-            <text x="32" y="48" fill="#1D4ED8" font-size="22" font-weight="800">共性定义</text>
+            <text x="32" y="48" fill="#1D4ED8" font-size="22" font-weight="800">任务定义</text>
             <text x="32" y="92" fill="#0F172A" font-size="24" font-weight="800">在金融、交通与电网等动态环境中，将实时时序状态与仿真求解器耦合，直接生成可执行策略并在交互中演进</text>
 
             
