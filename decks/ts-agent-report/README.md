@@ -1,13 +1,13 @@
 # 时间序列 LLM Agent 专题报告
 
-11 页 16:9 图形化演示文稿，包含独立 HTML 交互版、矢量 PDF 与 PowerPoint（`.pptx`）三种交付格式。
+10 页 16:9 图形化演示文稿，包含独立 HTML 交互版、矢量 PDF 与 PowerPoint（`.pptx`）三种交付格式。
 
 ## 目录结构
 
 - `index.html`：独立交互式演示稿（支持方向键、空格翻页、顶部议程跳转与右侧目录抽屉）
 - `dist/ts_agent_report.html`：独立 HTML 发行版
-- 11 页 16:9 矢量 PDF。[仓库根目录的 PDF](../../TS_Agent_Presentation_16x9.pdf)
-- 11 页 16:9 PowerPoint 演示文稿。[仓库根目录的 PPTX](../../TS_Agent_Presentation_16x9.pptx)
+- 10 页 16:9 矢量 PDF。[仓库根目录的 PDF](../../TS_Agent_Presentation_16x9.pdf)
+- 10 页 16:9 PowerPoint 演示文稿。[仓库根目录的 PPTX](../../TS_Agent_Presentation_16x9.pptx)
 - `scripts/export_pdf_pptx.py` 从 `index.html` 重新导出 PDF 和 PPTX 到仓库根目录。
 
 中文标题用黑体（SimHei），正文和图中文字用微软雅黑，英文与数字用 Arial，公式用 Cambria Math。导出时使用 Arch Linux 主机上安装的字体。
@@ -24,4 +24,3 @@
 8. TimeCopilot（占位骨架）
 9. TS-Reasoner（占位骨架）
 10. NEXUS（占位骨架）
-11. 个人思考与后续研究构想（占位骨架）

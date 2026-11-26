@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Builds the 11-slide 16:9 Time-Series LLM Agent presentation:
-- Strict >= 22px (11pt) typography floor across ALL 11 slides
+Builds the 10-slide 16:9 Time-Series LLM Agent presentation:
+- Strict >= 22px (11pt) typography floor across ALL 10 slides
 - Real KaTeX pre-rendered math formulas (offline + WeasyPrint compatible)
 - Exports standalone HTML, 16:9 vector PDF, 16:9 PPTX, and full Git repo ZIP
 """
@@ -42,7 +42,7 @@ KATEX_NEXUS_EQ = render_katex(
     r"\mu_{\mathrm{post}} \propto (\tau_0 \Sigma)^{-1}\pi + \Omega_{\mathrm{macro}}^{-1} q_{\mathrm{macro}} + \Omega_{\mathrm{micro}}^{-1} q_{\mathrm{micro}}"
 )
 
-# Slide definitions (1..11)
+# Slide definitions (1..10)
 SLIDES_HTML = f'''
       <!-- ==================== SLIDE 01 ==================== -->
       <section class="slide active" data-title="Agent 的本质：从静态函数映射走向有状态闭环决策体">
@@ -1255,70 +1255,6 @@ SLIDES_HTML = f'''
         </div>
       </section>
 
-      <!-- ==================== SLIDE 11 ==================== -->
-      <section class="slide" data-title="个人思考与研究构想">
-        <header class="slide-header">
-          <div class="header-left">
-            <span class="slide-num">11</span>
-            <h1 class="slide-title">个人思考与后续研究构想</h1>
-          </div>
-          <nav class="slide-agenda-rail"></nav>
-        </header>
-        <div class="visual-stage">
-          <svg viewBox="0 0 1808 920" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Microsoft YaHei, PingFang SC, Noto Sans CJK SC, sans-serif">
-            <defs>
-              <marker id="m11-b" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
-                <path d="M 0 1.2 L 9.5 5 L 0 8.8 L 2.2 5 z" fill="#2563EB"/>
-              </marker>
-            </defs>
-
-            <text x="0" y="42" fill="#64748B" font-size="22" font-weight="700">从既有工作脉络出发，梳理自己的问题切入点、方法设想与验证路径（占位待填）</text>
-
-            <g transform="translate(0, 82)">
-              <rect x="0" y="0" width="564" height="804" rx="16" fill="#FAFBFD" stroke="#CBD5E1" stroke-width="2" stroke-dasharray="9 7"/>
-              <rect x="34" y="34" width="128" height="44" rx="8" fill="#EFF6FF"/>
-              <text x="98" y="64" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="800">思考一</text>
-              <text x="34" y="140" fill="#0F172A" font-size="32" font-weight="800">问题切入点</text>
-              <text x="34" y="196" fill="#64748B" font-size="22">现有时序智能体尚未解决的</text>
-              <text x="34" y="232" fill="#64748B" font-size="22">根本矛盾是什么？</text>
-              <line x1="34" y1="274" x2="530" y2="274" stroke="#E2E8F0" stroke-width="1.6"/>
-              <text x="34" y="352" fill="#64748B" font-size="23" font-weight="600">· 待填写核心痛点 1</text>
-              <text x="34" y="438" fill="#64748B" font-size="23" font-weight="600">· 待填写核心痛点 2</text>
-              <text x="34" y="524" fill="#64748B" font-size="23" font-weight="600">· 待填写与前文工作的差异</text>
-            </g>
-
-            <line x1="574" y1="484" x2="612" y2="484" stroke="#2563EB" stroke-width="4" marker-end="url(#m11-b)"/>
-
-            <g transform="translate(622, 82)">
-              <rect x="0" y="0" width="564" height="804" rx="16" fill="#EFF6FF" stroke="#2563EB" stroke-width="2.4" stroke-dasharray="9 7"/>
-              <rect x="34" y="34" width="128" height="44" rx="8" fill="#DBEAFE" stroke="#93C5FD" stroke-width="1.5"/>
-              <text x="98" y="64" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="800">思考二</text>
-              <text x="34" y="140" fill="#1D4ED8" font-size="32" font-weight="800">核心方法构想</text>
-              <text x="34" y="196" fill="#334155" font-size="22">语义控制流与数值计算流</text>
-              <text x="34" y="232" fill="#334155" font-size="22">如何更优雅地结合？</text>
-              <line x1="34" y1="274" x2="530" y2="274" stroke="#BFDBFE" stroke-width="1.6"/>
-              <text x="34" y="352" fill="#334155" font-size="23" font-weight="600">· 待填写核心机制与直觉</text>
-              <text x="34" y="438" fill="#334155" font-size="23" font-weight="600">· 待填写工具或记忆闭环</text>
-              <text x="34" y="524" fill="#334155" font-size="23" font-weight="600">· 待填写框架示意草图</text>
-            </g>
-
-            <line x1="1196" y1="484" x2="1234" y2="484" stroke="#2563EB" stroke-width="4" marker-end="url(#m11-b)"/>
-
-            <g transform="translate(1244, 82)">
-              <rect x="0" y="0" width="564" height="804" rx="16" fill="#FAFBFD" stroke="#CBD5E1" stroke-width="2" stroke-dasharray="9 7"/>
-              <rect x="34" y="34" width="128" height="44" rx="8" fill="#EFF6FF"/>
-              <text x="98" y="64" text-anchor="middle" fill="#1D4ED8" font-size="22" font-weight="800">思考三</text>
-              <text x="34" y="140" fill="#0F172A" font-size="32" font-weight="800">实验与验证设想</text>
-              <text x="34" y="196" fill="#64748B" font-size="22">如何设计最小闭环实验</text>
-              <text x="34" y="232" fill="#64748B" font-size="22">证明想法真正有效？</text>
-              <line x1="34" y1="274" x2="530" y2="274" stroke="#E2E8F0" stroke-width="1.6"/>
-              <text x="34" y="352" fill="#64748B" font-size="23" font-weight="600">· 待填写目标基准与场景</text>
-              <text x="34" y="438" fill="#64748B" font-size="23" font-weight="600">· 待填写关键对照与消融</text>
-              <text x="34" y="524" fill="#64748B" font-size="23" font-weight="600">· 待填写预期核心结论</text>
-            </g>
-          </svg>
-        </div>
-      </section>
 '''
 
 FULL_HTML = f'''<!DOCTYPE html>
@@ -1461,13 +1397,13 @@ FULL_HTML = f'''<!DOCTYPE html>
   <div class="presenter-hud">
     <button class="hud-btn" id="btn-toc" type="button">目录</button>
     <button class="hud-btn" id="btn-prev" type="button" aria-label="上一页">◀</button>
-    <span class="hud-counter" id="hud-counter">01 / 11</span>
+    <span class="hud-counter" id="hud-counter">01 / 10</span>
     <button class="hud-btn" id="btn-next" type="button" aria-label="下一页">▶</button>
   </div>
 
   <div class="drawer-backdrop" id="drawer-backdrop"></div>
   <aside class="toc-drawer" id="toc-drawer">
-    <div class="toc-title">演示目录（共 11 页）</div>
+    <div class="toc-title">演示目录（共 10 页）</div>
     <ul class="toc-list" id="toc-list"></ul>
   </aside>
 
@@ -1479,7 +1415,7 @@ FULL_HTML = f'''<!DOCTYPE html>
       const shortLabels = [
         '1 本质要素', '2 时序结合', '3 分类总览',
         '4 预测推理', '5 增强合成', '6 异常诊断', '7 决策支持',
-        '8 TimeCopilot', '9 TS-Reasoner', '10 NEXUS', '11 思考'
+        '8 TimeCopilot', '9 TS-Reasoner', '10 NEXUS'
       ];
       let current = 0;
 
@@ -1551,9 +1487,9 @@ FULL_HTML = f'''<!DOCTYPE html>
 
 HTML_PATH.write_text(FULL_HTML, encoding="utf-8")
 
-# Strict automated audit across ALL 11 slides
+# Strict automated audit across ALL 10 slides
 slides = re.findall(r'<section class="slide[^>]*>(.*?)</section>', FULL_HTML, re.S)
-assert len(slides) == 11, f"Expected 11 slides, got {len(slides)}"
+assert len(slides) == 10, f"Expected 10 slides, got {len(slides)}"
 for idx, s in enumerate(slides, 1):
     sizes = [float(x) for x in re.findall(r'font-size="([0-9.]+)"', s)]
     mn, mx = min(sizes), max(sizes)
@@ -1568,7 +1504,7 @@ assert "分类一" not in FULL_HTML and "分类二" not in FULL_HTML and "分类
 short_labels = [
     '1 本质要素', '2 时序结合', '3 分类总览',
     '4 预测推理', '5 增强合成', '6 异常诊断', '7 决策支持',
-    '8 TimeCopilot', '9 TS-Reasoner', '10 NEXUS', '11 思考'
+    '8 TimeCopilot', '9 TS-Reasoner', '10 NEXUS'
 ]
 print_html = re.sub(r'<!-- Presenter HUD -->.*', '</body></html>', FULL_HTML, flags=re.S)
 s_i = [0]
@@ -1591,9 +1527,9 @@ print_html = print_html.replace('</head>', """
 weasyprint.HTML(string=print_html).write_pdf(str(PDF_PATH))
 print("PDF exported:", PDF_PATH.stat().st_size, "bytes")
 
-# Render all 11 PNGs & export PPTX
+# Render all 10 PNGs & export PPTX
 pdf_doc = pdfium.PdfDocument(str(PDF_PATH))
-assert len(pdf_doc) == 11
+assert len(pdf_doc) == 10
 png_dir = INT_DIR / "rendered_slides"
 if png_dir.exists():
     shutil.rmtree(png_dir)

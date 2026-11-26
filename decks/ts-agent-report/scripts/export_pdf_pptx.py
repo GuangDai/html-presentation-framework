@@ -15,7 +15,7 @@ PPTX_OUT = REPO_ROOT / "TS_Agent_Presentation_16x9.pptx"
 short_labels = [
     "1 本质要素", "2 时序结合", "3 分类总览",
     "4 预测推理", "5 增强合成", "6 异常诊断", "7 决策支持",
-    "8 TimeCopilot", "9 TS-Reasoner", "10 NEXUS", "11 思考",
+    "8 TimeCopilot", "9 TS-Reasoner", "10 NEXUS",
 ]
 
 html = HTML_IN.read_text(encoding="utf-8")

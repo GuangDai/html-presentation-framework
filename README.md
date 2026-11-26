@@ -1,6 +1,6 @@
 # 学术论文 16:9 HTML 演示框架
 
-首页默认打开 11 页《时间序列 LLM Agent 专题报告》，PDF 和 PPTX 位于仓库根目录。[HTML](decks/ts-agent-report/index.html) · [PDF](TS_Agent_Presentation_16x9.pdf) · [PPTX](TS_Agent_Presentation_16x9.pptx) · [报告说明](decks/ts-agent-report/README.md)
+首页默认打开 10 页《时间序列 LLM Agent 专题报告》，PDF 和 PPTX 位于仓库根目录。[HTML](decks/ts-agent-report/index.html) · [PDF](TS_Agent_Presentation_16x9.pdf) · [PPTX](TS_Agent_Presentation_16x9.pptx) · [报告说明](decks/ts-agent-report/README.md)
 
 ## 归档演示
 
